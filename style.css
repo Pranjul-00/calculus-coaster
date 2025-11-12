@@ -70,6 +70,11 @@ header h2 {
   line-height: 0; /* Fixes extra space */
 }
 
+/* Fix for p5.js canvas in a flex container */
+#canvas-container canvas {
+  display: block;
+}
+
 /* === THEORY REPORT SECTION === */
 #theory-section {
   background: #ffffff;
