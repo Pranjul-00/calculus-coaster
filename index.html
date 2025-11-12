@@ -1,30 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Calculus Roller Coaster</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="style.css">
+  <title>The Calculus of Thrill | Project Report</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+  <!-- Our Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 
-    <script src="sketch.js"></script>
-  </head>
+  <!-- p5.js libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
 
-  <body>
-    <header>
-      <h1>The Calculus of Thrill</h1>
-      <h2>A Physics-Based Roller Coaster Simulation</h2>
-    </header>
+  <!-- KaTeX (for math formatting) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+</head>
 
-    <main>
+<body>
+  <!-- Header Section -->
+  <header>
+    <h1>The Calculus of Thrill</h1>
+    <h2>A Physics-Based Roller Coaster Simulation</h2>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-content">
+
+    <!-- Section 1: The Live Simulation -->
+    <section id="simulation-section">
+      <h2>The Live Simulation</h2>
+      <p>This is a real-time, physics-accurate simulation of our track design. The cart's motion is not pre-animated;
+        it's calculated 60 times per second using the calculus and physics principles detailed below.</p>
+      <!-- This DIV is where p5.js puts the canvas -->
       <div id="canvas-container"></div>
-    </main>
+    </section>
 
-    <footer>
-      <p>A project by Team Roller Riders</p>
-    </footer>
-  </body>
+    <!-- Section 2: The Project Theory -->
+    <section id="theory-section">
+      <h2>Project Report & Theory</h2>
+
+      <!-- Problem Statement -->
+      <div class="theory-subsection">
+        <h3>1. Problem Statement</h3>
+        <p>Our project answers the question: <strong>"How can calculus be applied to design a roller coaster track
+            that maximizes thrill while maintaining rider safety?"</strong></p>
+        <p>This is a balancing act. For "thrill," we need steep drops and high speeds, which calculus measures with
+          the <strong>1st Derivative (Slope)</strong>. For "safety," we must manage the <strong>G-Forces</strong>
+          on the rider, which calculus measures using <strong>Curvature</strong> (derived from the 1st and 2nd
+          Derivatives).</p>
+      </div>
+
+      <!-- Track Design -->
+      <div class="theory-subsection">
+        <h3>2. The Track Design: Piecewise Functions</h3>
+        <p>A realistic track cannot be modeled by a single function. We designed our coaster by connecting three
+          separate segments, or "pieces."</p>
+        <p>The most important part of this design is ensuring a <strong>smooth</strong> transition between pieces. A
+          "kink" in the track would be catastrophic. To solve this, we enforced <strong>$C^1$ Continuity</strong>
+          — a condition where at each connection point, both the <strong>height ($f(x)$)</strong> and the
+          <strong>slope ($f'(x)$)</strong> of the two connecting functions are equal.</p>
+        <p>Our final track functions are:</p>
+        <pre><code>f(x) =
+  f1(x) = 20.0 - 0.32x²           (for 0 ≤ x < 5)
+  f2(x) = 0.0064(x - 10)⁴ + 8.0   (for 5 ≤ x < 15)
+  f3(x) = 20.0 - 0.32(x - 20)²     (for 15 ≤ x ≤ 25)</code></pre>
+      </div>
+
+      <!-- Calculus Analysis -->
+      <div class="theory-subsection">
+        <h3>3. The Calculus Analysis</h3>
+        <p>As our teacher noted, because our track $f(x)$ is piecewise, all equations derived from it are also
+          piecewise. Our program correctly implements this logic.</p>
+
+        <h4>First Derivative (Slope, $f'(x)$)</h4>
+        <p>The slope determines the steepness of the track.</p>
+        <pre><code>f'(x) =
+  f1'(x) = -0.64x                  (for 0 ≤ x < 5)
+  f2'(x) = 0.0256(x - 10)³          (for 5 ≤ x < 15)
+  f3'(x) = -0.64(x - 20)            (for 15 ≤ x ≤ 25)</code></pre>
+
+        <h4>Second Derivative (Concavity, $f''(x)$)</h4>
+        <p>The concavity is used to find the curvature of the track.</p>
+        <pre><code>f''(x) =
+  f1''(x) = -0.64                   (for 0 ≤ x < 5)
+  f2''(x) = 0.0768(x - 10)²           (for 5 ≤ x < 15)
+  f3''(x) = -0.64                   (for 15 ≤ x ≤ 25)</code></pre>
+
+        <h4>Curvature ($\kappa(x)$)</h4>
+        <p>Curvature measures how sharply the track bends and is the key to calculating G-forces. It is
+          calculated from the first and second derivatives:</p>
+        <!-- This div will be centered by KaTeX -->
+        <div>$$\kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+      </div>
+
+      <!-- Physics Model -->
+      <div class="theory-subsection">
+        <h3>4. The Physics Model</h3>
+        <p>The cart's motion is governed by the <strong>Conservation of Energy</strong>. We assume the cart starts
+          with a tiny push (at height $h_{start}$) and trades its Potential Energy (PE) for Kinetic Energy (KE).
+        </p>
+        $$PE_{initial} + KE_{initial} = PE_{current} + KE_{current}$$
+        $$mgh_{start} + 0 = mgh + \frac{1}{2}mv^2$$
+
+        <h4>Velocity ($v(x)$)</h4>
+        <p>By solving for $v$, we get the master equation for velocity. This single formula becomes three
+          different equations because $f(x)$ (our height, $h$) is piecewise:</p>
+        <div>$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
+
+        <h4>G-Force ($Gs$)</h4>
+        <p>The "G-force" is the "apparent weight" a rider feels. It's a combination of Earth's gravity ($1G$) and
+          the centripetal acceleration from the curve. The complete formula, which we use to get the real-time
+          value in our simulation, is:</p>
+        <div>$$Gs(x) = \frac{1 + [f'(x)]^2 + 2(h_{start} - f(x)) \cdot f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+        <p>This formula correctly accounts for both gravity and centripetal force. At the top of a hill, $f''(x)$
+          is negative, resulting in a G-force less than 1 (the "airtime" feeling). At the bottom of a valley,
+          $f''(x)$ is positive, resulting in a G-force greater than 1 (the "pressed in your seat" feeling).
+        </p>
+      </div>
+
+    </section>
+
+  </div> <!-- end of .main-content -->
+
+  <!-- Footer Section -->
+  <footer>
+    <p>A project by Team Roller Riders</p>
+  </footer>
+
+</body>
+
 </html>

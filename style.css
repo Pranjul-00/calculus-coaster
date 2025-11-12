@@ -1,12 +1,12 @@
 /* === GLOBAL STYLES === */
 body {
-  /* Use a modern, clean font */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f4f4f9; /* Light grey background */
   color: #333;
+  line-height: 1.6;
 }
 
 /* === HEADER === */
@@ -30,21 +30,107 @@ header h2 {
   opacity: 0.9;
 }
 
-/* === MAIN CONTENT (for the simulation) === */
-main {
-  display: flex;
-  justify-content: center; /* Center the canvas horizontally */
-  padding: 2rem 1rem;
+/* === MAIN CONTENT WRAPPER === */
+.main-content {
+  width: 90%;
+  max-width: 1000px;
+  margin: 2rem auto; /* Center the main content block */
 }
 
-/* This is the div that will hold your p5.js canvas */
-#canvas-container {
-  /* Add a shadow to make the canvas "pop" off the page */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  
-  /* This prevents a weird extra pixel of space */
-  line-height: 0; 
+/* === SIMULATION SECTION === */
+#simulation-section {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
 }
+
+#simulation-section h2 {
+  text-align: center;
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+#simulation-section p {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 1.5rem auto;
+}
+
+/* This is the div that holds your p5.js canvas */
+#canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden; /* Ensures canvas corners are rounded */
+  line-height: 0; /* Fixes extra space */
+}
+
+/* === THEORY REPORT SECTION === */
+#theory-section {
+  background: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#theory-section h2 {
+  text-align: center;
+  margin-top: 0;
+  color: #2c3e50;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.theory-subsection {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.theory-subsection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.theory-subsection h3 {
+  color: #34495e;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.theory-subsection h4 {
+  color: #16a085;
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Style for code blocks (for our functions) */
+pre {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Style for KaTeX math blocks */
+.katex-display {
+  display: block;
+  text-align: center;
+  margin: 1rem 0;
+  overflow-x: auto;
+  font-size: 1.1rem;
+}
+
 
 /* === FOOTER === */
 footer {
