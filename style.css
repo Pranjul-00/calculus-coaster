@@ -60,14 +60,18 @@ header h2 {
 
 /* This is the div that holds your p5.js canvas */
 #canvas-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* We are 800px wide, just like our canvas */
+  width: 800px;
+
+  /* This centers the 800px block on the page */
+  margin: 0 auto; 
+
+  /* The rest is for looks and to fix spacing */
   background: #fdfdfd;
   border: 1px solid #ddd;
   border-radius: 8px;
-  overflow: hidden; /* Ensures canvas corners are rounded */
-  line-height: 0; /* Fixes extra space */
+  overflow: hidden; /* This rounds the canvas corners */
+  line-height: 0; /* This removes extra space */
 }
 
 /* Fix for p5.js canvas in a flex container */
