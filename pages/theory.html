@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Theory - The Calculus of Thrill</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- KaTeX for mathematical equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">🎢 The Calculus of Thrill</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="simulation.html" class="nav-link">Simulation</a></li>
+                <li><a href="physics.html" class="nav-link">Physics</a></li>
+                <li><a href="design.html" class="nav-link">Design</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1>Mathematical Theory</h1>
+            <p>The calculus concepts that make our roller coaster simulation possible</p>
+        </div>
+    </header>
+
+    <!-- Theory Content -->
+    <section class="theory-content">
+        <div class="container">
+            
+            <!-- First Derivative Section -->
+            <div class="theory-section">
+                <h2>First Derivative: Slope f'(x)</h2>
+                <p class="section-intro"><strong>Physical Meaning:</strong> The slope (steepness) of the track at any point x</p>
+                
+                <div class="piecewise-function">
+                    <h3>The Three Pieces:</h3>
+                    <div class="piece">
+                        <span class="condition">For 0 ≤ x < 5:</span>
+                        <div class="equation">$$f'_1(x) = -0.64x$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 5 ≤ x < 15:</span>
+                        <div class="equation">$$f'_2(x) = 0.0256(x-10)^3$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 15 ≤ x ≤ 25:</span>
+                        <div class="equation">$$f'_3(x) = -0.64(x-20)$$</div>
+                    </div>
+                </div>
+                
+                <div class="purpose-box">
+                    <h4>Purpose:</h4>
+                    <ul>
+                        <li>Proves C¹ continuity (no jumps in the slope)</li>
+                        <li>Identifies the steepest and flattest parts of the track</li>
+                        <li>Essential for calculating velocity direction</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Second Derivative Section -->
+            <div class="theory-section">
+                <h2>Second Derivative: Concavity f''(x)</h2>
+                <p class="section-intro"><strong>Physical Meaning:</strong> How the track curves (concave up or down)</p>
+                
+                <div class="piecewise-function">
+                    <h3>The Three Pieces:</h3>
+                    <div class="piece">
+                        <span class="condition">For 0 ≤ x < 5:</span>
+                        <div class="equation">$$f''_1(x) = -0.64$$</div>
+                        <span class="concavity concave-down">Concave down</span>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 5 ≤ x < 15:</span>
+                        <div class="equation">$$f''_2(x) = 0.0768(x-10)^2$$</div>
+                        <span class="concavity concave-up">Concave up</span>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 15 ≤ x ≤ 25:</span>
+                        <div class="equation">$$f''_3(x) = -0.64$$</div>
+                        <span class="concavity concave-down">Concave down</span>
+                    </div>
+                </div>
+                
+                <div class="purpose-box">
+                    <h4>Purpose:</h4>
+                    <ul>
+                        <li>Critical component for calculating curvature</li>
+                        <li>Determines G-force direction and magnitude</li>
+                        <li>Shows where riders feel pressed down or weightless</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Curvature Section -->
+            <div class="theory-section">
+                <h2>Curvature κ(x): The Safety Measure</h2>
+                <p class="section-intro"><strong>Physical Meaning:</strong> How sharply the track bends. High curvature = tight bend = high G-forces</p>
+                
+                <div class="master-equation">
+                    <h3>Master Equation:</h3>
+                    <div class="equation">$$\kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+                </div>
+                
+                <div class="application-box">
+                    <h4>Application:</h4>
+                    <p>This calculation is also piecewise, as it depends on both f'(x) and f''(x), which are themselves piecewise functions.</p>
+                    
+                    <div class="safety-note">
+                        <p><strong>⚠️ Safety Critical:</strong> High curvature areas require careful speed management to keep G-forces within safe limits for riders.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Insight Section -->
+            <div class="theory-section highlight-section">
+                <h2>🔑 Key Insight: The Piecewise Nature</h2>
+                <p class="section-intro">Because our main function f(x) is made of three different pieces, <strong>all equations derived from it must also have three different pieces</strong>.</p>
+                
+                <div class="insight-grid">
+                    <div class="insight-card">
+                        <h4>In Our Code</h4>
+                        <p>Our simulation correctly implements this "if/else" logic for every calculation</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>Mathematical Rigor</h4>
+                        <p>This ensures our analysis is mathematically sound and physically accurate</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>Real-world Application</h4>
+                        <p>Professional roller coaster design uses similar piecewise mathematical models</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Navigation to Other Pages -->
+    <section class="page-navigation">
+        <div class="container">
+            <h2>Continue Exploring</h2>
+            <div class="nav-cards-small">
+                <a href="simulation.html" class="nav-card-small">
+                    <div class="card-icon">🎮</div>
+                    <h4>See It in Action</h4>
+                    <p>Watch these equations work in the simulation</p>
+                </a>
+                <a href="physics.html" class="nav-card-small">
+                    <div class="card-icon">🔬</div>
+                    <h4>Physics Model</h4>
+                    <p>How we use these derivatives for physics</p>
+                </a>
+                <a href="design.html" class="nav-card-small">
+                    <div class="card-icon">🏗️</div>
+                    <h4>Track Design</h4>
+                    <p>The original piecewise functions</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Team Roller Riders - <a href="../index.html">Back to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+    </script>
+</body>
+</html>

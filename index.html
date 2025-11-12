@@ -1,136 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>The Calculus of Thrill | Project Report</title>
-
-  <!-- Our Stylesheet -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- p5.js libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
-
-  <!-- KaTeX (for math formatting) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-    onload="renderMathInElement(document.body);"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Calculus of Thrill</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-  <!-- Header Section -->
-  <header>
-    <h1>The Calculus of Thrill</h1>
-    <h2>A Physics-Based Roller Coaster Simulation</h2>
-  </header>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="site-title">The Calculus of Thrill</h1>
+                    <p class="site-subtitle">Mathematical Analysis of Roller Coaster Physics</p>
+                </div>
+                <nav class="main-nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link active">Home</a></li>
+                        <li><a href="pages/simulation.html" class="nav-link">Simulation</a></li>
+                        <li><a href="pages/theory.html" class="nav-link">Theory</a></li>
+                        <li><a href="pages/physics.html" class="nav-link">Physics</a></li>
+                        <li><a href="pages/design.html" class="nav-link">Design</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-  <!-- Main Content Wrapper -->
-  <div class="main-content">
-
-    <!-- Section 1: The Live Simulation -->
-    <section id="simulation-section">
-      <h2>The Live Simulation</h2>
-      <p>This is a real-time, physics-accurate simulation of our track design. The cart's motion is not pre-animated;
-        it's calculated 60 times per second using the calculus and physics principles detailed below.</p>
-      <!-- This DIV is where p5.js puts the canvas -->
-      <div id="canvas-container"></div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Mathematical Exploration of Roller Coaster Design</h2>
+                <p class="hero-description">
+                    Discover how calculus and physics principles combine to create thrilling yet safe roller coaster experiences through interactive simulation and rigorous mathematical analysis.
+                </p>
+            </div>
+        </div>
     </section>
 
-    <!-- Section 2: The Project Theory -->
-    <section id="theory-section">
-      <h2>Project Report & Theory</h2>
+    <!-- Main Navigation Cards -->
+    <section class="main-nav-section">
+        <div class="container">
+            <h2 class="section-title">Explore the Project</h2>
+            
+            <div class="nav-cards">
+                <div class="nav-card">
+                    <div class="card-icon">🎮</div>
+                    <h3>Interactive Simulation</h3>
+                    <p>Watch our physics-based roller coaster simulation in real-time. See velocity vectors, G-forces, and energy conservation in action.</p>
+                    <a href="pages/simulation.html" class="card-button">Launch Simulation</a>
+                </div>
 
-      <!-- Problem Statement -->
-      <div class="theory-subsection">
-        <h3>1. Problem Statement</h3>
-        <p>Our project answers the question: <strong>"How can calculus be applied to design a roller coaster track
-            that maximizes thrill while maintaining rider safety?"</strong></p>
-        <p>This is a balancing act. For "thrill," we need steep drops and high speeds, which calculus measures with
-          the <strong>1st Derivative (Slope)</strong>. For "safety," we must manage the <strong>G-Forces</strong>
-          on the rider, which calculus measures using <strong>Curvature</strong> (derived from the 1st and 2nd
-          Derivatives).</p>
-      </div>
+                <div class="nav-card">
+                    <div class="card-icon">📐</div>
+                    <h3>Mathematical Theory</h3>
+                    <p>Explore the mathematical foundations: piecewise functions, C¹ continuity, derivatives, and curvature analysis.</p>
+                    <a href="pages/theory.html" class="card-button">View Theory</a>
+                </div>
 
-      <!-- Track Design -->
-      <div class="theory-subsection">
-        <h3>2. The Track Design: Piecewise Functions</h3>
-        <p>A realistic track cannot be modeled by a single function. We designed our coaster by connecting three
-          separate segments, or "pieces."</p>
-        <p>The most important part of this design is ensuring a <strong>smooth</strong> transition between pieces. A
-          "kink" in the track would be catastrophic. To solve this, we enforced <strong>$C^1$ Continuity</strong>
-          — a condition where at each connection point, both the <strong>height ($f(x)$)</strong> and the
-          <strong>slope ($f'(x)$)</strong> of the two connecting functions are equal.</p>
-        <p>Our final track functions are:</p>
-        <pre><code>f(x) =
-  f1(x) = 20.0 - 0.32x²           (for 0 ≤ x < 5)
-  f2(x) = 0.0064(x - 10)⁴ + 8.0   (for 5 ≤ x < 15)
-  f3(x) = 20.0 - 0.32(x - 20)²     (for 15 ≤ x ≤ 25)</code></pre>
-      </div>
+                <div class="nav-card">
+                    <div class="card-icon">🔬</div>
+                    <h3>Physics Model</h3>
+                    <p>Understand the physics behind the simulation: conservation of energy, velocity calculations, and G-force analysis.</p>
+                    <a href="pages/physics.html" class="card-button">Study Physics</a>
+                </div>
 
-      <!-- Calculus Analysis -->
-      <div class="theory-subsection">
-        <h3>3. The Calculus Analysis</h3>
-        <p>As our teacher noted, because our track $f(x)$ is piecewise, all equations derived from it are also
-          piecewise. Our program correctly implements this logic.</p>
-
-        <h4>First Derivative (Slope, $f'(x)$)</h4>
-        <p>The slope determines the steepness of the track.</p>
-        <pre><code>f'(x) =
-  f1'(x) = -0.64x                  (for 0 ≤ x < 5)
-  f2'(x) = 0.0256(x - 10)³          (for 5 ≤ x < 15)
-  f3'(x) = -0.64(x - 20)            (for 15 ≤ x ≤ 25)</code></pre>
-
-        <h4>Second Derivative (Concavity, $f''(x)$)</h4>
-        <p>The concavity is used to find the curvature of the track.</p>
-        <pre><code>f''(x) =
-  f1''(x) = -0.64                   (for 0 ≤ x < 5)
-  f2''(x) = 0.0768(x - 10)²           (for 5 ≤ x < 15)
-  f3''(x) = -0.64                   (for 15 ≤ x ≤ 25)</code></pre>
-
-        <h4>Curvature ($\kappa(x)$)</h4>
-        <p>Curvature measures how sharply the track bends and is the key to calculating G-forces. It is
-          calculated from the first and second derivatives:</p>
-        <!-- This div will be centered by KaTeX -->
-        <div>$$\kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}}$$</div>
-      </div>
-
-      <!-- Physics Model -->
-      <div class="theory-subsection">
-        <h3>4. The Physics Model</h3>
-        <p>The cart's motion is governed by the <strong>Conservation of Energy</strong>. We assume the cart starts
-          with a tiny push (at height $h_{start}$) and trades its Potential Energy (PE) for Kinetic Energy (KE).
-        </p>
-        $$PE_{initial} + KE_{initial} = PE_{current} + KE_{current}$$
-        $$mgh_{start} + 0 = mgh + \frac{1}{2}mv^2$$
-
-        <h4>Velocity ($v(x)$)</h4>
-        <p>By solving for $v$, we get the master equation for velocity. This single formula becomes three
-          different equations because $f(x)$ (our height, $h$) is piecewise:</p>
-        <div>$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
-
-        <h4>G-Force ($Gs$)</h4>
-        <p>The "G-force" is the "apparent weight" a rider feels. It's a combination of Earth's gravity ($1G$) and
-          the centripetal acceleration from the curve. The complete formula, which we use to get the real-time
-          value in our simulation, is:</p>
-        <div>$$Gs(x) = \frac{1 + [f'(x)]^2 + 2(h_{start} - f(x)) \cdot f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
-        <p>This formula correctly accounts for both gravity and centripetal force. At the top of a hill, $f''(x)$
-          is negative, resulting in a G-force less than 1 (the "airtime" feeling). At the bottom of a valley,
-          $f''(x)$ is positive, resulting in a G-force greater than 1 (the "pressed in your seat" feeling).
-        </p>
-      </div>
-
+                <div class="nav-card">
+                    <div class="card-icon">🏗️</div>
+                    <h3>Track Design</h3>
+                    <p>Learn how we designed the track using piecewise functions and ensured smooth transitions with mathematical continuity.</p>
+                    <a href="pages/design.html" class="card-button">See Design</a>
+                </div>
+            </div>
+        </div>
     </section>
 
-  </div> <!-- end of .main-content -->
+    <!-- Project Overview -->
+    <section class="overview-section">
+        <div class="container">
+            <div class="overview-content">
+                <div class="overview-text">
+                    <h2>Project Overview</h2>
+                    <h3>Central Question</h3>
+                    <p><em>"How can calculus be applied to design a roller coaster track that maximizes thrill while maintaining rider safety?"</em></p>
+                    
+                    <div class="key-points">
+                        <div class="point">
+                            <h4>🚀 Thrill Factor</h4>
+                            <p>Achieved through steep drops and high speeds, analyzed using derivatives and velocity</p>
+                        </div>
+                        <div class="point">
+                            <h4>🛡️ Safety Management</h4>
+                            <p>Controlled by managing forces on riders, analyzed using curvature and G-forces</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overview-visual">
+                    <div class="feature-list">
+                        <h3>What You'll Find</h3>
+                        <ul>
+                            <li>✅ Live physics simulation</li>
+                            <li>✅ Mathematical equation analysis</li>
+                            <li>✅ Piecewise function design</li>
+                            <li>✅ C¹ continuity proofs</li>
+                            <li>✅ Energy conservation model</li>
+                            <li>✅ Real-time G-force calculations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Footer Section -->
-  <footer>
-    <p>A project by Team Roller Riders</p>
-  </footer>
-
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <h3>The Calculus of Thrill</h3>
+                    <p>A comprehensive mathematical analysis of roller coaster physics, demonstrating the practical applications of calculus in engineering design and safety optimization.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Project Sections</h4>
+                        <ul>
+                            <li><a href="pages/simulation.html">Interactive Simulation</a></li>
+                            <li><a href="pages/theory.html">Mathematical Theory</a></li>
+                            <li><a href="pages/physics.html">Physics Model</a></li>
+                            <li><a href="pages/design.html">Track Design</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Mathematical Concepts</h4>
+                        <ul>
+                            <li>Piecewise Functions</li>
+                            <li>C¹ Continuity</li>
+                            <li>Derivatives & Curvature</li>
+                            <li>Energy Conservation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
+            </div>
+        </div>
+    </footer>
 </body>
-
 </html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Design - The Calculus of Thrill</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- KaTeX for mathematical equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">🎢 The Calculus of Thrill</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="simulation.html" class="nav-link">Simulation</a></li>
+                <li><a href="theory.html" class="nav-link">Theory</a></li>
+                <li><a href="physics.html" class="nav-link">Physics</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1>Track Design: Piecewise Functions & C¹ Continuity</h1>
+            <p>How we mathematically designed a smooth, thrilling roller coaster track</p>
+        </div>
+    </header>
+
+    <!-- Design Content -->
+    <section class="design-content">
+        <div class="container">
+            
+            <!-- Introduction Section -->
+            <div class="design-section">
+                <h2>Why Piecewise Functions?</h2>
+                <p class="section-intro">A realistic track cannot be modeled by a single simple function. Our track is designed by connecting three separate mathematical functions (a "piecewise" function).</p>
+                
+                <div class="design-reasoning">
+                    <div class="reason-card">
+                        <h4>🎢 Variety</h4>
+                        <p>Different sections provide different experiences - drops, valleys, hills</p>
+                    </div>
+                    <div class="reason-card">
+                        <h4>🎯 Control</h4>
+                        <p>Each piece can be optimized for specific thrills or safety requirements</p>
+                    </div>
+                    <div class="reason-card">
+                        <h4>🔧 Flexibility</h4>
+                        <p>Easy to modify individual sections without affecting the whole track</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Three Functions -->
+            <div class="design-section">
+                <h2>The Three Track Pieces</h2>
+                
+                <div class="function-showcase">
+                    <div class="function-card">
+                        <div class="function-header">
+                            <h3>Function 1: Initial Drop</h3>
+                            <span class="domain">Domain: 0 ≤ x < 5</span>
+                        </div>
+                        <div class="equation">$$f_1(x) = 20 - 0.32x^2$$</div>
+                        <div class="function-details">
+                            <p><strong>Type:</strong> Parabola (quadratic function)</p>
+                            <p><strong>Purpose:</strong> Creates the thrilling initial descent</p>
+                            <p><strong>Characteristics:</strong> Starts high, curves downward, builds speed</p>
+                        </div>
+                    </div>
+
+                    <div class="function-card">
+                        <div class="function-header">
+                            <h3>Function 2: Deep Valley</h3>
+                            <span class="domain">Domain: 5 ≤ x < 15</span>
+                        </div>
+                        <div class="equation">$$f_2(x) = 0.0064(x-10)^4 + 8.0$$</div>
+                        <div class="function-details">
+                            <p><strong>Type:</strong> Quartic function (4th degree polynomial)</p>
+                            <p><strong>Purpose:</strong> Creates the deep valley experience</p>
+                            <p><strong>Characteristics:</strong> Smooth U-shape, maximum speed at bottom</p>
+                        </div>
+                    </div>
+
+                    <div class="function-card">
+                        <div class="function-header">
+                            <h3>Function 3: Second Hill</h3>
+                            <span class="domain">Domain: 15 ≤ x ≤ 25</span>
+                        </div>
+                        <div class="equation">$$f_3(x) = 20 - 0.32(x-20)^2$$</div>
+                        <div class="function-details">
+                            <p><strong>Type:</strong> Parabola (shifted quadratic)</p>
+                            <p><strong>Purpose:</strong> Final hill for airtime experience</p>
+                            <p><strong>Characteristics:</strong> Rises to create weightless feeling at peak</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- C¹ Continuity Section -->
+            <div class="design-section highlight-section">
+                <h2>🔗 C¹ Continuity: The Key to Smooth Rides</h2>
+                <p class="section-intro">The most critical part of the design is making the track smooth. If the pieces just "meet," they would create a sharp "kink."</p>
+                
+                <div class="continuity-explanation">
+                    <h3>The Problem:</h3>
+                    <p>Simply connecting three functions at their endpoints would create dangerous sharp corners that could:</p>
+                    <ul>
+                        <li>❌ Cause uncomfortable jolts for riders</li>
+                        <li>❌ Create infinite G-forces at connection points</li>
+                        <li>❌ Make the track physically impossible to build</li>
+                    </ul>
+                </div>
+                
+                <div class="continuity-solution">
+                    <h3>The Solution: C¹ Continuity</h3>
+                    <p>We enforced <strong>C¹ Continuity</strong>, a mathematical condition requiring two things at every connection point:</p>
+                    
+                    <div class="continuity-conditions">
+                        <div class="condition">
+                            <h4>1. Height Continuity</h4>
+                            <div class="equation">$$f_1(x) = f_2(x) \text{ at connection points}$$</div>
+                            <p>The heights are equal - no sudden jumps up or down</p>
+                        </div>
+                        
+                        <div class="condition">
+                            <h4>2. Slope Continuity</h4>
+                            <div class="equation">$$f'_1(x) = f'_2(x) \text{ at connection points}$$</div>
+                            <p>The slopes are equal - no sharp corners or kinks</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="continuity-result">
+                    <h3>✅ The Result:</h3>
+                    <p>This ensures a seamless transition with no sharp corners that could be dangerous or uncomfortable. The track flows smoothly from piece to piece, just like a real roller coaster.</p>
+                </div>
+            </div>
+
+            <!-- Design Process Section -->
+            <div class="design-section">
+                <h2>🛠️ The Design Process</h2>
+                
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h4>Choose Function Types</h4>
+                        <p>Select mathematical functions that create the desired track shapes</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h4>Set Connection Points</h4>
+                        <p>Determine where the track pieces will connect (x = 5 and x = 15)</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h4>Enforce Height Continuity</h4>
+                        <p>Adjust parameters so function values match at connection points</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h4>Enforce Slope Continuity</h4>
+                        <p>Adjust parameters so derivatives match at connection points</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <h4>Test and Refine</h4>
+                        <p>Verify the track provides good thrills while maintaining safety</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-world Connection -->
+            <div class="design-section">
+                <h2>🌍 Real-world Application</h2>
+                <p class="section-intro">Our mathematical approach mirrors how professional roller coaster designers work.</p>
+                
+                <div class="real-world-grid">
+                    <div class="real-world-card">
+                        <h4>Professional Design</h4>
+                        <p>Real coaster designers use similar piecewise mathematical models, often with even more complex functions and higher-order continuity requirements.</p>
+                    </div>
+                    <div class="real-world-card">
+                        <h4>Safety Standards</h4>
+                        <p>The continuity requirements we enforced are similar to real safety standards that prevent dangerous track geometry.</p>
+                    </div>
+                    <div class="real-world-card">
+                        <h4>Computer-Aided Design</h4>
+                        <p>Modern coaster design software uses the same mathematical principles we've demonstrated in our project.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Navigation to Other Pages -->
+    <section class="page-navigation">
+        <div class="container">
+            <h2>Continue Exploring</h2>
+            <div class="nav-cards-small">
+                <a href="simulation.html" class="nav-card-small">
+                    <div class="card-icon">🎮</div>
+                    <h4>See the Design in Action</h4>
+                    <p>Watch our track design come to life</p>
+                </a>
+                <a href="theory.html" class="nav-card-small">
+                    <div class="card-icon">📐</div>
+                    <h4>Mathematical Analysis</h4>
+                    <p>Explore the derivatives of our functions</p>
+                </a>
+                <a href="physics.html" class="nav-card-small">
+                    <div class="card-icon">🔬</div>
+                    <h4>Physics Model</h4>
+                    <p>How physics brings the design to life</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Team Roller Riders - <a href="../index.html">Back to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+    </script>
+</body>
+</html>

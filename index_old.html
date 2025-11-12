@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Calculus of Thrill</title>
+
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- KaTeX for mathematical equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">🎢 Calculus Coaster</div>
+        <ul class="nav-menu">
+          <li><a href="#simulation" class="nav-link">Simulation</a></li>
+          <li><a href="#theory" class="nav-link">Theory</a></li>
+          <li><a href="#design" class="nav-link">Design</a></li>
+          <li><a href="#physics" class="nav-link">Physics</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">The Calculus of Thrill</h1>
+        <p class="hero-subtitle">How calculus and physics combine to design the perfect roller coaster</p>
+        <div class="hero-description">
+          <p>Exploring the mathematical principles behind roller coaster design through interactive simulation</p>
+        </div>
+      </div>
+      <div class="hero-background"></div>
+    </header>
+
+    <!-- Simulation Section -->
+    <section id="simulation" class="section simulation-section">
+      <div class="container">
+        <h2 class="section-title">Live Physics Simulation</h2>
+        <p class="section-description">
+          Watch as our roller coaster cart follows the laws of physics in real-time. The green vector shows velocity direction and magnitude, while the blue vector represents G-force.
+        </p>
+        <div class="simulation-container">
+          <div id="canvas-container"></div>
+          <div class="simulation-info">
+            <div class="info-panel">
+              <h3>Legend</h3>
+              <div class="legend-items">
+                <div class="legend-item">
+                  <div class="legend-color green"></div>
+                  <span>Velocity Vector</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color blue"></div>
+                  <span>G-Force Vector</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color red"></div>
+                  <span>Cart Position</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Theory Section -->
+    <section id="theory" class="section theory-section">
+      <div class="container">
+        <h2 class="section-title">Project Theory</h2>
+        
+        <div class="theory-grid">
+          <div class="theory-card">
+            <div class="card-header">
+              <h3>🎯 Project Goal & Problem Statement</h3>
+            </div>
+            <div class="card-content">
+              <p><strong>Central Question:</strong> "How can calculus be applied to design a roller coaster track that maximizes thrill while maintaining rider safety?"</p>
+              <div class="goal-points">
+                <div class="goal-item">
+                  <h4>🚀 Thrill Factor</h4>
+                  <p>Achieved through steep drops and high speeds, analyzed using the 1st Derivative and Velocity calculations</p>
+                </div>
+                <div class="goal-item">
+                  <h4>🛡️ Safety Management</h4>
+                  <p>Controlled by managing forces on riders, analyzed using Curvature and G-Force calculations</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="theory-card">
+            <div class="card-header">
+              <h3>📐 Mathematical Foundation</h3>
+            </div>
+            <div class="card-content">
+              <p>This project integrates multiple mathematical and physical concepts:</p>
+              <ul>
+                <li><strong>Calculus:</strong> Derivatives, continuity, and piecewise functions</li>
+                <li><strong>Physics:</strong> Conservation of energy and force analysis</li>
+                <li><strong>Engineering:</strong> Safety constraints and design optimization</li>
+                <li><strong>Computer Science:</strong> Real-time simulation and visualization</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Track Design Section -->
+    <section id="design" class="section design-section">
+      <div class="container">
+        <h2 class="section-title">Track Design: Piecewise Functions & C¹ Continuity</h2>
+        
+        <div class="design-explanation">
+          <p class="lead-text">A realistic track cannot be modeled by a single simple function. Our track is designed by connecting three separate mathematical functions (a "piecewise" function).</p>
+        </div>
+
+        <div class="function-grid">
+          <div class="function-card">
+            <div class="function-header">
+              <h4>Function 1: Initial Drop</h4>
+              <span class="domain">Domain: 0 ≤ x < 5</span>
+            </div>
+            <div class="equation">$$f_1(x) = 20 - 0.32x^2$$</div>
+            <p>A parabolic drop for the thrilling initial descent</p>
+          </div>
+
+          <div class="function-card">
+            <div class="function-header">
+              <h4>Function 2: Deep Valley</h4>
+              <span class="domain">Domain: 5 ≤ x < 15</span>
+            </div>
+            <div class="equation">$$f_2(x) = 0.0064(x-10)^4 + 8.0$$</div>
+            <p>A quartic function creating the deep valley experience</p>
+          </div>
+
+          <div class="function-card">
+            <div class="function-header">
+              <h4>Function 3: Second Hill</h4>
+              <span class="domain">Domain: 15 ≤ x ≤ 25</span>
+            </div>
+            <div class="equation">$$f_3(x) = 20 - 0.32(x-20)^2$$</div>
+            <p>Another parabola for the final hill and airtime</p>
+          </div>
+        </div>
+
+        <div class="continuity-explanation">
+          <h3>🔗 C¹ Continuity: The Key to Smooth Rides</h3>
+          <p>The most critical part of the design is making the track smooth. If the pieces just "meet," they would create a sharp "kink." To solve this, we enforced <strong>C¹ Continuity</strong>:</p>
+          
+          <div class="continuity-conditions">
+            <div class="condition">
+              <h4>Height Continuity</h4>
+              <div class="equation">$$f_1(x) = f_2(x) \text{ at connection points}$$</div>
+              <p>The heights are equal at every connection point</p>
+            </div>
+            
+            <div class="condition">
+              <h4>Slope Continuity</h4>
+              <div class="equation">$$f'_1(x) = f'_2(x) \text{ at connection points}$$</div>
+              <p>The slopes are equal to prevent sharp corners</p>
+            </div>
+          </div>
+          
+          <p class="continuity-result">This ensures a seamless transition with no sharp corners that could be dangerous or uncomfortable.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculus Analysis Section -->
+    <section id="calculus" class="section calculus-section">
+      <div class="container">
+        <h2 class="section-title">The Calculus Analysis</h2>
+        
+        <div class="analysis-intro">
+          <p class="lead-text">A key insight: because our main function f(x) is made of three different pieces, all equations derived from it must also have three different pieces. Our simulation's code correctly implements this "if/else" logic.</p>
+        </div>
+
+        <div class="derivative-grid">
+          <div class="derivative-card">
+            <div class="card-header">
+              <h3>First Derivative: Slope f'(x)</h3>
+            </div>
+            <div class="card-content">
+              <p><strong>Physical Meaning:</strong> The slope (steepness) of the track at any point x</p>
+              
+              <div class="piecewise-function">
+                <div class="piece">
+                  <span class="condition">0 ≤ x < 5:</span>
+                  <div class="equation">$$f'_1(x) = -0.64x$$</div>
+                </div>
+                <div class="piece">
+                  <span class="condition">5 ≤ x < 15:</span>
+                  <div class="equation">$$f'_2(x) = 0.0256(x-10)^3$$</div>
+                </div>
+                <div class="piece">
+                  <span class="condition">15 ≤ x ≤ 25:</span>
+                  <div class="equation">$$f'_3(x) = -0.64(x-20)$$</div>
+                </div>
+              </div>
+              
+              <p><strong>Purpose:</strong> Proves the C¹ continuity (the graph of f'(x) is continuous with no jumps) and finds the steepest/flattest parts of the track.</p>
+            </div>
+          </div>
+
+          <div class="derivative-card">
+            <div class="card-header">
+              <h3>Second Derivative: Concavity f''(x)</h3>
+            </div>
+            <div class="card-content">
+              <p><strong>Physical Meaning:</strong> The concavity (how the track curves)</p>
+              
+              <div class="piecewise-function">
+                <div class="piece">
+                  <span class="condition">0 ≤ x < 5:</span>
+                  <div class="equation">$$f''_1(x) = -0.64$$</div>
+                  <span class="concavity concave-down">Concave down</span>
+                </div>
+                <div class="piece">
+                  <span class="condition">5 ≤ x < 15:</span>
+                  <div class="equation">$$f''_2(x) = 0.0768(x-10)^2$$</div>
+                  <span class="concavity concave-up">Concave up</span>
+                </div>
+                <div class="piece">
+                  <span class="condition">15 ≤ x ≤ 25:</span>
+                  <div class="equation">$$f''_3(x) = -0.64$$</div>
+                  <span class="concavity concave-down">Concave down</span>
+                </div>
+              </div>
+              
+              <p><strong>Purpose:</strong> This is a crucial component for calculating curvature and G-forces.</p>
+            </div>
+          </div>
+
+          <div class="derivative-card">
+            <div class="card-header">
+              <h3>Curvature κ(x): The Safety Measure</h3>
+            </div>
+            <div class="card-content">
+              <p><strong>Physical Meaning:</strong> How sharply the track bends. High curvature = tight bend = high G-forces</p>
+              
+              <div class="master-equation">
+                <h4>Master Equation:</h4>
+                <div class="equation">$$\kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+              </div>
+              
+              <p><strong>Application:</strong> This is also a piecewise calculation, as it depends on both f'(x) and f''(x), which are themselves piecewise.</p>
+              <div class="safety-note">
+                <p><strong>⚠️ Safety Critical:</strong> High curvature areas require careful speed management to keep G-forces within safe limits.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Physics Model Section -->
+    <section id="physics" class="section physics-section">
+      <div class="container">
+        <h2 class="section-title">The Physics Model: Realistic Motion</h2>
+        
+        <div class="physics-intro">
+          <p class="lead-text">The animation is not pre-set. It is a live physics simulation governed by the Conservation of Energy. We assume the cart starts at a height h<sub>start</sub> (with a tiny "push") and trades its Potential Energy (PE) for Kinetic Energy (KE).</p>
+        </div>
+
+        <div class="energy-equation">
+          <h3>Conservation of Energy Principle</h3>
+          <div class="equation">$$PE_{initial} = PE_{current} + KE_{current}$$</div>
+          <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
+        </div>
+
+        <div class="physics-grid">
+          <div class="physics-card">
+            <div class="card-header">
+              <h3>🚀 Velocity (Speed): v(x)</h3>
+            </div>
+            <div class="card-content">
+              <p>By solving the energy equation for v (velocity), we get the master formula for the cart's speed at any point.</p>
+              
+              <div class="master-equation">
+                <h4>Master Equation:</h4>
+                <div class="equation">$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
+              </div>
+              
+              <p><strong>The "Three Equations":</strong> Because f(x) has three different formulas, this master equation results in three different, specific velocity equations:</p>
+              <div class="velocity-equations">
+                <div class="equation">$$v_1(x) = \sqrt{2g(h_{start} - f_1(x))}$$</div>
+                <div class="equation">$$v_2(x) = \sqrt{2g(h_{start} - f_2(x))}$$</div>
+                <div class="equation">$$v_3(x) = \sqrt{2g(h_{start} - f_3(x))}$$</div>
+              </div>
+              
+              <p><strong>Simulation:</strong> Our code calculates this value 60 times per second to find the cart's true speed, which is why it speeds up in the valleys and slows down on the hills.</p>
+            </div>
+          </div>
+
+          <div class="physics-card">
+            <div class="card-header">
+              <h3>⚡ G-Forces: Gs(x)</h3>
+            </div>
+            <div class="card-content">
+              <p><strong>Physical Meaning:</strong> The "apparent weight" a rider feels. It's a combination of Earth's gravity (1 G) and the centripetal acceleration from the curve.</p>
+              
+              <div class="gforce-equation">
+                <h4>Master Equation:</h4>
+                <div class="equation">$$Gs(x) = \frac{1 + [f'(x)]^2 + 2(h_{start} - f(x)) \cdot f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+              </div>
+              
+              <div class="gforce-effects">
+                <div class="effect">
+                  <h4>🏔️ Valley Bottom (x=10)</h4>
+                  <p>f''(x) is positive → Gs > 1 → "pressed into your seat" feeling</p>
+                </div>
+                <div class="effect">
+                  <h4>🎈 Hill Top (x=20)</h4>
+                  <p>f''(x) is negative → Gs < 1 → "airtime" or weightless feeling</p>
+                </div>
+              </div>
+              
+              <p><strong>Simulation:</strong> This is calculated in real-time and displayed as "G-Force".</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visualization Section -->
+    <section id="visualization" class="section visualization-section">
+      <div class="container">
+        <h2 class="section-title">The Live Simulation: Visualization</h2>
+        
+        <div class="viz-intro">
+          <p class="lead-text">The webpage uses p5.js to run this simulation with real-time physics calculations and vector visualization.</p>
+        </div>
+        
+        <div class="viz-grid">
+          <div class="viz-card">
+            <div class="card-header">
+              <h3>🎨 Real-time Rendering</h3>
+            </div>
+            <div class="card-content">
+              <ul>
+                <li>Draws the track based on the f(x) functions</li>
+                <li>Calculates the cart's position 60 times per second using the true velocity v(x)</li>
+                <li>Physics-based motion with energy conservation</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="viz-card">
+            <div class="card-header">
+              <h3>📊 Data Display</h3>
+            </div>
+            <div class="card-content">
+              <ul>
+                <li>Displays the real-time Speed and G-Force data as text</li>
+                <li>Speed shown in km/h for practical understanding</li>
+                <li>G-Force values help understand rider experience</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="viz-card">
+            <div class="card-header">
+              <h3>🎯 Vector Visualization</h3>
+            </div>
+            <div class="card-content">
+              <ul>
+                <li><span class="vector-green">Green tangent vector:</span> Shows direction and magnitude of velocity</li>
+                <li><span class="vector-blue">Blue normal vector:</span> Shows direction and magnitude of G-force</li>
+                <li>Real-time physics visualization of forces acting on the cart</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>🎢 The Calculus of Thrill</h4>
+            <p>A comprehensive mathematical exploration of roller coaster physics, combining calculus, physics, and computer simulation.</p>
+          </div>
+          <div class="footer-section">
+            <h4>🛠️ Technologies Used</h4>
+            <ul>
+              <li>p5.js for interactive simulation</li>
+              <li>KaTeX for mathematical equation rendering</li>
+              <li>Modern CSS3 & HTML5</li>
+              <li>JavaScript for real-time calculations</li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>📚 Mathematical Concepts</h4>
+            <ul>
+              <li>Piecewise Functions & C¹ Continuity</li>
+              <li>First & Second Derivatives</li>
+              <li>Conservation of Energy</li>
+              <li>Curvature & G-Force Analysis</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 Team Roller Riders - A Calculus Class Project</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Initialize KaTeX and smooth scrolling -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Render mathematical equations
+        if (typeof renderMathInElement !== 'undefined') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+          });
+        }
+
+        // Smooth scrolling for navigation links with offset for fixed navbar
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+            if (target) {
+              const offsetTop = target.offsetTop - 80; // Account for navbar height
+              window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+              });
+            }
+          });
+        });
+
+        // Debug: Check if canvas container exists
+        const canvasContainer = document.getElementById('canvas-container');
+        if (canvasContainer) {
+          console.log('Canvas container found:', canvasContainer);
+        } else {
+          console.error('Canvas container not found!');
+        }
+
+        // Debug: Check if p5.js is loaded
+        if (typeof createCanvas !== 'undefined') {
+          console.log('p5.js loaded successfully');
+        } else {
+          console.error('p5.js not loaded!');
+        }
+      });
+    </script>
+  </body>
+</html>

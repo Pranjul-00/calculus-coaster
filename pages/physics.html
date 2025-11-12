@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Model - The Calculus of Thrill</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- KaTeX for mathematical equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">🎢 The Calculus of Thrill</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="simulation.html" class="nav-link">Simulation</a></li>
+                <li><a href="theory.html" class="nav-link">Theory</a></li>
+                <li><a href="design.html" class="nav-link">Design</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1>Physics Model: Realistic Motion</h1>
+            <p>How conservation of energy creates authentic roller coaster physics</p>
+        </div>
+    </header>
+
+    <!-- Physics Content -->
+    <section class="physics-content">
+        <div class="container">
+            
+            <!-- Energy Conservation Section -->
+            <div class="physics-section">
+                <h2>Conservation of Energy: The Foundation</h2>
+                <p class="section-intro">The animation is not pre-set. It's a live physics simulation governed by the Conservation of Energy.</p>
+                
+                <div class="energy-principle">
+                    <h3>The Principle:</h3>
+                    <p>We assume the cart starts at height h<sub>start</sub> (with a tiny "push") and trades its Potential Energy (PE) for Kinetic Energy (KE).</p>
+                    
+                    <div class="equation">$$PE_{initial} = PE_{current} + KE_{current}$$</div>
+                    <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
+                </div>
+                
+                <div class="energy-explanation">
+                    <div class="energy-card">
+                        <h4>🏔️ At the Top</h4>
+                        <p>Maximum potential energy, minimum kinetic energy (slow speed)</p>
+                    </div>
+                    <div class="energy-card">
+                        <h4>🏎️ In the Valley</h4>
+                        <p>Minimum potential energy, maximum kinetic energy (high speed)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Velocity Section -->
+            <div class="physics-section">
+                <h2>🚀 Velocity (Speed): v(x)</h2>
+                <p class="section-intro">By solving the energy equation for v (velocity), we get the master formula for the cart's speed at any point.</p>
+                
+                <div class="master-equation">
+                    <h3>Master Equation:</h3>
+                    <div class="equation">$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
+                </div>
+                
+                <div class="velocity-breakdown">
+                    <h3>The "Three Equations":</h3>
+                    <p>Because f(x) has three different formulas, this master equation results in three different, specific velocity equations:</p>
+                    
+                    <div class="velocity-equations">
+                        <div class="equation">$$v_1(x) = \sqrt{2g(h_{start} - f_1(x))}$$</div>
+                        <div class="equation">$$v_2(x) = \sqrt{2g(h_{start} - f_2(x))}$$</div>
+                        <div class="equation">$$v_3(x) = \sqrt{2g(h_{start} - f_3(x))}$$</div>
+                    </div>
+                </div>
+                
+                <div class="simulation-note">
+                    <h4>🎮 In the Simulation:</h4>
+                    <p>Our code calculates this value 60 times per second to find the cart's true speed. This is why it speeds up in the valleys and slows down on the hills - pure physics!</p>
+                </div>
+            </div>
+
+            <!-- G-Forces Section -->
+            <div class="physics-section">
+                <h2>⚡ G-Forces: Gs(x)</h2>
+                <p class="section-intro">The "apparent weight" a rider feels. It's a combination of Earth's gravity (1 G) and the centripetal acceleration from the curve.</p>
+                
+                <div class="master-equation">
+                    <h3>Master Equation:</h3>
+                    <div class="equation">$$Gs(x) = \frac{1 + [f'(x)]^2 + 2(h_{start} - f(x)) \cdot f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+                </div>
+                
+                <div class="gforce-effects">
+                    <h3>What Riders Feel:</h3>
+                    <div class="effect-grid">
+                        <div class="effect">
+                            <h4>🏔️ Valley Bottom (x=10)</h4>
+                            <p>f''(x) is positive → Gs > 1</p>
+                            <p class="feeling">"Pressed into your seat" feeling</p>
+                        </div>
+                        <div class="effect">
+                            <h4>🎈 Hill Top (x=20)</h4>
+                            <p>f''(x) is negative → Gs < 1</p>
+                            <p class="feeling">"Airtime" or weightless feeling</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gforce-scale">
+                    <h3>G-Force Scale:</h3>
+                    <ul>
+                        <li><strong>1 G:</strong> Normal Earth gravity</li>
+                        <li><strong>2-3 G:</strong> Intense but safe (pressed into seat)</li>
+                        <li><strong>0.5 G:</strong> Light, floating sensation</li>
+                        <li><strong>0 G:</strong> Complete weightlessness (airtime)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Real-time Calculation Section -->
+            <div class="physics-section highlight-section">
+                <h2>🔄 Real-time Physics Simulation</h2>
+                <p class="section-intro">Every frame of our simulation involves complex calculations happening 60 times per second.</p>
+                
+                <div class="calculation-flow">
+                    <div class="calc-step">
+                        <h4>Step 1: Position</h4>
+                        <p>Calculate current height using f(x)</p>
+                    </div>
+                    <div class="calc-step">
+                        <h4>Step 2: Derivatives</h4>
+                        <p>Find slope f'(x) and concavity f''(x)</p>
+                    </div>
+                    <div class="calc-step">
+                        <h4>Step 3: Velocity</h4>
+                        <p>Apply energy conservation formula</p>
+                    </div>
+                    <div class="calc-step">
+                        <h4>Step 4: G-Forces</h4>
+                        <p>Calculate apparent weight from curvature</p>
+                    </div>
+                    <div class="calc-step">
+                        <h4>Step 5: Motion</h4>
+                        <p>Update cart position for next frame</p>
+                    </div>
+                </div>
+                
+                <div class="physics-accuracy">
+                    <h4>Why This Matters:</h4>
+                    <p>This isn't just animation - it's a genuine physics simulation. The cart behaves exactly as it would in real life, following the same laws of physics that govern actual roller coasters.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Navigation to Other Pages -->
+    <section class="page-navigation">
+        <div class="container">
+            <h2>Continue Exploring</h2>
+            <div class="nav-cards-small">
+                <a href="simulation.html" class="nav-card-small">
+                    <div class="card-icon">🎮</div>
+                    <h4>See Physics in Action</h4>
+                    <p>Watch these equations work in real-time</p>
+                </a>
+                <a href="theory.html" class="nav-card-small">
+                    <div class="card-icon">📐</div>
+                    <h4>Mathematical Theory</h4>
+                    <p>The calculus behind these physics</p>
+                </a>
+                <a href="design.html" class="nav-card-small">
+                    <div class="card-icon">🏗️</div>
+                    <h4>Track Design</h4>
+                    <p>How we built the track functions</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Team Roller Riders - <a href="../index.html">Back to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+    </script>
+</body>
+</html>

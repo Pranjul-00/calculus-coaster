@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Simulation - The Calculus of Thrill</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="../js/sketch.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="site-title">The Calculus of Thrill</h1>
+                    <p class="site-subtitle">Mathematical Analysis of Roller Coaster Physics</p>
+                </div>
+                <nav class="main-nav">
+                    <ul class="nav-list">
+                        <li><a href="../index.html" class="nav-link">Home</a></li>
+                        <li><a href="simulation.html" class="nav-link active">Simulation</a></li>
+                        <li><a href="theory.html" class="nav-link">Theory</a></li>
+                        <li><a href="physics.html" class="nav-link">Physics</a></li>
+                        <li><a href="design.html" class="nav-link">Design</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content Header -->
+    <section class="page-intro">
+        <div class="container">
+            <h2 class="page-title">Interactive Physics Simulation</h2>
+            <p class="page-description">Watch our roller coaster cart follow the laws of physics in real-time with vector visualization and data analysis.</p>
+        </div>
+    </section>
+
+    <!-- Simulation Section -->
+    <section class="simulation-page">
+        <div class="container">
+            <div class="simulation-layout">
+                <div class="simulation-main">
+                    <div id="canvas-container"></div>
+                </div>
+                
+                <div class="simulation-sidebar">
+                    <div class="info-panel">
+                        <h3>🎯 What You're Seeing</h3>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <div class="legend-color green"></div>
+                                <span><strong>Green Vector:</strong> Velocity direction and magnitude</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color blue"></div>
+                                <span><strong>Blue Vector:</strong> G-force direction and magnitude</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color red"></div>
+                                <span><strong>Red Circle:</strong> Cart position</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-panel">
+                        <h3>⚡ Physics in Action</h3>
+                        <ul>
+                            <li><strong>Energy Conservation:</strong> Potential energy converts to kinetic energy</li>
+                            <li><strong>Speed Changes:</strong> Faster in valleys, slower on hills</li>
+                            <li><strong>G-Forces:</strong> Higher in curves, lower on hilltops</li>
+                            <li><strong>Real-time Calculation:</strong> 60 updates per second</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-panel">
+                        <h3>📊 Understanding the Data</h3>
+                        <div class="data-explanation">
+                            <p><strong>Speed (km/h):</strong> How fast the cart is moving</p>
+                            <p><strong>G-Force (Gs):</strong> The apparent weight felt by riders</p>
+                            <ul>
+                                <li>1 G = Normal gravity</li>
+                                <li>&gt; 1 G = Pressed into seat</li>
+                                <li>&lt; 1 G = Weightless feeling</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="simulation-details">
+                <h2>How the Simulation Works</h2>
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <h3>🔄 Real-time Physics</h3>
+                        <p>The cart's position is calculated 60 times per second using the conservation of energy principle. No pre-programmed animation - pure physics!</p>
+                    </div>
+                    <div class="detail-card">
+                        <h3>📐 Mathematical Functions</h3>
+                        <p>The track is defined by three piecewise functions that are mathematically continuous and smooth (C¹ continuity).</p>
+                    </div>
+                    <div class="detail-card">
+                        <h3>🎯 Vector Visualization</h3>
+                        <p>The green and blue vectors show the actual forces and motion vectors calculated from the mathematical derivatives.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation to Other Pages -->
+    <section class="page-navigation">
+        <div class="container">
+            <h2>Continue Exploring</h2>
+            <div class="nav-cards-small">
+                <a href="theory.html" class="nav-card-small">
+                    <div class="card-icon">📐</div>
+                    <h4>Mathematical Theory</h4>
+                    <p>Explore the calculus behind the simulation</p>
+                </a>
+                <a href="physics.html" class="nav-card-small">
+                    <div class="card-icon">🔬</div>
+                    <h4>Physics Model</h4>
+                    <p>Understand energy conservation and forces</p>
+                </a>
+                <a href="design.html" class="nav-card-small">
+                    <div class="card-icon">🏗️</div>
+                    <h4>Track Design</h4>
+                    <p>Learn about piecewise functions</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <h3>The Calculus of Thrill</h3>
+                    <p>Interactive simulation demonstrating real-time physics calculations and mathematical modeling of roller coaster dynamics.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Project Sections</h4>
+                        <ul>
+                            <li><a href="../index.html">Project Home</a></li>
+                            <li><a href="theory.html">Mathematical Theory</a></li>
+                            <li><a href="physics.html">Physics Model</a></li>
+                            <li><a href="design.html">Track Design</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Simulation Features</h4>
+                        <ul>
+                            <li>Real-time Physics</li>
+                            <li>Vector Visualization</li>
+                            <li>Energy Conservation</li>
+                            <li>G-Force Analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
