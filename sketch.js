@@ -65,7 +65,10 @@ function fDoublePrime(x) {
 
 // --- 3. The Setup Function (Runs Once) ---
 function setup() {
-  createCanvas(800, 400); // 800x400 pixel canvas
+  // 800x400 pixel canvas
+  let canvas = createCanvas(800, 400);
+  // Tell the canvas to live inside the div we made in index.html
+  canvas.parent('canvas-container');
   cartX = 0; // Start cart at x=0
   cartY = f(cartX);
   strokeWeight(4); // Thicker lines
