@@ -221,6 +221,40 @@ body {
   border: 3px solid var(--border-light);
   background-color: white;
   min-width: 800px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.canvas-enlarge-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15, 23, 42, 0.8);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px var(--shadow-medium);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.9;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 5;
+}
+
+.canvas-enlarge-icon:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+body.canvas-overlay-active .canvas-enlarge-icon {
+  display: none;
 }
 
 .simulation-info {
@@ -832,6 +866,62 @@ body {
 .page-navigation h2 {
   text-align: center;
   font-size: 2rem;
+}
+
+/* === CANVAS OVERLAY (ENLARGED VIEW) === */
+.canvas-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 40;
+}
+
+.canvas-overlay-close {
+  display: none;
+}
+
+body.canvas-overlay-active {
+  overflow: hidden;
+}
+
+body.canvas-overlay-active .canvas-overlay-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.canvas-overlay-active #canvas-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%) scale(1.5);
+  z-index: 50;
+  min-width: auto;
+  width: min(1100px, 96vw);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+body.canvas-overlay-active .canvas-overlay-close {
+  display: inline-block;
+  position: fixed;
+  top: calc(50% + 310px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+}
+
+@media (max-width: 900px) {
+  body.canvas-overlay-active #canvas-container {
+    transform: translate(-50%, -50%) scale(1.0);
+    width: 96vw;
+  }
+
+  body.canvas-overlay-active .canvas-overlay-close {
+    top: calc(50% + 230px);
+  }
 }
 
 /* === SIMULATION CONTROLS PANEL === */

@@ -43,7 +43,9 @@
         <div class="container">
             <div class="simulation-layout">
                 <div class="simulation-main">
-                    <div id="canvas-container"></div>
+                    <div id="canvas-container">
+                        <button id="openCanvasOverlayBtn" class="canvas-enlarge-icon" aria-label="Enlarge simulation">⤢</button>
+                    </div>
 
                     <div class="simulation-controls">
                         <div class="controls-row">
@@ -57,12 +59,12 @@
                         </div>
                         <div class="gravity-control">
                             <span>Gravity g (m/s²):</span>
-                            <input type="number" id="gravityInput" min="0" max="30" step="0.1" value="9.81">
+                            <input type="number" id="gravityInput" min="0" max="9999" step="0.1" value="9.81">
                             <button id="gravityApplyBtn" class="sim-button">Apply</button>
                         </div>
                         <div class="initial-speed-control">
                             <span>Initial speed v₀ (m/s):</span>
-                            <input type="number" id="initialSpeedInput" min="0" max="50" step="0.1" value="0.5">
+                            <input type="number" id="initialSpeedInput" min="0" max="9999" step="0.1" value="0.5">
                             <button id="initialSpeedApplyBtn" class="sim-button">Apply</button>
                         </div>
                     </div>
@@ -131,6 +133,10 @@
             </div>
         </div>
     </section>
+
+    <!-- Canvas Overlay Elements for Enlarged View -->
+    <div id="canvasOverlayBackdrop" class="canvas-overlay-backdrop"></div>
+    <button id="canvasOverlayCloseBtn" class="sim-button canvas-overlay-close">X</button>
 
     <!-- Navigation to Other Pages -->
     <section class="page-navigation">

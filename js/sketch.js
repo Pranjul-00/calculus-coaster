@@ -86,8 +86,14 @@ function setup() {
   const gravityApplyBtn = document.getElementById('gravityApplyBtn');
   const initialSpeedInput = document.getElementById('initialSpeedInput');
   const initialSpeedApplyBtn = document.getElementById('initialSpeedApplyBtn');
+  const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
+  const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
+  const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
 
-  if (playPauseBtn && resetBtn && speedSlider && speedValue && gravityInput && gravityApplyBtn && initialSpeedInput && initialSpeedApplyBtn) {
+  if (playPauseBtn && resetBtn && speedSlider && speedValue &&
+    gravityInput && gravityApplyBtn &&
+    initialSpeedInput && initialSpeedApplyBtn) {
+
     playPauseBtn.addEventListener('click', () => {
       running = !running;
       playPauseBtn.textContent = running ? 'Pause' : 'Play';
@@ -131,6 +137,20 @@ function setup() {
 
     initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
     initialSpeedInput.addEventListener('change', applyInitialSpeed);
+
+    if (openOverlayBtn && canvasOverlayBackdrop && canvasOverlayCloseBtn) {
+      const openOverlay = () => {
+        document.body.classList.add('canvas-overlay-active');
+      };
+
+      const closeOverlay = () => {
+        document.body.classList.remove('canvas-overlay-active');
+      };
+
+      openOverlayBtn.addEventListener('click', openOverlay);
+      canvasOverlayCloseBtn.addEventListener('click', closeOverlay);
+      canvasOverlayBackdrop.addEventListener('click', closeOverlay);
+    }
   }
 
   strokeWeight(4); // Thicker lines
