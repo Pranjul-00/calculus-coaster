@@ -221,7 +221,6 @@ body {
   border: 3px solid var(--border-light);
   background-color: white;
   min-width: 800px;
-  min-height: 400px;
 }
 
 .simulation-info {
@@ -812,6 +811,7 @@ body {
 .simulation-main {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .simulation-sidebar {
