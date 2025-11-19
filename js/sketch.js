@@ -7,12 +7,17 @@
 // --- 1. Global Variables & Constants ---
 let g = 9.81; // Acceleration due to gravity (m/s^2)
 const trackStartHeight = 20.0; // The track's actual start height
-const energyStartHeight = 20.01; // Give it slightly more energy to "push" it
+let initialSpeed = 0.5;
+let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
 let cartX = 0.0; // Cart's current X position (in meters, 0 to 25)
 let cartY = 0.0; // Cart's current Y position (in meters)
 let running = true; // Whether the animation is running
 let timeScale = 1.0; // Speed multiplier for the animation
+
+function updateEnergyStartHeight() {
+  energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
+}
 
 // --- 2. The Track Functions (NEW, Steeper) ---
 
@@ -79,8 +84,10 @@ function setup() {
   const speedValue = document.getElementById('speedValue');
   const gravityInput = document.getElementById('gravityInput');
   const gravityApplyBtn = document.getElementById('gravityApplyBtn');
+  const initialSpeedInput = document.getElementById('initialSpeedInput');
+  const initialSpeedApplyBtn = document.getElementById('initialSpeedApplyBtn');
 
-  if (playPauseBtn && resetBtn && speedSlider && speedValue && gravityInput && gravityApplyBtn) {
+  if (playPauseBtn && resetBtn && speedSlider && speedValue && gravityInput && gravityApplyBtn && initialSpeedInput && initialSpeedApplyBtn) {
     playPauseBtn.addEventListener('click', () => {
       running = !running;
       playPauseBtn.textContent = running ? 'Pause' : 'Play';
@@ -97,11 +104,13 @@ function setup() {
     });
 
     gravityInput.value = g.toFixed(2);
+    initialSpeedInput.value = initialSpeed.toFixed(2);
 
     const applyGravity = () => {
       const newG = parseFloat(gravityInput.value);
       if (!isNaN(newG) && newG > 0 && newG <= 30) {
         g = newG;
+        updateEnergyStartHeight();
       } else {
         gravityInput.value = g.toFixed(2);
       }
@@ -109,6 +118,19 @@ function setup() {
 
     gravityApplyBtn.addEventListener('click', applyGravity);
     gravityInput.addEventListener('change', applyGravity);
+
+    const applyInitialSpeed = () => {
+      const newV0 = parseFloat(initialSpeedInput.value);
+      if (!isNaN(newV0) && newV0 >= 0 && newV0 <= 50) {
+        initialSpeed = newV0;
+        updateEnergyStartHeight();
+      } else {
+        initialSpeedInput.value = initialSpeed.toFixed(2);
+      }
+    };
+
+    initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
+    initialSpeedInput.addEventListener('change', applyInitialSpeed);
   }
 
   strokeWeight(4); // Thicker lines

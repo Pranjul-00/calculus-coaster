@@ -862,7 +862,8 @@ body {
 }
 
 .controls-row,
-.gravity-control {
+.gravity-control,
+.initial-speed-control {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -887,7 +888,8 @@ body {
   accent-color: var(--accent-blue);
 }
 
-#gravityInput {
+#gravityInput,
+#initialSpeedInput {
   width: 80px;
   padding: 0.25rem 0.5rem;
   border-radius: 999px;
