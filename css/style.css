@@ -810,8 +810,8 @@ body {
 
 .simulation-main {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
 }
 
 .simulation-sidebar {
@@ -822,6 +822,61 @@ body {
 
 .simulation-details {
   margin-top: 1.5rem;
+}
+
+/* === SIMULATION CONTROLS PANEL === */
+.simulation-controls {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-white);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sim-button {
+  background: var(--gradient-accent);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow-light);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.sim-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+.sim-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px var(--shadow-light);
+  opacity: 0.9;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-medium);
+}
+
+.speed-control span {
+  white-space: nowrap;
+}
+
+#speedSlider {
+  width: 160px;
+  accent-color: var(--accent-blue);
 }
 
 .details-grid {
