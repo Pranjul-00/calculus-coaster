@@ -43,110 +43,188 @@
     <!-- Theory Content -->
     <section class="theory-content">
         <div class="container">
-            
-            <!-- First Derivative Section -->
+            <!-- Track Function Section -->
             <div class="theory-section">
-                <h2>First Derivative: Slope f'(x)</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> The slope (steepness) of the track at any point x</p>
-                
+                <h2>Track Function f(x): Piecewise Shape of the Coaster</h2>
+                <p class="section-intro"><strong>Physical Meaning:</strong> The height of the roller coaster track at each horizontal position x.</p>
+
                 <div class="piecewise-function">
-                    <h3>The Three Pieces:</h3>
+                    <h3>Three Track Segments (from the Mathematica model):</h3>
                     <div class="piece">
                         <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$f'_1(x) = -0.64x$$</div>
+                        <div class="equation">$$f_1(x) = 20 - 0.2 x^2$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$f'_2(x) = 0.0256(x-10)^3$$</div>
+                        <div class="equation">$$f_2(x) = 0.004 (x - 10)^4 + 12.5$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 15 ≤ x ≤ 25:</span>
-                        <div class="equation">$$f'_3(x) = -0.64(x-20)$$</div>
+                        <div class="equation">$$f_3(x) = -0.2 (x - 20)^2 + 20$$</div>
                     </div>
                 </div>
-                
-                <div class="purpose-box">
-                    <h4>Purpose:</h4>
-                    <ul>
-                        <li>Proves C¹ continuity (no jumps in the slope)</li>
-                        <li>Identifies the steepest and flattest parts of the track</li>
-                        <li>Essential for calculating velocity direction</li>
-                    </ul>
-                </div>
-            </div>
 
-            <!-- Second Derivative Section -->
-            <div class="theory-section">
-                <h2>Second Derivative: Concavity f''(x)</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> How the track curves (concave up or down)</p>
-                
-                <div class="piecewise-function">
-                    <h3>The Three Pieces:</h3>
-                    <div class="piece">
-                        <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$f''_1(x) = -0.64$$</div>
-                        <span class="concavity concave-down">Concave down</span>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$f''_2(x) = 0.0768(x-10)^2$$</div>
-                        <span class="concavity concave-up">Concave up</span>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 15 ≤ x ≤ 25:</span>
-                        <div class="equation">$$f''_3(x) = -0.64$$</div>
-                        <span class="concavity concave-down">Concave down</span>
-                    </div>
-                </div>
-                
-                <div class="purpose-box">
-                    <h4>Purpose:</h4>
-                    <ul>
-                        <li>Critical component for calculating curvature</li>
-                        <li>Determines G-force direction and magnitude</li>
-                        <li>Shows where riders feel pressed down or weightless</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Curvature Section -->
-            <div class="theory-section">
-                <h2>Curvature κ(x): The Safety Measure</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> How sharply the track bends. High curvature = tight bend = high G-forces</p>
-                
                 <div class="master-equation">
-                    <h3>Master Equation:</h3>
-                    <div class="equation">$$\kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}}$$</div>
-                </div>
-                
-                <div class="application-box">
-                    <h4>Application:</h4>
-                    <p>This calculation is also piecewise, as it depends on both f'(x) and f''(x), which are themselves piecewise functions.</p>
-                    
-                    <div class="safety-note">
-                        <p><strong>⚠️ Safety Critical:</strong> High curvature areas require careful speed management to keep G-forces within safe limits for riders.</p>
+                    <h3>Combined Piecewise Track:</h3>
+                    <div class="equation">
+                        $$
+                        f(x) =
+                        \begin{cases}
+                        20 - 0.2 x^2, & 0 \le x < 5 \\
+                        0.004 (x-10)^4 + 12.5, & 5 \le x < 15 \\
+                        -0.2 (x-20)^2 + 20, & 15 \le x \le 25
+                        \end{cases}
+                        $$
                     </div>
+                </div>
+
+                <div class="purpose-box">
+                    <h4>Why This Matters:</h4>
+                    <ul>
+                        <li>The track is smooth and continuous at x = 5 and x = 15 (the pieces meet exactly).</li>
+                        <li>Each segment controls a different "story" of the ride: initial drop, valley, and final hill.</li>
+                        <li>This is implemented directly in Mathematica using a <code>Piecewise</code> definition for f(x).</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Key Insight Section -->
+            <!-- Velocity Function Section -->
+            <div class="theory-section">
+                <h2>Velocity Along the Track v(x): Energy to Speed</h2>
+                <p class="section-intro"><strong>Physical Meaning:</strong> The speed of the coaster car at each x, computed from the vertical drop under gravity.</p>
+
+                <div class="master-equation">
+                    <h3>Gravitational Acceleration:</h3>
+                    <div class="equation">$$g = 9.81\,\text{m/s}^2$$</div>
+                </div>
+
+                <div class="piecewise-function">
+                    <h3>Velocity Pieces (from the Mathematica model):</h3>
+                    <div class="piece">
+                        <span class="condition">For 0 ≤ x < 5:</span>
+                        <div class="equation">$$v_1(x) = \sqrt{2 g\,(0.2 x^2)}$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 5 ≤ x < 15:</span>
+                        <div class="equation">$$v_2(x) = \sqrt{2 g\,\bigl(7.5 - 0.004 (x - 10)^4\bigr)}$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 15 ≤ x ≤ 25:</span>
+                        <div class="equation">$$v_3(x) = \sqrt{2 g\,\bigl(0.2 (x - 20)^2\bigr)}$$</div>
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Combined Piecewise Velocity:</h3>
+                    <div class="equation">
+                        $$
+                        v(x) =
+                        \begin{cases}
+                        \sqrt{2 g\,(0.2 x^2)}, & 0 \le x < 5 \\
+                        \sqrt{2 g\,\bigl(7.5 - 0.004 (x - 10)^4\bigr)}, & 5 \le x < 15 \\
+                        \sqrt{2 g\,\bigl(0.2 (x - 20)^2\bigr)}, & 15 \le x \le 25
+                        \end{cases}
+                        $$
+                    </div>
+                </div>
+
+                <div class="purpose-box">
+                    <h4>Why This Matches the Code:</h4>
+                    <ul>
+                        <li>Each expression comes directly from the Mathematica definitions <code>v1[x]</code>, <code>v2[x]</code>, and <code>v3[x]</code>.</li>
+                        <li>The square roots come from energy conservation: potential energy lost becomes kinetic energy.</li>
+                        <li>The simulation shows this as the "Current Real Velocity" readout in m/s.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Velocity as a Function of Time Section -->
+            <div class="theory-section">
+                <h2>Velocity as a Function of Time v(t)</h2>
+                <p class="section-intro"><strong>Physical Meaning:</strong> How fast the cart moves at each instant of time as it travels through the three track segments.</p>
+
+                <div class="master-equation">
+                    <h3>Position as a Time-Dependent Function:</h3>
+                    <div class="equation">
+                        $$
+                        x = x(t), \qquad x(0) = 0
+                        $$
+                        $$
+                        \frac{dx}{dt} = \frac{v(x(t))}{\sqrt{1 + [f'(x(t))]^2}}
+                        $$
+                    </div>
+                </div>
+
+                <div class="piecewise-function">
+                    <h3>Three Time Phases (Three Velocity Graphs):</h3>
+                    <div class="piece">
+                        <span class="condition">Phase 1: While the cart is on 0 ≤ x(t) < 5</span>
+                        <div class="equation">$$v_1(t) = v(x(t)) \text{ with } x(t) \in [0,5)$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">Phase 2: While the cart is on 5 ≤ x(t) < 15</span>
+                        <div class="equation">$$v_2(t) = v(x(t)) \text{ with } x(t) \in [5,15)$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">Phase 3: While the cart is on 15 ≤ x(t) ≤ 25</span>
+                        <div class="equation">$$v_3(t) = v(x(t)) \text{ with } x(t) \in [15,25]$$</div>
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Combined Piecewise Velocity in Time:</h3>
+                    <div class="equation">
+                        $$
+                        v(t) =
+                        \begin{cases}
+                        v_1(t), & 0 \le t < T_1 \\[-2pt]
+                        v_2(t), & T_1 \le t < T_2 \\[-2pt]
+                        v_3(t), & T_2 \le t \le T_3
+                        \end{cases}
+                        $$
+                    </div>
+                </div>
+
+                <div class="purpose-box">
+                    <h4>How This Connects to the Simulation:</h4>
+                    <ul>
+                        <li>The times \(T_1, T_2, T_3\) are the instants when the cart passes x = 5 and x = 15 and finally reaches x = 25.</li>
+                        <li>In the p5.js code, time advances in small steps \(\Delta t\) using the frame time (\texttt{deltaTime}) and the speed slider multiplier.</li>
+                        <li>At each step, the simulation updates x(t), then recomputes v(x(t)) and draws the new point on the track.</li>
+                        <li>If you plotted \(v(t)\) while the ride runs, you would see three connected graphs: one for each track segment.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slope and Animation Direction Section -->
             <div class="theory-section highlight-section">
-                <h2>🔑 Key Insight: The Piecewise Nature</h2>
-                <p class="section-intro">Because our main function f(x) is made of three different pieces, <strong>all equations derived from it must also have three different pieces</strong>.</p>
-                
-                <div class="insight-grid">
-                    <div class="insight-card">
-                        <h4>In Our Code</h4>
-                        <p>Our simulation correctly implements this "if/else" logic for every calculation</p>
+                <h2>Slope f'(x) and Animation Logic</h2>
+                <p class="section-intro">The Mathematica code differentiates the piecewise track to get the slope f'(x) and uses it to move the coaster car along the track.</p>
+
+                <div class="piecewise-function">
+                    <h3>First Derivative Pieces:</h3>
+                    <div class="piece">
+                        <span class="condition">For 0 ≤ x < 5:</span>
+                        <div class="equation">$$f'_1(x) = -0.4 x$$</div>
                     </div>
-                    <div class="insight-card">
-                        <h4>Mathematical Rigor</h4>
-                        <p>This ensures our analysis is mathematically sound and physically accurate</p>
+                    <div class="piece">
+                        <span class="condition">For 5 ≤ x < 15:</span>
+                        <div class="equation">$$f'_2(x) = 0.016 (x - 10)^3$$</div>
                     </div>
-                    <div class="insight-card">
-                        <h4>Real-world Application</h4>
-                        <p>Professional roller coaster design uses similar piecewise mathematical models</p>
+                    <div class="piece">
+                        <span class="condition">For 15 ≤ x ≤ 25:</span>
+                        <div class="equation">$$f'_3(x) = -0.4 (x - 20)$$</div>
                     </div>
+                </div>
+
+                <div class="application-box">
+                    <h4>How the Animation Uses f'(x) and v(x):</h4>
+                    <ul>
+                        <li>The code computes the angle of the track with <code>angle = ArcTan[fPrime[x]]</code>.</li>
+                        <li>The horizontal step is <code>dx = (vMag * Cos[angle]) * timeSpeed</code>, so the point moves along the track at a controllable speed.</li>
+                        <li>When <code>running</code> is <code>True</code>, x is updated; when it reaches the end of the track, it loops back to the start.</li>
+                        <li>Play / Pause, Reset, and the Speed Slider in the control panel all manipulate these variables in real time.</li>
+                    </ul>
                 </div>
             </div>
 

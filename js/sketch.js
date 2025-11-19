@@ -11,6 +11,8 @@ const energyStartHeight = 20.01; // Give it slightly more energy to "push" it
 
 let cartX = 0.0; // Cart's current X position (in meters, 0 to 25)
 let cartY = 0.0; // Cart's current Y position (in meters)
+let running = true; // Whether the animation is running
+let timeScale = 1.0; // Speed multiplier for the animation
 
 // --- 2. The Track Functions (NEW, Steeper) ---
 
@@ -71,6 +73,27 @@ function setup() {
   canvas.parent('canvas-container');
   cartX = 0; // Start cart at x=0
   cartY = f(cartX);
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const speedSlider = document.getElementById('speedSlider');
+  const speedValue = document.getElementById('speedValue');
+
+  if (playPauseBtn && resetBtn && speedSlider && speedValue) {
+    playPauseBtn.addEventListener('click', () => {
+      running = !running;
+      playPauseBtn.textContent = running ? 'Pause' : 'Play';
+    });
+
+    resetBtn.addEventListener('click', () => {
+      cartX = 0;
+      cartY = f(cartX);
+    });
+
+    speedSlider.addEventListener('input', () => {
+      timeScale = parseFloat(speedSlider.value);
+      speedValue.textContent = timeScale.toFixed(1) + 'x';
+    });
+  }
   strokeWeight(4); // Thicker lines
 }
 
@@ -86,21 +109,22 @@ function draw() {
 
   // dx/dt = v / sqrt(1 + slope^2)
   let horizontalVel = v / Math.sqrt(1 + slope * slope);
-  
   // dy/dt = slope * (dx/dt)
   let verticalVel = slope * horizontalVel;
   
   // Get time passed since last frame (in seconds)
-  let dt = deltaTime / 1000; 
+  let dt = (deltaTime / 1000) * timeScale; 
 
   // Update the cart's position
-  cartX += horizontalVel * dt;
-  cartY = f(cartX); 
+  if (running) {
+    cartX += horizontalVel * dt;
 
-  // Reset cart if it reaches the end
-  if (cartX > 25) {
-    cartX = 0;
+    // Reset cart if it reaches the end
+    if (cartX > 25) {
+      cartX = 0;
+    }
   }
+  cartY = f(cartX); 
 
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
