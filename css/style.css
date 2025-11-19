@@ -803,7 +803,7 @@ body {
 
 .simulation-layout {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr;
   gap: 2rem;
   margin-bottom: 1.5rem;
 }
@@ -816,12 +816,22 @@ body {
 
 .simulation-sidebar {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
   gap: 1.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .simulation-details {
   margin-top: 1.5rem;
+}
+
+.simulation-details h2,
+.page-navigation h2 {
+  text-align: center;
+  font-size: 2rem;
 }
 
 /* === SIMULATION CONTROLS PANEL === */
