@@ -5,7 +5,7 @@
 */
 
 // --- 1. Global Variables & Constants ---
-const g = 9.81; // Acceleration due to gravity (m/s^2)
+let g = 9.81; // Acceleration due to gravity (m/s^2)
 const trackStartHeight = 20.0; // The track's actual start height
 const energyStartHeight = 20.01; // Give it slightly more energy to "push" it
 
@@ -77,8 +77,10 @@ function setup() {
   const resetBtn = document.getElementById('resetBtn');
   const speedSlider = document.getElementById('speedSlider');
   const speedValue = document.getElementById('speedValue');
+  const gravityInput = document.getElementById('gravityInput');
+  const gravityApplyBtn = document.getElementById('gravityApplyBtn');
 
-  if (playPauseBtn && resetBtn && speedSlider && speedValue) {
+  if (playPauseBtn && resetBtn && speedSlider && speedValue && gravityInput && gravityApplyBtn) {
     playPauseBtn.addEventListener('click', () => {
       running = !running;
       playPauseBtn.textContent = running ? 'Pause' : 'Play';
@@ -93,7 +95,22 @@ function setup() {
       timeScale = parseFloat(speedSlider.value);
       speedValue.textContent = timeScale.toFixed(1) + 'x';
     });
+
+    gravityInput.value = g.toFixed(2);
+
+    const applyGravity = () => {
+      const newG = parseFloat(gravityInput.value);
+      if (!isNaN(newG) && newG > 0 && newG <= 30) {
+        g = newG;
+      } else {
+        gravityInput.value = g.toFixed(2);
+      }
+    };
+
+    gravityApplyBtn.addEventListener('click', applyGravity);
+    gravityInput.addEventListener('change', applyGravity);
   }
+
   strokeWeight(4); // Thicker lines
 }
 

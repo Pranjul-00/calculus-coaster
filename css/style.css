@@ -833,10 +833,9 @@ body {
   box-shadow: 0 4px 12px var(--shadow-light);
   border: 1px solid var(--border-light);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .sim-button {
@@ -862,6 +861,15 @@ body {
   opacity: 0.9;
 }
 
+.controls-row,
+.gravity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .speed-control {
   display: flex;
   align-items: center;
@@ -877,6 +885,14 @@ body {
 #speedSlider {
   width: 160px;
   accent-color: var(--accent-blue);
+}
+
+#gravityInput {
+  width: 80px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-medium);
+  font-size: 0.9rem;
 }
 
 .details-grid {

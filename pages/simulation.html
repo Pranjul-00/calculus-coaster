@@ -46,12 +46,19 @@
                     <div id="canvas-container"></div>
 
                     <div class="simulation-controls">
-                        <button id="playPauseBtn" class="sim-button">Pause</button>
-                        <button id="resetBtn" class="sim-button">Reset</button>
-                        <div class="speed-control">
-                            <span>Speed:</span>
-                            <input type="range" id="speedSlider" min="0.2" max="3" step="0.1" value="1">
-                            <span id="speedValue">1.0x</span>
+                        <div class="controls-row">
+                            <button id="playPauseBtn" class="sim-button">Pause</button>
+                            <button id="resetBtn" class="sim-button">Reset</button>
+                            <div class="speed-control">
+                                <span>Speed:</span>
+                                <input type="range" id="speedSlider" min="0.2" max="3" step="0.1" value="1">
+                                <span id="speedValue">1.0x</span>
+                            </div>
+                        </div>
+                        <div class="gravity-control">
+                            <span>Gravity g (m/s²):</span>
+                            <input type="number" id="gravityInput" min="0" max="30" step="0.1" value="9.81">
+                            <button id="gravityApplyBtn" class="sim-button">Apply</button>
                         </div>
                     </div>
                 </div>
