@@ -168,6 +168,11 @@ function draw() {
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
 
+  stroke(30, 64, 175);
+  strokeWeight(4);
+  noFill();
+  rect(20, 20, width - 40, height - 40, 16);
+
   // --- C. Coordinate Transformation ---
   // Map our new [5m, 22m] height range to the canvas
   let screenX = map(cartX, 0, 25, 50, width - 50);
