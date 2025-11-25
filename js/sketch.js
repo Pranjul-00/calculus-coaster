@@ -29,6 +29,8 @@ let isTeleporting = false;
 let teleportTimer = 0.0;
 let landingX = 0.0;
 let projectileTrail = [];
+let rideTime = 0.0;
+let arcDistance = 0.0;
 
 function updateEnergyStartHeight() {
   energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
@@ -137,6 +139,8 @@ function setup() {
       projectileVy = 0.0;
       landingX = 0.0;
       projectileTrail = [];
+      rideTime = 0.0;
+      arcDistance = 0.0;
     });
 
     speedSlider.addEventListener('input', () => {
@@ -213,6 +217,8 @@ function draw() {
     verticalVel = slope * horizontalVel;
 
     if (running) {
+      rideTime += dt;
+      arcDistance += v * dt;
       cartX += horizontalVel * dt;
 
       if (cartX >= 35) {
@@ -263,6 +269,11 @@ function draw() {
     verticalVel = projectileVy;
     slope = 0;
     concavity = 0;
+
+    if (running) {
+      rideTime += dt;
+      arcDistance += v * dt;
+    }
   } else if (hasLanded && !isTeleporting) {
     // Landed on the ground: pause before teleport
     cartX = projectileX;
@@ -297,6 +308,8 @@ function draw() {
         projectileVx = 0.0;
         projectileVy = 0.0;
         projectileTrail = [];
+        rideTime = 0.0;
+        arcDistance = 0.0;
       } else {
         let t = teleportTimer / teleportDuration;
 
@@ -385,12 +398,14 @@ function draw() {
     textSize(16);
     textAlign(LEFT);
     fill(255, 255, 255, 180); // Semi-transparent white box
-    rect(screenX + 20, screenY - 10, 200, 90);
+    rect(screenX + 20, screenY - 10, 220, 130);
     fill(0); // Black text
     text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
     text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
     text("Vx: " + horizontalVel.toFixed(2) + " m/s", screenX + 25, screenY + 50);
     text("Vy: " + verticalVel.toFixed(2) + " m/s", screenX + 25, screenY + 70);
+    text("Dist: " + arcDistance.toFixed(2) + " m", screenX + 25, screenY + 90);
+    text("Time: " + rideTime.toFixed(2) + " s", screenX + 25, screenY + 110);
   }
 
   // Projectile trail (dotted red/blue) during projectile flight
