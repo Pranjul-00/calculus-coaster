@@ -388,6 +388,7 @@ function draw() {
         projectileTrail = [];
         rideTime = 0.0;
         arcDistance = 0.0;
+        landingX = 0.0;
       } else {
         let t = teleportTimer / teleportDuration;
 
@@ -427,12 +428,8 @@ function draw() {
   let farthestX = Math.max(cartX, projectileX, landingX);
   let paddingX = 5.0;
   let maxZoomOutFactor = 2.0;
-  // After the projectile has landed (y = 0), clamp farthestX so the
-  // horizontal view returns to the base track range.
-  if (hasLanded) {
-    farthestX = Math.min(farthestX, baseWorldXMax - paddingX);
-  }
-
+  // Horizontal zoom based on farthest point we need to see.
+  // Teleportation can later force this back to the base range.
   let candidateMax = Math.max(baseWorldXMax, farthestX + paddingX);
   let displayWorldXMax = Math.min(candidateMax, baseWorldXMax * maxZoomOutFactor);
 
@@ -442,6 +439,13 @@ function draw() {
   let maxZoomOutYFactor = 2.0;
   let candidateYMax = Math.max(baseWorldYMax, farthestY + paddingY);
   let displayWorldYMax = Math.min(candidateYMax, baseWorldYMax * maxZoomOutYFactor);
+
+  // Once teleportation has been in progress for at least 0.5 s,
+  // lock the zoom back to the default world extents.
+  if (isTeleporting && teleportTimer >= 0.5) {
+    displayWorldXMax = baseWorldXMax;
+    displayWorldYMax = baseWorldYMax;
+  }
 
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
@@ -502,35 +506,60 @@ function draw() {
     let hudHeight = 130;
     let margin = 25;
 
-    // Default placement: to the right, roughly centered vertically on the cart
-    let hudX = screenX + 20;
-    let hudY = screenY - 10;
+    // Treat the cart as a small box for overlap checks
+    let cartRadius = 10;
+    let cartLeft = screenX - cartRadius;
+    let cartRight = screenX + cartRadius;
+    let cartTop = screenY - cartRadius;
+    let cartBottom = screenY + cartRadius;
 
-    // Check if this default placement fits fully inside the canvas margins
-    let hitsEdge = (
-      hudX < margin ||
-      hudX + hudWidth > width - margin ||
-      hudY < margin ||
-      hudY + hudHeight > height - margin
-    );
+    // Candidate HUD positions around the cart. We will clamp each
+    // candidate to the canvas margins and pick the first that does
+    // not overlap the cart box.
+    let candidates = [
+      // Right of cart
+      { x: screenX + 20, y: screenY - hudHeight / 2 },
+      // Above cart
+      { x: screenX - hudWidth / 2, y: screenY - hudHeight - 20 },
+      // Below cart
+      { x: screenX - hudWidth / 2, y: screenY + 20 },
+      // Left of cart
+      { x: screenX - hudWidth - 20, y: screenY - hudHeight / 2 }
+    ];
 
-    if (hitsEdge) {
-      // Reposition to the top-right of the cart when we hit the canvas edge
-      hudX = screenX + 20;
-      hudY = screenY - hudHeight - 20;
+    // Default to the first candidate; we will refine below
+    let hudX = candidates[0].x;
+    let hudY = candidates[0].y;
 
-      // Minimal clamping to keep the "top-right" HUD fully visible
-      if (hudX + hudWidth > width - margin) {
-        hudX = width - margin - hudWidth;
-      }
-      if (hudX < margin) {
-        hudX = margin;
-      }
-      if (hudY < margin) {
-        hudY = margin;
-      }
-      if (hudY + hudHeight > height - margin) {
-        hudY = height - margin - hudHeight;
+    for (let i = 0; i < candidates.length; i++) {
+      let c = candidates[i];
+
+      // Clamp candidate inside margins
+      let candidateX = Math.min(
+        Math.max(c.x, margin),
+        width - margin - hudWidth
+      );
+      let candidateY = Math.min(
+        Math.max(c.y, margin),
+        height - margin - hudHeight
+      );
+
+      let hudLeft = candidateX;
+      let hudRight = candidateX + hudWidth;
+      let hudTop = candidateY;
+      let hudBottom = candidateY + hudHeight;
+
+      let overlapsCart = !(
+        hudLeft > cartRight ||
+        hudRight < cartLeft ||
+        hudTop > cartBottom ||
+        hudBottom < cartTop
+      );
+
+      if (!overlapsCart) {
+        hudX = candidateX;
+        hudY = candidateY;
+        break;
       }
     }
 
