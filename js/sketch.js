@@ -42,6 +42,11 @@ let projectileEquationElement = null;
 let projectileEquationTimeElement = null;
 let projectileEquationXElement = null;
 
+let lastLaunchX = null;
+let lastLaunchY = null;
+let lastLaunchVx = null;
+let lastLaunchVy = null;
+
 function formatProjectileNumber(n) {
   if (Number.isFinite(n)) {
     return n.toFixed(2);
@@ -64,14 +69,41 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
 
   const x0 = launchX;
   const y0 = launchY;
+  const x0Str = formatProjectileNumber(x0);
+  const y0Str = formatProjectileNumber(y0);
+  const vx0Str = formatProjectileNumber(vx0);
+  const vy0Str = formatProjectileNumber(vy0);
+  const gStr = formatProjectileNumber(g);
+  const gHalf = 0.5 * g;
+  const gHalfStr = formatProjectileNumber(gHalf);
 
-  const timeText = "x(t) = " + formatProjectileNumber(x0) +
-    " + " + formatProjectileNumber(vx0) + " t, " +
-    "y(t) = " + formatProjectileNumber(y0) +
-    " + " + formatProjectileNumber(vy0) + " t - 0.5 * " +
-    formatProjectileNumber(g) + " t^2";
+  // Cache last launch parameters so we can re-render equations when g changes.
+  lastLaunchX = x0;
+  lastLaunchY = y0;
+  lastLaunchVx = vx0;
+  lastLaunchVy = vy0;
 
-  projectileEquationTimeElement.textContent = timeText;
+  // LaTeX for parametric equations at this launch.
+  const timeLatex =
+    "\\begin{aligned}" +
+    "x(t) &= " + x0Str + " + " + vx0Str + " t\\\\" +
+    "y(t) &= " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2" +
+    "\\end{aligned}";
+
+  // Prefer KaTeX rendering, fall back to plain text if unavailable.
+  if (window.katex && window.katex.render) {
+    projectileEquationTimeElement.innerHTML = "";
+    window.katex.render(timeLatex, projectileEquationTimeElement, {
+      displayMode: true,
+      throwOnError: false
+    });
+  } else {
+    const fallback =
+      "x(t) = " + x0Str + " + " + vx0Str + " t; " +
+      "y(t) = " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2";
+
+    projectileEquationTimeElement.textContent = fallback;
+  }
 
   if (Math.abs(vx0) < 1e-6) {
     projectileEquationXElement.textContent = "y(x) is undefined for vertical launch (vx ≈ 0).";
@@ -80,10 +112,40 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
 
   const a = vy0 / vx0;
   const b = g / (2 * vx0 * vx0);
-  const xText = "y(x) = " + formatProjectileNumber(y0) +
-    " + " + formatProjectileNumber(a) + " (x - " + formatProjectileNumber(x0) + ")" +
-    " - " + formatProjectileNumber(b) + " (x - " + formatProjectileNumber(x0) + ")^2";
-  projectileEquationXElement.textContent = xText;
+  const aStr = formatProjectileNumber(a);
+  const bStr = formatProjectileNumber(b);
+
+  // Expand y(x) = y0 + a(x - x0) - b(x - x0)^2 into Ax^2 + Bx + C.
+  const A = -b;
+  const B = a + 2 * b * x0;
+  const C = y0 - a * x0 - b * x0 * x0;
+  const AStr = formatProjectileNumber(A);
+  const BStr = formatProjectileNumber(B);
+  const CStr = formatProjectileNumber(C);
+
+  // LaTeX for Cartesian equation y(x) for this launch: vertex form and expanded form.
+  const xLatex =
+    "\\begin{aligned}" +
+    "y(x) &= " + y0Str +
+    " + " + aStr + " (x - " + x0Str + ")" +
+    " - " + bStr + " (x - " + x0Str + ")^2 \\\\" +
+    "     &= " + AStr + " x^2 + " + BStr + " x + " + CStr +
+    "\\end{aligned}";
+
+  if (window.katex && window.katex.render) {
+    projectileEquationXElement.innerHTML = "";
+    window.katex.render(xLatex, projectileEquationXElement, {
+      displayMode: true,
+      throwOnError: false
+    });
+  } else {
+    const fallbackX =
+      "y(x) = " + y0Str +
+      " + " + aStr + " (x - " + x0Str + ")" +
+      " - " + bStr + " (x - " + x0Str + ")^2; " +
+      "y(x) = " + AStr + " x^2 + " + BStr + " x + " + CStr;
+    projectileEquationXElement.textContent = fallbackX;
+  }
 }
 
 function updateEnergyStartHeight() {
@@ -209,6 +271,10 @@ function setup() {
       arcDistance = 0.0;
       cameraWorldXMax = worldXMax;
       cameraWorldYMax = 22.0;
+      lastLaunchX = null;
+      lastLaunchY = null;
+      lastLaunchVx = null;
+      lastLaunchVy = null;
       if (projectileEquationTimeElement && projectileEquationXElement) {
         projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
         projectileEquationXElement.textContent = "Launch the cart to see y(x).";
@@ -228,6 +294,11 @@ function setup() {
       if (!isNaN(newG) && newG > 0 && newG <= 1000000000) {
         g = newG;
         updateEnergyStartHeight();
+
+        if (lastLaunchX !== null && lastLaunchY !== null &&
+            lastLaunchVx !== null && lastLaunchVy !== null) {
+          updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
+        }
       } else {
         gravityInput.value = g.toFixed(2);
       }
@@ -240,6 +311,11 @@ function setup() {
       g = defaultG;
       gravityInput.value = g.toFixed(2);
       updateEnergyStartHeight();
+
+      if (lastLaunchX !== null && lastLaunchY !== null &&
+          lastLaunchVx !== null && lastLaunchVy !== null) {
+        updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
+      }
     });
 
     const applyInitialSpeed = () => {
