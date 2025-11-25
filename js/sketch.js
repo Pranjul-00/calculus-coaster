@@ -14,6 +14,11 @@ let cartX = 0.0; // Cart's current X position (in meters, 0 to 25)
 let cartY = 0.0; // Cart's current Y position (in meters)
 let running = true; // Whether the animation is running
 let timeScale = 1.0; // Speed multiplier for the animation
+let onTrack = true;
+let projectileX = 0.0;
+let projectileY = 0.0;
+let projectileVx = 0.0;
+let projectileVy = 0.0;
 
 function updateEnergyStartHeight() {
   energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
@@ -111,6 +116,7 @@ function setup() {
     resetBtn.addEventListener('click', () => {
       cartX = 0;
       cartY = f(cartX);
+      onTrack = true;
     });
 
     speedSlider.addEventListener('input', () => {
@@ -168,31 +174,59 @@ function setup() {
 // --- 4. The Draw Function (The Animation Loop) ---
 function draw() {
   // --- A. Update Physics ---
-  let h = f(cartX);
-  let slope = fPrime(cartX);
-  let concavity = fDoublePrime(cartX);
+  let dt = (deltaTime / 1000) * timeScale;
+  let h = 0;
+  let slope = 0;
+  let concavity = 0;
+  let v = 0;
+  let horizontalVel = 0;
+  let verticalVel = 0;
 
-  // v = sqrt(2 * g * (start_height - current_height))
-  let v = Math.sqrt(2 * g * (energyStartHeight - h));
+  if (onTrack) {
+    h = f(cartX);
+    slope = fPrime(cartX);
+    concavity = fDoublePrime(cartX);
 
-  // dx/dt = v / sqrt(1 + slope^2)
-  let horizontalVel = v / Math.sqrt(1 + slope * slope);
-  // dy/dt = slope * (dx/dt)
-  let verticalVel = slope * horizontalVel;
-  
-  // Get time passed since last frame (in seconds)
-  let dt = (deltaTime / 1000) * timeScale; 
+    v = Math.sqrt(2 * g * (energyStartHeight - h));
+    horizontalVel = v / Math.sqrt(1 + slope * slope);
+    verticalVel = slope * horizontalVel;
 
-  // Update the cart's position
-  if (running) {
-    cartX += horizontalVel * dt;
+    if (running) {
+      cartX += horizontalVel * dt;
 
-    // Reset cart if it reaches the end
-    if (cartX > 35) {
-      cartX = 0;
+      if (cartX >= 35) {
+        cartX = 35;
+        cartY = f(cartX);
+        projectileX = cartX;
+        projectileY = cartY;
+        projectileVx = horizontalVel;
+        projectileVy = verticalVel;
+        onTrack = false;
+      } else {
+        cartY = f(cartX);
+      }
+    } else {
+      cartY = f(cartX);
     }
+  } else {
+    if (running) {
+      projectileVy -= g * dt;
+      projectileX += projectileVx * dt;
+      projectileY += projectileVy * dt;
+
+      if (projectileY <= 0) {
+        projectileY = 0;
+        running = false;
+      }
+    }
+
+    cartX = projectileX;
+    cartY = projectileY;
+
+    v = Math.sqrt(projectileVx * projectileVx + projectileVy * projectileVy);
+    slope = 0;
+    concavity = 0;
   }
-  cartY = f(cartX); 
 
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
@@ -205,6 +239,7 @@ function draw() {
   // --- C. Coordinate Transformation ---
   // Map our new [0m, 22m] height range to the canvas
   let screenX = map(cartX, 0, 35, 50, width - 50);
+
   let screenY = map(cartY, 0, 22, height - 50, 50);
 
   // Draw ground at y = 0
