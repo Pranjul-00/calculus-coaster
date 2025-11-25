@@ -47,7 +47,7 @@
             <!-- Introduction Section -->
             <div class="design-section">
                 <h2>Why Piecewise Functions?</h2>
-                <p class="section-intro">A realistic track cannot be modeled by a single simple function. Our track is designed by connecting three separate mathematical functions (a "piecewise" function).</p>
+                <p class="section-intro">A realistic track cannot be modeled by a single simple function. Our track is designed by connecting four separate mathematical functions (a "piecewise" function).</p>
                 
                 <div class="design-reasoning">
                     <div class="reason-card">
@@ -65,9 +65,9 @@
                 </div>
             </div>
 
-            <!-- The Three Functions -->
+            <!-- The Four Functions -->
             <div class="design-section">
-                <h2>The Three Track Pieces</h2>
+                <h2>The Four Track Pieces</h2>
                 
                 <div class="function-showcase">
                     <div class="function-card">
@@ -108,6 +108,19 @@
                             <p><strong>Characteristics:</strong> Rises to create weightless feeling at peak</p>
                         </div>
                     </div>
+
+                    <div class="function-card">
+                        <div class="function-header">
+                            <h3>Function 4: Final Ramp & Return</h3>
+                            <span class="domain">Domain: 25 ≤ x ≤ 35</span>
+                        </div>
+                        <div class="equation">$$f_4(x) = 0.32(x-30)^2 + 4.0$$</div>
+                        <div class="function-details">
+                            <p><strong>Type:</strong> Parabola (upright, shifted)</p>
+                            <p><strong>Purpose:</strong> Smoothly brings the cart back toward ground level</p>
+                            <p><strong>Characteristics:</strong> Gently rises from the valley exit and controls landing height and speed before launch into projectile motion.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -118,7 +131,7 @@
                 
                 <div class="continuity-explanation">
                     <h3>The Problem:</h3>
-                    <p>Simply connecting three functions at their endpoints would create dangerous sharp corners that could:</p>
+                    <p>Simply connecting four functions at their endpoints would create dangerous sharp corners that could:</p>
                     <ul>
                         <li>❌ Cause uncomfortable jolts for riders</li>
                         <li>❌ Create infinite G-forces at connection points</li>
@@ -151,6 +164,36 @@
                 </div>
             </div>
 
+            <!-- Launch Geometry & Projectile Setup -->
+            <div class="design-section">
+                <h2>🎯 Launch Geometry: Handing Off to Projectile Motion</h2>
+                <p class="section-intro">The final part of the track is designed so the cart can safely "take off" into the air and follow the projectile equations described on the Theory and Physics pages.</p>
+
+                <div class="continuity-explanation">
+                    <h3>Exit Height and Slope:</h3>
+                    <p>At the end of the track, two design choices matter most:</p>
+                    <ul>
+                        <li><strong>Height at exit:</strong> The value of $f(x)$ at the last point becomes the launch height $y_0$.</li>
+                        <li><strong>Slope at exit:</strong> The derivative $f'(x)$ at that point sets the launch angle, which splits the speed into horizontal $v_{x0}$ and vertical $v_{y0}$ components.</li>
+                    </ul>
+                    <p>Together with the speed computed from energy conservation, these values form the initial conditions $(x_0, y_0, v_{x0}, v_{y0})$ for the projectile motion.</p>
+                </div>
+
+                <div class="continuity-solution">
+                    <h3>Design Goals for the Launch:</h3>
+                    <ul>
+                        <li>Keep the exit ramp smooth and continuous with the rest of the track (no sudden kinks).</li>
+                        <li>Avoid a perfectly vertical slope so that $v_{x0}$ is not zero and the flight path is a clear, long arc.</li>
+                        <li>Choose a height and angle that produce a visually satisfying flight before the cart lands.</li>
+                    </ul>
+                </div>
+
+                <div class="continuity-result">
+                    <h3>Connection to the Simulation:</h3>
+                    <p>The p5.js code reads the final track point and its slope to compute $x_0, y_0, v_{x0}, v_{y0}$. These feed directly into the projectile equations $x(t)$, $y(t)$ and $y(x)$ shown beneath the simulation canvas.</p>
+                </div>
+            </div>
+
             <!-- Design Process Section -->
             <div class="design-section">
                 <h2>🛠️ The Design Process</h2>
@@ -164,7 +207,7 @@
                     <div class="process-step">
                         <div class="step-number">2</div>
                         <h4>Set Connection Points</h4>
-                        <p>Determine where the track pieces will connect (x = 5 and x = 15)</p>
+                        <p>Determine where the track pieces will connect (x = 5, x = 15, and x = 25)</p>
                     </div>
                     <div class="process-step">
                         <div class="step-number">3</div>
@@ -256,6 +299,7 @@
                             <li>Piecewise Functions</li>
                             <li>C¹ Continuity</li>
                             <li>Smooth Transitions</li>
+                            <li>Launch Geometry & Projectile Setup</li>
                             <li>Mathematical Modeling</li>
                         </ul>
                     </div>

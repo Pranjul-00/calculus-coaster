@@ -80,13 +80,14 @@
                 </div>
                 
                 <div class="velocity-breakdown">
-                    <h3>The "Three Equations":</h3>
-                    <p>Because f(x) has three different formulas, this master equation results in three different, specific velocity equations:</p>
+                    <h3>The "Four Equations":</h3>
+                    <p>Because f(x) has four different formulas, this master equation results in four different, specific velocity equations:</p>
                     
                     <div class="velocity-equations">
                         <div class="equation">$$v_1(x) = \sqrt{2g(h_{start} - f_1(x))}$$</div>
                         <div class="equation">$$v_2(x) = \sqrt{2g(h_{start} - f_2(x))}$$</div>
                         <div class="equation">$$v_3(x) = \sqrt{2g(h_{start} - f_3(x))}$$</div>
+                        <div class="equation">$$v_4(x) = \sqrt{2g(h_{start} - f_4(x))}$$</div>
                     </div>
                 </div>
                 
@@ -130,6 +131,44 @@
                         <li><strong>0.5 G:</strong> Light, floating sensation</li>
                         <li><strong>0 G:</strong> Complete weightlessness (airtime)</li>
                     </ul>
+                </div>
+            </div>
+            <!-- Projectile Motion Section -->
+            <div class="physics-section">
+                <h2>🎯 Projectile Flight After the Track</h2>
+                <p class="section-intro">After the cart leaves the final hill, it is no longer constrained by the track and follows pure projectile motion under gravity.</p>
+
+                <div class="master-equation">
+                    <h3>Launch Conditions:</h3>
+                    <p>At the last point on the track, we record the cart's position and velocity components:</p>
+                    <div class="equation">
+                        $$ x(0) = x_0, \quad y(0) = y_0, \quad v_x(0) = v_{x0}, \quad v_y(0) = v_{y0} $$
+                    </div>
+                    <p>The values $x_0$, $y_0$, $v_{x0}$, and $v_{y0}$ come from the energy-based speed and the track slope at the launch point.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Time-Parametric Equations x(t) and y(t):</h3>
+                    <p>Once in the air, horizontal acceleration is zero and vertical acceleration is $-g$, so the motion is governed by:</p>
+                    <div class="equation">
+                        $$ x(t) = x_0 + v_{x0} t, \quad y(t) = y_0 + v_{y0} t - \tfrac{1}{2} g t^2 $$
+                    </div>
+                    <p>The simulation updates these equations frame by frame and uses them to draw the dotted flight path.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Cartesian Flight Path y(x):</h3>
+                    <p>When the horizontal velocity component is non-zero ($v_{x0} \neq 0$), we can rewrite the motion as a single function of $x$:</p>
+                    <div class="equation">
+                        $$ y(x) = y_0 + \frac{v_{y0}}{v_{x0}} (x - x_0) - \frac{g}{2 v_{x0}^2} (x - x_0)^2 $$
+                    </div>
+                    <p>This downward-opening parabola is the equation shown under the simulation canvas during flight.</p>
+                    <p>If $v_{x0} \approx 0$ (a nearly vertical launch), $x(t) \approx x_0$ and it is not meaningful to write $y$ as a single-valued function of $x$, so the simulation only reports the parametric form.</p>
+                </div>
+
+                <div class="simulation-note">
+                    <h4>🎮 In the Simulation:</h4>
+                    <p>As soon as the cart leaves the track, the track-based G-force and $v(x)$ formulas stop applying. The motion is now governed entirely by gravity and the launch velocity components, exactly matching the projectile equations described on the Theory page.</p>
                 </div>
             </div>
 
@@ -218,6 +257,7 @@
                             <li>Energy Conservation</li>
                             <li>Velocity Calculations</li>
                             <li>G-Force Analysis</li>
+                            <li>Projectile Motion</li>
                             <li>Real-time Simulation</li>
                         </ul>
                     </div>
