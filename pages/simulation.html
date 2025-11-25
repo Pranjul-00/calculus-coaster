@@ -59,13 +59,15 @@
                         </div>
                         <div class="gravity-control">
                             <span>Gravity g (m/s²):</span>
-                            <input type="number" id="gravityInput" min="0" max="9999" step="0.1" value="9.81">
+                            <input type="number" id="gravityInput" min="0" max="1000000000" step="0.1" value="9.81">
                             <button id="gravityApplyBtn" class="sim-button">Apply</button>
+                            <button id="gravityResetBtn" class="sim-button">Reset</button>
                         </div>
                         <div class="initial-speed-control">
                             <span>Initial speed v₀ (m/s):</span>
-                            <input type="number" id="initialSpeedInput" min="0" max="9999" step="0.1" value="0.5">
+                            <input type="number" id="initialSpeedInput" min="0" max="1000000000" step="0.1" value="0.5">
                             <button id="initialSpeedApplyBtn" class="sim-button">Apply</button>
+                            <button id="initialSpeedResetBtn" class="sim-button">Reset</button>
                         </div>
                     </div>
                 </div>

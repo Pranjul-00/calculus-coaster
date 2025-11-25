@@ -5,12 +5,14 @@
 */
 
 // --- 1. Global Variables & Constants ---
-let g = 9.81; // Acceleration due to gravity (m/s^2)
+const defaultG = 9.81;
+const defaultInitialSpeed = 0.5;
+let g = defaultG; // Acceleration due to gravity (m/s^2)
 const trackStartHeight = 20.0; // The track's actual start height
 const worldXMax = 50.0;
 const landedPauseDuration = 1.5;
 const teleportDuration = 1.5;
-let initialSpeed = 0.5;
+let initialSpeed = defaultInitialSpeed;
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
@@ -110,15 +112,17 @@ function setup() {
   const speedValue = document.getElementById('speedValue');
   const gravityInput = document.getElementById('gravityInput');
   const gravityApplyBtn = document.getElementById('gravityApplyBtn');
+  const gravityResetBtn = document.getElementById('gravityResetBtn');
   const initialSpeedInput = document.getElementById('initialSpeedInput');
   const initialSpeedApplyBtn = document.getElementById('initialSpeedApplyBtn');
+  const initialSpeedResetBtn = document.getElementById('initialSpeedResetBtn');
   const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
   const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
 
   if (playPauseBtn && resetBtn && speedSlider && speedValue &&
-    gravityInput && gravityApplyBtn &&
-    initialSpeedInput && initialSpeedApplyBtn) {
+    gravityInput && gravityApplyBtn && gravityResetBtn &&
+    initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn) {
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -153,7 +157,7 @@ function setup() {
 
     const applyGravity = () => {
       const newG = parseFloat(gravityInput.value);
-      if (!isNaN(newG) && newG > 0 && newG <= 30) {
+      if (!isNaN(newG) && newG > 0 && newG <= 1000000000) {
         g = newG;
         updateEnergyStartHeight();
       } else {
@@ -164,9 +168,15 @@ function setup() {
     gravityApplyBtn.addEventListener('click', applyGravity);
     gravityInput.addEventListener('change', applyGravity);
 
+    gravityResetBtn.addEventListener('click', () => {
+      g = defaultG;
+      gravityInput.value = g.toFixed(2);
+      updateEnergyStartHeight();
+    });
+
     const applyInitialSpeed = () => {
       const newV0 = parseFloat(initialSpeedInput.value);
-      if (!isNaN(newV0) && newV0 >= 0 && newV0 <= 50) {
+      if (!isNaN(newV0) && newV0 >= 0 && newV0 <= 1000000000) {
         initialSpeed = newV0;
         updateEnergyStartHeight();
       } else {
@@ -176,6 +186,12 @@ function setup() {
 
     initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
     initialSpeedInput.addEventListener('change', applyInitialSpeed);
+
+    initialSpeedResetBtn.addEventListener('click', () => {
+      initialSpeed = defaultInitialSpeed;
+      initialSpeedInput.value = initialSpeed.toFixed(2);
+      updateEnergyStartHeight();
+    });
 
     if (openOverlayBtn && canvasOverlayBackdrop && canvasOverlayCloseBtn) {
       const openOverlay = () => {
