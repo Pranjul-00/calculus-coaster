@@ -374,7 +374,9 @@ function draw() {
   // Draw the Cart
   stroke(200, 0, 0); // Red outline
   fill(255, 0, 0); // Red fill
-  circle(screenX, screenY, 20); // 20px circle
+  if (!isTeleporting) {
+    circle(screenX, screenY, 20); // 20px circle
+  }
 
   // Teleportation pixel effect
   if (isTeleporting) {
@@ -406,35 +408,37 @@ function draw() {
   pop();
 
   // --- G. Draw Vectors ---
-  // Save settings again
-  push();
+  if (!isTeleporting) {
+    // Save settings again
+    push();
 
-  // 1. Velocity Vector (Tangent)
-  let v_scale = 5; // Scale factor: 5 pixels per m/s
-  // We flip vy because p5's Y-axis is inverted
-  strokeWeight(3);
-  stroke(0, 150, 0); // Green
-  line(screenX, screenY, 
-       screenX + (horizontalVel * v_scale), 
-       screenY - (verticalVel * v_scale));
+    // 1. Velocity Vector (Tangent)
+    let v_scale = 5; // Scale factor: 5 pixels per m/s
+    // We flip vy because p5's Y-axis is inverted
+    strokeWeight(3);
+    stroke(0, 150, 0); // Green
+    line(screenX, screenY, 
+         screenX + (horizontalVel * v_scale), 
+         screenY - (verticalVel * v_scale));
 
-  // 2. G-Force Vector (Normal)
-  // The normal vector is perpendicular to the tangent (-slope, 1)
-  let nx = -slope;
-  let ny = 1;
-  // Normalize it (make its length 1)
-  let n_mag = sqrt(nx*nx + ny*ny);
-  nx = nx / n_mag;
-  ny = ny / n_mag;
-  
-  let g_scale = 20; // Scale factor: 20 pixels per G
-  strokeWeight(3);
-  stroke(0, 0, 200); // Blue
-  // We draw (-nx, -ny) to point "up" and "out"
-  line(screenX, screenY, 
-       screenX + (nx * Gs * g_scale), 
-       screenY - (ny * Gs * g_scale)); // Flip Y-axis
-  
-  // Restore settings
-  pop();
+    // 2. G-Force Vector (Normal)
+    // The normal vector is perpendicular to the tangent (-slope, 1)
+    let nx = -slope;
+    let ny = 1;
+    // Normalize it (make its length 1)
+    let n_mag = sqrt(nx*nx + ny*ny);
+    nx = nx / n_mag;
+    ny = ny / n_mag;
+    
+    let g_scale = 20; // Scale factor: 20 pixels per G
+    strokeWeight(3);
+    stroke(0, 0, 200); // Blue
+    // We draw (-nx, -ny) to point "up" and "out"
+    line(screenX, screenY, 
+         screenX + (nx * Gs * g_scale), 
+         screenY - (ny * Gs * g_scale)); // Flip Y-axis
+    
+    // Restore settings
+    pop();
+  }
 }
