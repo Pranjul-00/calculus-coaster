@@ -93,10 +93,65 @@
                 </div>
             </div>
 
+            <!-- Position Equations Section -->
+            <div class="theory-section">
+                <h2>Position Equations: x and x(t)</h2>
+                <p class="section-intro"><strong>Mathematical Equations:</strong> The explicit formulas for horizontal position and its time dependence.</p>
+
+                <div class="master-equation">
+                    <h3>Horizontal Position x - Parametric Track Equation:</h3>
+                    <div class="equation">$$\vec{r}(x) = \langle x, f(x) \rangle = \langle x, f(x) \rangle$$</div>
+                    <p><strong>Where f(x) is the piecewise track function:</strong></p>
+                    <div class="equation">
+                        $$
+                        f(x) =
+                        \begin{cases}
+                        20 - 0.32 x^2, & 0 \le x < 5 \\
+                        0.0064 (x-10)^4 + 8.0, & 5 \le x < 15 \\
+                        20.0 - 0.32 (x-20)^2, & 15 \le x < 25 \\
+                        0.32 (x-30)^2 + 4.0, & 25 \le x \le 35
+                        \end{cases}
+                        $$
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Position as Function of Time x(t) - Differential Equation:</h3>
+                    <div class="equation">
+                        $$
+                        \frac{dx}{dt} = \frac{\sqrt{2g(h_{start} - f(x))}}{\sqrt{1 + [f'(x)]^2}}
+                        $$
+                    </div>
+                    <p><strong>Initial Condition:</strong> x(0) = 0</p>
+                    <p><strong>Expanded Form:</strong></p>
+                    <div class="equation">
+                        $$
+                        \frac{dx}{dt} =
+                        \begin{cases}
+                        \frac{\sqrt{2g \cdot 0.32 x^2}}{\sqrt{1 + (0.64 x)^2}}, & 0 \le x < 5 \\[8pt]
+                        \frac{\sqrt{2g(12.0 - 0.0064 (x-10)^4)}}{\sqrt{1 + [0.0256 (x-10)^3]^2}}, & 5 \le x < 15 \\[8pt]
+                        \frac{\sqrt{2g \cdot 0.32 (x-20)^2}}{\sqrt{1 + [0.64 (x-20)]^2}}, & 15 \le x < 25 \\[8pt]
+                        \frac{\sqrt{2g(16.0 - 0.32 (x-30)^2)}}{\sqrt{1 + [0.64 (x-30)]^2}}, & 25 \le x \le 35
+                        \end{cases}
+                        $$
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Numerical Integration Formula:</h3>
+                    <p><strong>Euler's Method (used in simulation):</strong></p>
+                    <div class="equation">
+                        $$
+                        x(t + \Delta t) = x(t) + \frac{\sqrt{2g(h_{start} - f(x(t)))}}{\sqrt{1 + [f'(x(t))]^2}} \cdot \Delta t
+                        $$
+                    </div>
+                </div>
+            </div>
+
             <!-- Velocity Function Section -->
             <div class="theory-section">
                 <h2>Velocity Along the Track v(x): Energy to Speed</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> The speed of the coaster car at each x, computed from the vertical drop under gravity.</p>
+                <p class="section-intro"><strong>Physical Meaning:</strong> The speed of the coaster car at each horizontal position x, computed from the vertical drop under gravity.</p>
 
                 <div class="master-equation">
                     <h3>Gravitational Acceleration:</h3>
@@ -154,15 +209,30 @@
                 <p class="section-intro"><strong>Physical Meaning:</strong> How fast the cart moves at each instant of time as it travels through the three track segments.</p>
 
                 <div class="master-equation">
-                    <h3>Position as a Time-Dependent Function:</h3>
+                    <h3>How x(t) is Determined - The Differential Equation:</h3>
                     <div class="equation">
-                        $$
-                        x = x(t), \qquad x(0) = 0
-                        $$
                         $$
                         \frac{dx}{dt} = \frac{v(x(t))}{\sqrt{1 + [f'(x(t))]^2}}
                         $$
                     </div>
+                    <p><strong>Initial Condition:</strong> x(0) = 0</p>
+                    <p><strong>Explanation:</strong> This differential equation determines how the horizontal position x changes with time t. The right side represents the horizontal component of velocity along the curved track.</p>
+                    <ul>
+                        <li><strong>v(x(t)):</strong> The speed at position x(t) (from energy conservation)</li>
+                        <li><strong>f'(x(t)):</strong> The slope of the track at position x(t)</li>
+                        <li><strong>√(1 + [f'(x)]²):</strong> Converts speed along the curve to horizontal speed</li>
+                    </ul>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Numerical Solution:</h3>
+                    <p>Since this differential equation cannot be solved analytically, x(t) is found through <strong>numerical integration</strong> in the simulation:</p>
+                    <div class="equation">
+                        $$
+                        x(t + \Delta t) \approx x(t) + \frac{v(x(t))}{\sqrt{1 + [f'(x(t))]^2}} \cdot \Delta t
+                        $$
+                    </div>
+                    <p>The simulation uses small time steps Δt to approximate the continuous motion.</p>
                 </div>
 
                 <div class="piecewise-function">
