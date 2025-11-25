@@ -16,6 +16,11 @@ let initialSpeed = defaultInitialSpeed;
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
+// Sticky camera bounds (world coordinates). These expand as needed during a run
+// to keep the cart, projectile path, and HUD visible, and reset between runs.
+let cameraWorldXMax = worldXMax;
+let cameraWorldYMax = 22.0;
+
 let cartX = 0.0; // Cart's current X position (in meters, 0 to 25)
 let cartY = 0.0; // Cart's current Y position (in meters)
 let running = true; // Whether the animation is running
@@ -202,6 +207,8 @@ function setup() {
       projectileTrail = [];
       rideTime = 0.0;
       arcDistance = 0.0;
+      cameraWorldXMax = worldXMax;
+      cameraWorldYMax = 22.0;
       if (projectileEquationTimeElement && projectileEquationXElement) {
         projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
         projectileEquationXElement.textContent = "Launch the cart to see y(x).";
@@ -389,6 +396,8 @@ function draw() {
         rideTime = 0.0;
         arcDistance = 0.0;
         landingX = 0.0;
+        cameraWorldXMax = worldXMax;
+        cameraWorldYMax = 22.0;
       } else {
         let t = teleportTimer / teleportDuration;
 
@@ -425,27 +434,28 @@ function draw() {
   }
 
   let baseWorldXMax = worldXMax;
-  let farthestX = Math.max(cartX, projectileX, landingX);
-  let paddingX = 5.0;
-  let maxZoomOutFactor = 2.0;
-  // Horizontal zoom based on farthest point we need to see.
-  // Teleportation can later force this back to the base range.
-  let candidateMax = Math.max(baseWorldXMax, farthestX + paddingX);
-  let displayWorldXMax = Math.min(candidateMax, baseWorldXMax * maxZoomOutFactor);
-
   let baseWorldYMax = 22.0;
-  let farthestY = Math.max(cartY, projectileY, f(0), f(35));
+  let paddingX = 5.0;
   let paddingY = 2.0;
-  let maxZoomOutYFactor = 2.0;
-  let candidateYMax = Math.max(baseWorldYMax, farthestY + paddingY);
-  let displayWorldYMax = Math.min(candidateYMax, baseWorldYMax * maxZoomOutYFactor);
 
-  // Once teleportation has been in progress for at least 0.5 s,
-  // lock the zoom back to the default world extents.
+  // Requested bounds from current simulation state
+  let farthestX = Math.max(cartX, projectileX, landingX);
+  let farthestY = Math.max(cartY, projectileY, f(0), f(35));
+  let requestedXMax = Math.max(baseWorldXMax, farthestX + paddingX);
+  let requestedYMax = Math.max(baseWorldYMax, farthestY + paddingY);
+
   if (isTeleporting && teleportTimer >= 0.5) {
-    displayWorldXMax = baseWorldXMax;
-    displayWorldYMax = baseWorldYMax;
+    // After 0.5 s of teleport, snap back to default bounds
+    cameraWorldXMax = baseWorldXMax;
+    cameraWorldYMax = baseWorldYMax;
+  } else {
+    // Expand sticky camera bounds during a run as needed
+    cameraWorldXMax = Math.max(cameraWorldXMax, requestedXMax);
+    cameraWorldYMax = Math.max(cameraWorldYMax, requestedYMax);
   }
+
+  let displayWorldXMax = cameraWorldXMax;
+  let displayWorldYMax = cameraWorldYMax;
 
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
