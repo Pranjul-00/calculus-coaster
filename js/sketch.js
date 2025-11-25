@@ -28,6 +28,7 @@ let landedTimer = 0.0;
 let isTeleporting = false;
 let teleportTimer = 0.0;
 let landingX = 0.0;
+let projectileTrail = [];
 
 function updateEnergyStartHeight() {
   energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
@@ -135,6 +136,7 @@ function setup() {
       projectileVx = 0.0;
       projectileVy = 0.0;
       landingX = 0.0;
+      projectileTrail = [];
     });
 
     speedSlider.addEventListener('input', () => {
@@ -202,6 +204,7 @@ function draw() {
 
   if (onTrack) {
     h = f(cartX);
+
     slope = fPrime(cartX);
     concavity = fDoublePrime(cartX);
 
@@ -219,9 +222,12 @@ function draw() {
         projectileY = cartY;
         projectileVx = horizontalVel;
         projectileVy = verticalVel;
+        projectileTrail = [];
+        projectileTrail.push({ x: projectileX, y: projectileY });
         onTrack = false;
         hasLanded = false;
         isTeleporting = false;
+
         landedTimer = 0.0;
         teleportTimer = 0.0;
         landingX = projectileX;
@@ -245,6 +251,8 @@ function draw() {
         projectileVy = 0.0;
         landingX = projectileX;
       }
+
+      projectileTrail.push({ x: projectileX, y: projectileY });
     }
 
     cartX = projectileX;
@@ -284,8 +292,10 @@ function draw() {
         projectileY = 0.0;
         projectileVx = 0.0;
         projectileVy = 0.0;
+        projectileTrail = [];
       } else {
         let t = teleportTimer / teleportDuration;
+
         if (t < 0) t = 0;
         if (t > 1) t = 1;
         let startX = 0;
@@ -370,6 +380,22 @@ function draw() {
   fill(0); // Black text
   text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
   text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
+
+  // Projectile trail (dotted red/blue) during projectile flight
+  if (!onTrack && !hasLanded && !isTeleporting && projectileTrail.length > 1) {
+    noStroke();
+    for (let i = 0; i < projectileTrail.length; i += 2) {
+      let p = projectileTrail[i];
+      let px = map(p.x, 0, worldXMax, 50, width - 50);
+      let py = map(p.y, 0, 22, height - 50, 50);
+      if (((i / 2) % 2) === 0) {
+        fill(255, 0, 0); // red
+      } else {
+        fill(30, 64, 175); // blue-ish
+      }
+      circle(px, py, 4);
+    }
+  }
 
   // Draw the Cart
   stroke(200, 0, 0); // Red outline
