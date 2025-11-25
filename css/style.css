@@ -853,6 +853,46 @@ body.canvas-overlay-active .canvas-enlarge-icon {
   align-items: center;
 }
 
+.projectile-equation-block {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-white);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  border: 1px solid var(--border-light);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.projectile-equation-block h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-blue);
+}
+
+.projectile-equation-row {
+  margin-top: 0.5rem;
+}
+
+.projectile-equation-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.projectile-equation-text {
+  font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  background: var(--bg-light);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--accent-blue);
+  overflow-x: auto;
+}
+
 .simulation-sidebar {
   display: flex;
   flex-direction: row;

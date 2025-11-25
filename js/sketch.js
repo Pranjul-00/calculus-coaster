@@ -34,6 +34,8 @@ let projectileTrail = [];
 let rideTime = 0.0;
 let arcDistance = 0.0;
 let projectileEquationElement = null;
+let projectileEquationTimeElement = null;
+let projectileEquationXElement = null;
 
 function formatProjectileNumber(n) {
   if (Number.isFinite(n)) {
@@ -43,34 +45,40 @@ function formatProjectileNumber(n) {
 }
 
 function updateProjectileEquation(launchX, launchY, vx0, vy0) {
-  if (!projectileEquationElement) {
+  if (!projectileEquationTimeElement || !projectileEquationXElement) {
     return;
   }
 
   if (!Number.isFinite(launchX) || !Number.isFinite(launchY) ||
       !Number.isFinite(vx0) || !Number.isFinite(vy0) || !Number.isFinite(g)) {
-    projectileEquationElement.textContent = "Projectile equation unavailable for this launch.";
+    const msg = "Projectile equation unavailable for this launch.";
+    projectileEquationTimeElement.textContent = msg;
+    projectileEquationXElement.textContent = msg;
     return;
   }
 
   const x0 = launchX;
   const y0 = launchY;
 
+  const timeText = "x(t) = " + formatProjectileNumber(x0) +
+    " + " + formatProjectileNumber(vx0) + " t, " +
+    "y(t) = " + formatProjectileNumber(y0) +
+    " + " + formatProjectileNumber(vy0) + " t - 0.5 * " +
+    formatProjectileNumber(g) + " t^2";
+
+  projectileEquationTimeElement.textContent = timeText;
+
   if (Math.abs(vx0) < 1e-6) {
-    const text = "x(t) = " + formatProjectileNumber(x0) +
-      ", y(t) = " + formatProjectileNumber(y0) +
-      " + " + formatProjectileNumber(vy0) + " t - 0.5 * " +
-      formatProjectileNumber(g) + " t^2";
-    projectileEquationElement.textContent = text;
+    projectileEquationXElement.textContent = "y(x) is undefined for vertical launch (vx ≈ 0).";
     return;
   }
 
   const a = vy0 / vx0;
   const b = g / (2 * vx0 * vx0);
-  const text = "y(x) = " + formatProjectileNumber(y0) +
+  const xText = "y(x) = " + formatProjectileNumber(y0) +
     " + " + formatProjectileNumber(a) + " (x - " + formatProjectileNumber(x0) + ")" +
     " - " + formatProjectileNumber(b) + " (x - " + formatProjectileNumber(x0) + ")^2";
-  projectileEquationElement.textContent = text;
+  projectileEquationXElement.textContent = xText;
 }
 
 function updateEnergyStartHeight() {
@@ -158,16 +166,20 @@ function setup() {
   const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
   const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
-  const projectileEquationText = document.getElementById('projectileEquationText');
+  const projectileEquationTime = document.getElementById('projectileEquationTime');
+  const projectileEquationX = document.getElementById('projectileEquationX');
 
-  projectileEquationElement = projectileEquationText;
+  projectileEquationElement = document.getElementById('projectileEquationBlock');
+  projectileEquationTimeElement = projectileEquationTime;
+  projectileEquationXElement = projectileEquationX;
 
   if (playPauseBtn && resetBtn && speedSlider && speedValue &&
     gravityInput && gravityApplyBtn && gravityResetBtn &&
     initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn &&
-    projectileEquationText) {
+    projectileEquationTime && projectileEquationX) {
 
-    projectileEquationText.textContent = "Launch the cart to see the projectile path equation.";
+    projectileEquationTime.textContent = "Launch the cart to see x(t) and y(t).";
+    projectileEquationX.textContent = "Launch the cart to see y(x).";
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -190,8 +202,9 @@ function setup() {
       projectileTrail = [];
       rideTime = 0.0;
       arcDistance = 0.0;
-      if (projectileEquationElement) {
-        projectileEquationElement.textContent = "Launch the cart to see the projectile path equation.";
+      if (projectileEquationTimeElement && projectileEquationXElement) {
+        projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
+        projectileEquationXElement.textContent = "Launch the cart to see y(x).";
       }
     });
 

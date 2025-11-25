@@ -47,9 +47,20 @@
                         <button id="openCanvasOverlayBtn" class="canvas-enlarge-icon" aria-label="Enlarge simulation">⤢</button>
                     </div>
 
-                    <div class="projectile-equation-block">
-                        <h3>Projectile Path Equation</h3>
-                        <p id="projectileEquationText">Launch the cart to see the projectile path equation here.</p>
+                    <div class="projectile-equation-block" id="projectileEquationBlock">
+                        <h3>Projectile Path Equations</h3>
+                        <div class="projectile-equation-row">
+                            <div class="projectile-equation-label">Parametric in time</div>
+                            <p id="projectileEquationTime" class="projectile-equation-text">
+                                Launch the cart to see x(t) and y(t).
+                            </p>
+                        </div>
+                        <div class="projectile-equation-row">
+                            <div class="projectile-equation-label">Cartesian in x</div>
+                            <p id="projectileEquationX" class="projectile-equation-text">
+                                Launch the cart to see y(x).
+                            </p>
+                        </div>
                     </div>
 
                     <div class="simulation-controls">
