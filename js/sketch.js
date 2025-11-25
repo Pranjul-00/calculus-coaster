@@ -12,6 +12,9 @@ const trackStartHeight = 20.0; // The track's actual start height
 const worldXMax = 50.0;
 const landedPauseDuration = 1.5;
 const teleportDuration = 1.5;
+let cameraWorldXMax = worldXMax;
+let cameraWorldYMax = 22.0;
+
 let initialSpeed = defaultInitialSpeed;
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
@@ -202,6 +205,8 @@ function setup() {
       projectileTrail = [];
       rideTime = 0.0;
       arcDistance = 0.0;
+      cameraWorldXMax = worldXMax;
+      cameraWorldYMax = 22.0;
       if (projectileEquationTimeElement && projectileEquationXElement) {
         projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
         projectileEquationXElement.textContent = "Launch the cart to see y(x).";
@@ -427,15 +432,15 @@ function draw() {
   let farthestX = Math.max(cartX, projectileX, landingX);
   let paddingX = 5.0;
   let maxZoomOutFactor = 2.0;
-  let candidateMax = Math.max(baseWorldXMax, farthestX + paddingX);
-  let displayWorldXMax = Math.min(candidateMax, baseWorldXMax * maxZoomOutFactor);
+  let candidateMax = Math.max(cameraWorldXMax, farthestX + paddingX);
+  cameraWorldXMax = Math.min(candidateMax, baseWorldXMax * maxZoomOutFactor);
 
   let baseWorldYMax = 22.0;
   let farthestY = Math.max(cartY, projectileY, f(0), f(35));
   let paddingY = 2.0;
   let maxZoomOutYFactor = 2.0;
-  let candidateYMax = Math.max(baseWorldYMax, farthestY + paddingY);
-  let displayWorldYMax = Math.min(candidateYMax, baseWorldYMax * maxZoomOutYFactor);
+  let candidateYMax = Math.max(cameraWorldYMax, farthestY + paddingY);
+  cameraWorldYMax = Math.min(candidateYMax, baseWorldYMax * maxZoomOutYFactor);
 
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
@@ -447,14 +452,14 @@ function draw() {
 
   // --- C. Coordinate Transformation ---
   // Map our new [0m, 22m] height range to the canvas
-  let screenX = map(cartX, 0, displayWorldXMax, 50, width - 50);
+  let screenX = map(cartX, 0, cameraWorldXMax, 50, width - 50);
 
-  let screenY = map(cartY, 0, displayWorldYMax, height - 50, 50);
+  let screenY = map(cartY, 0, cameraWorldYMax, height - 50, 50);
 
   // Draw ground at y = 0
   stroke(120, 100, 80);
   strokeWeight(3);
-  let groundY = map(0, 0, displayWorldYMax, height - 50, 50);
+  let groundY = map(0, 0, cameraWorldYMax, height - 50, 50);
   line(50, groundY, width - 50, groundY);
 
   // --- D. Draw the Track ---
@@ -464,8 +469,9 @@ function draw() {
   for (let x = 0; x <= 35; x += 0.1) {
     let y = f(x);
     // Map each point to the new [0m, 22m] height range
-    let plotX = map(x, 0, displayWorldXMax, 50, width - 50);
-    let plotY = map(y, 0, displayWorldYMax, height - 50, 50);
+    let plotX = map(x, 0, cameraWorldXMax, 50, width - 50);
+    let plotY = map(y, 0, cameraWorldYMax, height - 50, 50);
+
     vertex(plotX, plotY);
   }
   endShape();
@@ -527,8 +533,9 @@ function draw() {
     noStroke();
     for (let i = 0; i < projectileTrail.length; i += 2) {
       let p = projectileTrail[i];
-      let px = map(p.x, 0, displayWorldXMax, 50, width - 50);
-      let py = map(p.y, 0, displayWorldYMax, height - 50, 50);
+      let px = map(p.x, 0, cameraWorldXMax, 50, width - 50);
+      let py = map(p.y, 0, cameraWorldYMax, height - 50, 50);
+
       if (((i / 2) % 2) === 0) {
         fill(255, 0, 0); // red
       } else {
@@ -547,10 +554,11 @@ function draw() {
 
   // Teleportation pixel effect
   if (isTeleporting) {
-    let landingScreenX = map(landingX, 0, displayWorldXMax, 50, width - 50);
+    let landingScreenX = map(landingX, 0, cameraWorldXMax, 50, width - 50);
     let landingScreenY = groundY;
-    let startScreenX = map(0, 0, displayWorldXMax, 50, width - 50);
-    let startScreenY = map(f(0), 0, displayWorldYMax, height - 50, 50);
+    let startScreenX = map(0, 0, cameraWorldXMax, 50, width - 50);
+    let startScreenY = map(f(0), 0, cameraWorldYMax, height - 50, 50);
+
     let steps = 30;
     let progress = teleportTimer / teleportDuration;
     if (progress < 0) progress = 0;
