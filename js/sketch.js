@@ -397,15 +397,37 @@ function draw() {
     noStroke();
     textSize(16);
     textAlign(LEFT);
+
+    // Base HUD position next to the cart
+    let hudWidth = 220;
+    let hudHeight = 130;
+    let hudX = screenX + 20;
+    let hudY = screenY - 10;
+
+    // Clamp HUD so it stays fully inside the canvas
+    let margin = 25;
+    if (hudX < margin) {
+      hudX = margin;
+    }
+    if (hudX + hudWidth > width - margin) {
+      hudX = width - margin - hudWidth;
+    }
+    if (hudY < margin) {
+      hudY = margin;
+    }
+    if (hudY + hudHeight > height - margin) {
+      hudY = height - margin - hudHeight;
+    }
+
     fill(255, 255, 255, 180); // Semi-transparent white box
-    rect(screenX + 20, screenY - 10, 220, 130);
+    rect(hudX, hudY, hudWidth, hudHeight);
     fill(0); // Black text
-    text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
-    text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
-    text("Vx: " + horizontalVel.toFixed(2) + " m/s", screenX + 25, screenY + 50);
-    text("Vy: " + verticalVel.toFixed(2) + " m/s", screenX + 25, screenY + 70);
-    text("Dist: " + arcDistance.toFixed(2) + " m", screenX + 25, screenY + 90);
-    text("Time: " + rideTime.toFixed(2) + " s", screenX + 25, screenY + 110);
+    text("Speed: " + speedKPH.toFixed(1) + " km/h", hudX + 5, hudY + 20);
+    text("G-Force: " + Gs.toFixed(2) + " Gs", hudX + 5, hudY + 40);
+    text("Vx: " + horizontalVel.toFixed(2) + " m/s", hudX + 5, hudY + 60);
+    text("Vy: " + verticalVel.toFixed(2) + " m/s", hudX + 5, hudY + 80);
+    text("Dist: " + arcDistance.toFixed(2) + " m", hudX + 5, hudY + 100);
+    text("Time: " + rideTime.toFixed(2) + " s", hudX + 5, hudY + 120);
   }
 
   // Projectile trail (dotted red/blue) during projectile flight
