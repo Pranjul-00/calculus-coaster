@@ -29,9 +29,12 @@ function f(x) {
   } else if (x >= 5 && x < 15) {
     // f2(x) = 0.0064*(x - 10)^4 + 8.0
     return 0.0064 * Math.pow(x - 10, 4) + 8.0;
-  } else if (x >= 15 && x <= 25) {
+  } else if (x >= 15 && x < 25) {
     // f3(x) = 20.0 - 0.32*(x - 20)^2
     return 20.0 - 0.32 * Math.pow(x - 20, 2);
+  } else if (x >= 25 && x <= 35) {
+    // f4(x) = 0.32*(x - 30)^2 + 4.0 (deeper valley than f2)
+    return 0.32 * Math.pow(x - 30, 2) + 4.0;
   } else {
     // Default case (if x goes out of bounds)
     return trackStartHeight;
@@ -46,9 +49,12 @@ function fPrime(x) {
   } else if (x >= 5 && x < 15) {
     // f2'(x) = 0.0256*(x - 10)^3
     return 0.0256 * Math.pow(x - 10, 3);
-  } else if (x >= 15 && x <= 25) {
+  } else if (x >= 15 && x < 25) {
     // f3'(x) = -0.64*(x - 20)
     return -0.64 * (x - 20);
+  } else if (x >= 25 && x <= 35) {
+    // f4'(x) = 0.64*(x - 30)
+    return 0.64 * (x - 30);
   } else {
     return 0;
   }
@@ -62,9 +68,12 @@ function fDoublePrime(x) {
   } else if (x >= 5 && x < 15) {
     // f2''(x) = 0.0768*(x - 10)^2
     return 0.0768 * Math.pow(x - 10, 2);
-  } else if (x >= 15 && x <= 25) {
+  } else if (x >= 15 && x < 25) {
     // f3''(x) = -0.64
     return -0.64;
+  } else if (x >= 25 && x <= 35) {
+    // f4''(x) = 0.64
+    return 0.64;
   } else {
     return 0;
   }
@@ -72,8 +81,8 @@ function fDoublePrime(x) {
 
 // --- 3. The Setup Function (Runs Once) ---
 function setup() {
-  // 800x400 pixel canvas
-  let canvas = createCanvas(800, 400);
+  // 1000x400 pixel canvas
+  let canvas = createCanvas(1000, 400);
   // Tell the canvas to live inside the div we made in index.html
   canvas.parent('canvas-container');
   cartX = 0; // Start cart at x=0
@@ -179,7 +188,7 @@ function draw() {
     cartX += horizontalVel * dt;
 
     // Reset cart if it reaches the end
-    if (cartX > 25) {
+    if (cartX > 35) {
       cartX = 0;
     }
   }
@@ -194,19 +203,25 @@ function draw() {
   rect(20, 20, width - 40, height - 40, 16);
 
   // --- C. Coordinate Transformation ---
-  // Map our new [5m, 22m] height range to the canvas
-  let screenX = map(cartX, 0, 25, 50, width - 50);
-  let screenY = map(cartY, 5, 22, height - 50, 50);
+  // Map our new [0m, 22m] height range to the canvas
+  let screenX = map(cartX, 0, 35, 50, width - 50);
+  let screenY = map(cartY, 0, 22, height - 50, 50);
+
+  // Draw ground at y = 0
+  stroke(120, 100, 80);
+  strokeWeight(3);
+  let groundY = map(0, 0, 22, height - 50, 50);
+  line(50, groundY, width - 50, groundY);
 
   // --- D. Draw the Track ---
   stroke(60, 60, 60); // Dark grey track
   noFill();
   beginShape();
-  for (let x = 0; x <= 25; x += 0.1) {
+  for (let x = 0; x <= 35; x += 0.1) {
     let y = f(x);
-    // Map each point to the new [5m, 22m] height range
-    let plotX = map(x, 0, 25, 50, width - 50);
-    let plotY = map(y, 5, 22, height - 50, 50);
+    // Map each point to the new [0m, 22m] height range
+    let plotX = map(x, 0, 35, 50, width - 50);
+    let plotY = map(y, 0, 22, height - 50, 50);
     vertex(plotX, plotY);
   }
   endShape();
