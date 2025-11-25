@@ -33,6 +33,45 @@ let landingX = 0.0;
 let projectileTrail = [];
 let rideTime = 0.0;
 let arcDistance = 0.0;
+let projectileEquationElement = null;
+
+function formatProjectileNumber(n) {
+  if (Number.isFinite(n)) {
+    return n.toFixed(2);
+  }
+  return String(n);
+}
+
+function updateProjectileEquation(launchX, launchY, vx0, vy0) {
+  if (!projectileEquationElement) {
+    return;
+  }
+
+  if (!Number.isFinite(launchX) || !Number.isFinite(launchY) ||
+      !Number.isFinite(vx0) || !Number.isFinite(vy0) || !Number.isFinite(g)) {
+    projectileEquationElement.textContent = "Projectile equation unavailable for this launch.";
+    return;
+  }
+
+  const x0 = launchX;
+  const y0 = launchY;
+
+  if (Math.abs(vx0) < 1e-6) {
+    const text = "x(t) = " + formatProjectileNumber(x0) +
+      ", y(t) = " + formatProjectileNumber(y0) +
+      " + " + formatProjectileNumber(vy0) + " t - 0.5 * " +
+      formatProjectileNumber(g) + " t^2";
+    projectileEquationElement.textContent = text;
+    return;
+  }
+
+  const a = vy0 / vx0;
+  const b = g / (2 * vx0 * vx0);
+  const text = "y(x) = " + formatProjectileNumber(y0) +
+    " + " + formatProjectileNumber(a) + " (x - " + formatProjectileNumber(x0) + ")" +
+    " - " + formatProjectileNumber(b) + " (x - " + formatProjectileNumber(x0) + ")^2";
+  projectileEquationElement.textContent = text;
+}
 
 function updateEnergyStartHeight() {
   energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
@@ -119,10 +158,16 @@ function setup() {
   const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
   const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
+  const projectileEquationText = document.getElementById('projectileEquationText');
+
+  projectileEquationElement = projectileEquationText;
 
   if (playPauseBtn && resetBtn && speedSlider && speedValue &&
     gravityInput && gravityApplyBtn && gravityResetBtn &&
-    initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn) {
+    initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn &&
+    projectileEquationText) {
+
+    projectileEquationText.textContent = "Launch the cart to see the projectile path equation.";
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -145,6 +190,9 @@ function setup() {
       projectileTrail = [];
       rideTime = 0.0;
       arcDistance = 0.0;
+      if (projectileEquationElement) {
+        projectileEquationElement.textContent = "Launch the cart to see the projectile path equation.";
+      }
     });
 
     speedSlider.addEventListener('input', () => {
@@ -253,6 +301,7 @@ function draw() {
         landedTimer = 0.0;
         teleportTimer = 0.0;
         landingX = projectileX;
+        updateProjectileEquation(projectileX, projectileY, projectileVx, projectileVy);
       } else {
         cartY = f(cartX);
       }
