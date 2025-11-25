@@ -378,18 +378,20 @@ function draw() {
   // Save current drawing settings
   push();
 
-  // Draw the text
-  fill(0); // Black text
-  noStroke();
-  textSize(16);
-  textAlign(LEFT);
-  fill(255, 255, 255, 180); // Semi-transparent white box
-  rect(screenX + 20, screenY - 10, 200, 90);
-  fill(0); // Black text
-  text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
-  text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
-  text("Vx: " + horizontalVel.toFixed(2) + " m/s", screenX + 25, screenY + 50);
-  text("Vy: " + verticalVel.toFixed(2) + " m/s", screenX + 25, screenY + 70);
+  if (!isTeleporting) {
+    // Draw the text
+    fill(0); // Black text
+    noStroke();
+    textSize(16);
+    textAlign(LEFT);
+    fill(255, 255, 255, 180); // Semi-transparent white box
+    rect(screenX + 20, screenY - 10, 200, 90);
+    fill(0); // Black text
+    text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
+    text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
+    text("Vx: " + horizontalVel.toFixed(2) + " m/s", screenX + 25, screenY + 50);
+    text("Vy: " + verticalVel.toFixed(2) + " m/s", screenX + 25, screenY + 70);
+  }
 
   // Projectile trail (dotted red/blue) during projectile flight
   if (!onTrack && !hasLanded && !isTeleporting && projectileTrail.length > 1) {
