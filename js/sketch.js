@@ -7,6 +7,7 @@
 // --- 1. Global Variables & Constants ---
 let g = 9.81; // Acceleration due to gravity (m/s^2)
 const trackStartHeight = 20.0; // The track's actual start height
+const worldXMax = 50.0;
 let initialSpeed = 0.5;
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
@@ -86,8 +87,8 @@ function fDoublePrime(x) {
 
 // --- 3. The Setup Function (Runs Once) ---
 function setup() {
-  // 1000x400 pixel canvas
-  let canvas = createCanvas(1000, 400);
+  // 1200x400 pixel canvas
+  let canvas = createCanvas(1200, 400);
   // Tell the canvas to live inside the div we made in index.html
   canvas.parent('canvas-container');
   cartX = 0; // Start cart at x=0
@@ -238,7 +239,7 @@ function draw() {
 
   // --- C. Coordinate Transformation ---
   // Map our new [0m, 22m] height range to the canvas
-  let screenX = map(cartX, 0, 35, 50, width - 50);
+  let screenX = map(cartX, 0, worldXMax, 50, width - 50);
 
   let screenY = map(cartY, 0, 22, height - 50, 50);
 
@@ -255,7 +256,7 @@ function draw() {
   for (let x = 0; x <= 35; x += 0.1) {
     let y = f(x);
     // Map each point to the new [0m, 22m] height range
-    let plotX = map(x, 0, 35, 50, width - 50);
+    let plotX = map(x, 0, worldXMax, 50, width - 50);
     let plotY = map(y, 0, 22, height - 50, 50);
     vertex(plotX, plotY);
   }

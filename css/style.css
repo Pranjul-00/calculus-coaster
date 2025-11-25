@@ -220,7 +220,7 @@ body {
   line-height: 0;
   border: 3px solid var(--border-light);
   background-color: white;
-  min-width: 1000px;
+  min-width: 1200px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
 }
@@ -900,7 +900,7 @@ body.canvas-overlay-active #canvas-container {
   transform: translate(-50%, -52%) scale(1.5);
   z-index: 50;
   min-width: auto;
-  width: min(1000px, 96vw);
+  width: min(1200px, 96vw);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
