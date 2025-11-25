@@ -223,6 +223,7 @@ body {
   min-width: 1200px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
+  margin: 0 auto;
 }
 
 .canvas-enlarge-icon {
@@ -835,6 +836,10 @@ body.canvas-overlay-active .canvas-enlarge-icon {
   background: var(--bg-light);
 }
 
+.simulation-page > .container {
+  padding: 0;
+}
+
 .simulation-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -897,7 +902,7 @@ body.canvas-overlay-active #canvas-container {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -52%) scale(1.5);
+  transform: translate(-50%, -50%) scale(1.3);
   z-index: 50;
   min-width: auto;
   width: min(1200px, 96vw);
@@ -907,7 +912,7 @@ body.canvas-overlay-active #canvas-container {
 body.canvas-overlay-active .canvas-overlay-close {
   display: inline-block;
   position: fixed;
-  top: calc(50% + 310px);
+  top: calc(50% + 320px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;

@@ -96,8 +96,8 @@ function fDoublePrime(x) {
 
 // --- 3. The Setup Function (Runs Once) ---
 function setup() {
-  // 1200x400 pixel canvas
-  let canvas = createCanvas(1200, 400);
+  // 1200x500 pixel canvas
+  let canvas = createCanvas(1200, 500);
   // Tell the canvas to live inside the div we made in index.html
   canvas.parent('canvas-container');
   cartX = 0; // Start cart at x=0
@@ -259,6 +259,8 @@ function draw() {
     cartY = projectileY;
 
     v = Math.sqrt(projectileVx * projectileVx + projectileVy * projectileVy);
+    horizontalVel = projectileVx;
+    verticalVel = projectileVy;
     slope = 0;
     concavity = 0;
   } else if (hasLanded && !isTeleporting) {
@@ -267,6 +269,8 @@ function draw() {
     cartY = 0;
 
     v = 0;
+    horizontalVel = 0;
+    verticalVel = 0;
     slope = 0;
     concavity = 0;
 
@@ -309,6 +313,8 @@ function draw() {
 
     if (!onTrack) {
       v = 0;
+      horizontalVel = 0;
+      verticalVel = 0;
       slope = 0;
       concavity = 0;
     } else {
@@ -316,6 +322,8 @@ function draw() {
       slope = fPrime(cartX);
       concavity = fDoublePrime(cartX);
       v = 0;
+      horizontalVel = 0;
+      verticalVel = 0;
     }
   }
 
@@ -376,10 +384,12 @@ function draw() {
   textSize(16);
   textAlign(LEFT);
   fill(255, 255, 255, 180); // Semi-transparent white box
-  rect(screenX + 20, screenY - 10, 160, 50);
+  rect(screenX + 20, screenY - 10, 200, 90);
   fill(0); // Black text
   text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
   text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
+  text("Vx: " + horizontalVel.toFixed(2) + " m/s", screenX + 25, screenY + 50);
+  text("Vy: " + verticalVel.toFixed(2) + " m/s", screenX + 25, screenY + 70);
 
   // Projectile trail (dotted red/blue) during projectile flight
   if (!onTrack && !hasLanded && !isTeleporting && projectileTrail.length > 1) {
