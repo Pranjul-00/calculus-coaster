@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Simulation - The Calculus of Thrill</title>
     <link rel="stylesheet" href="../css/style.css">
+    <!-- KaTeX for mathematical equations in the projectile equation block -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
     <script src="../js/sketch.js"></script>
 </head>
@@ -47,6 +50,22 @@
                         <button id="openCanvasOverlayBtn" class="canvas-enlarge-icon" aria-label="Enlarge simulation">⤢</button>
                     </div>
 
+                    <div class="projectile-equation-block" id="projectileEquationBlock">
+                        <h3>Projectile Path Equations</h3>
+                        <div class="projectile-equation-row">
+                            <div class="projectile-equation-label">Parametric in time</div>
+                            <p id="projectileEquationTime" class="projectile-equation-text">
+                                Launch the cart to see x(t) and y(t).
+                            </p>
+                        </div>
+                        <div class="projectile-equation-row">
+                            <div class="projectile-equation-label">Cartesian in x</div>
+                            <p id="projectileEquationX" class="projectile-equation-text">
+                                Launch the cart to see y(x).
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="simulation-controls">
                         <div class="controls-row">
                             <button id="playPauseBtn" class="sim-button">Pause</button>
@@ -59,13 +78,15 @@
                         </div>
                         <div class="gravity-control">
                             <span>Gravity g (m/s²):</span>
-                            <input type="number" id="gravityInput" min="0" max="9999" step="0.1" value="9.81">
+                            <input type="number" id="gravityInput" min="0" max="1000000000" step="0.1" value="9.81">
                             <button id="gravityApplyBtn" class="sim-button">Apply</button>
+                            <button id="gravityResetBtn" class="sim-button">Reset</button>
                         </div>
                         <div class="initial-speed-control">
                             <span>Initial speed v₀ (m/s):</span>
-                            <input type="number" id="initialSpeedInput" min="0" max="9999" step="0.1" value="0.5">
+                            <input type="number" id="initialSpeedInput" min="0" max="1000000000" step="0.1" value="0.5">
                             <button id="initialSpeedApplyBtn" class="sim-button">Apply</button>
+                            <button id="initialSpeedResetBtn" class="sim-button">Reset</button>
                         </div>
                     </div>
                 </div>

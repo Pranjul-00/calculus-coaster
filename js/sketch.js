@@ -5,14 +5,21 @@
 */
 
 // --- 1. Global Variables & Constants ---
-let g = 9.81; // Acceleration due to gravity (m/s^2)
+const defaultG = 9.81;
+const defaultInitialSpeed = 0.5;
+let g = defaultG; // Acceleration due to gravity (m/s^2)
 const trackStartHeight = 20.0; // The track's actual start height
 const worldXMax = 50.0;
 const landedPauseDuration = 1.5;
 const teleportDuration = 1.5;
-let initialSpeed = 0.5;
+let initialSpeed = defaultInitialSpeed;
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
+
+// Sticky camera bounds (world coordinates). These expand as needed during a run
+// to keep the cart, projectile path, and HUD visible, and reset between runs.
+let cameraWorldXMax = worldXMax;
+let cameraWorldYMax = 22.0;
 
 let cartX = 0.0; // Cart's current X position (in meters, 0 to 25)
 let cartY = 0.0; // Cart's current Y position (in meters)
@@ -29,6 +36,117 @@ let isTeleporting = false;
 let teleportTimer = 0.0;
 let landingX = 0.0;
 let projectileTrail = [];
+let rideTime = 0.0;
+let arcDistance = 0.0;
+let projectileEquationElement = null;
+let projectileEquationTimeElement = null;
+let projectileEquationXElement = null;
+
+let lastLaunchX = null;
+let lastLaunchY = null;
+let lastLaunchVx = null;
+let lastLaunchVy = null;
+
+function formatProjectileNumber(n) {
+  if (Number.isFinite(n)) {
+    return n.toFixed(2);
+  }
+  return String(n);
+}
+
+function updateProjectileEquation(launchX, launchY, vx0, vy0) {
+  if (!projectileEquationTimeElement || !projectileEquationXElement) {
+    return;
+  }
+
+  if (!Number.isFinite(launchX) || !Number.isFinite(launchY) ||
+      !Number.isFinite(vx0) || !Number.isFinite(vy0) || !Number.isFinite(g)) {
+    const msg = "Projectile equation unavailable for this launch.";
+    projectileEquationTimeElement.textContent = msg;
+    projectileEquationXElement.textContent = msg;
+    return;
+  }
+
+  const x0 = launchX;
+  const y0 = launchY;
+  const x0Str = formatProjectileNumber(x0);
+  const y0Str = formatProjectileNumber(y0);
+  const vx0Str = formatProjectileNumber(vx0);
+  const vy0Str = formatProjectileNumber(vy0);
+  const gStr = formatProjectileNumber(g);
+  const gHalf = 0.5 * g;
+  const gHalfStr = formatProjectileNumber(gHalf);
+
+  // Cache last launch parameters so we can re-render equations when g changes.
+  lastLaunchX = x0;
+  lastLaunchY = y0;
+  lastLaunchVx = vx0;
+  lastLaunchVy = vy0;
+
+  // LaTeX for parametric equations at this launch.
+  const timeLatex =
+    "\\begin{aligned}" +
+    "x(t) &= " + x0Str + " + " + vx0Str + " t\\\\" +
+    "y(t) &= " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2" +
+    "\\end{aligned}";
+
+  // Prefer KaTeX rendering, fall back to plain text if unavailable.
+  if (window.katex && window.katex.render) {
+    projectileEquationTimeElement.innerHTML = "";
+    window.katex.render(timeLatex, projectileEquationTimeElement, {
+      displayMode: true,
+      throwOnError: false
+    });
+  } else {
+    const fallback =
+      "x(t) = " + x0Str + " + " + vx0Str + " t; " +
+      "y(t) = " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2";
+
+    projectileEquationTimeElement.textContent = fallback;
+  }
+
+  if (Math.abs(vx0) < 1e-6) {
+    projectileEquationXElement.textContent = "y(x) is undefined for vertical launch (vx ≈ 0).";
+    return;
+  }
+
+  const a = vy0 / vx0;
+  const b = g / (2 * vx0 * vx0);
+  const aStr = formatProjectileNumber(a);
+  const bStr = formatProjectileNumber(b);
+
+  // Expand y(x) = y0 + a(x - x0) - b(x - x0)^2 into Ax^2 + Bx + C.
+  const A = -b;
+  const B = a + 2 * b * x0;
+  const C = y0 - a * x0 - b * x0 * x0;
+  const AStr = formatProjectileNumber(A);
+  const BStr = formatProjectileNumber(B);
+  const CStr = formatProjectileNumber(C);
+
+  // LaTeX for Cartesian equation y(x) for this launch: vertex form and expanded form.
+  const xLatex =
+    "\\begin{aligned}" +
+    "y(x) &= " + y0Str +
+    " + " + aStr + " (x - " + x0Str + ")" +
+    " - " + bStr + " (x - " + x0Str + ")^2 \\\\" +
+    "     &= " + AStr + " x^2 + " + BStr + " x + " + CStr +
+    "\\end{aligned}";
+
+  if (window.katex && window.katex.render) {
+    projectileEquationXElement.innerHTML = "";
+    window.katex.render(xLatex, projectileEquationXElement, {
+      displayMode: true,
+      throwOnError: false
+    });
+  } else {
+    const fallbackX =
+      "y(x) = " + y0Str +
+      " + " + aStr + " (x - " + x0Str + ")" +
+      " - " + bStr + " (x - " + x0Str + ")^2; " +
+      "y(x) = " + AStr + " x^2 + " + BStr + " x + " + CStr;
+    projectileEquationXElement.textContent = fallbackX;
+  }
+}
 
 function updateEnergyStartHeight() {
   energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
@@ -96,8 +214,8 @@ function fDoublePrime(x) {
 
 // --- 3. The Setup Function (Runs Once) ---
 function setup() {
-  // 1200x400 pixel canvas
-  let canvas = createCanvas(1200, 400);
+  // 1200x500 pixel canvas
+  let canvas = createCanvas(1200, 500);
   // Tell the canvas to live inside the div we made in index.html
   canvas.parent('canvas-container');
   cartX = 0; // Start cart at x=0
@@ -108,15 +226,27 @@ function setup() {
   const speedValue = document.getElementById('speedValue');
   const gravityInput = document.getElementById('gravityInput');
   const gravityApplyBtn = document.getElementById('gravityApplyBtn');
+  const gravityResetBtn = document.getElementById('gravityResetBtn');
   const initialSpeedInput = document.getElementById('initialSpeedInput');
   const initialSpeedApplyBtn = document.getElementById('initialSpeedApplyBtn');
+  const initialSpeedResetBtn = document.getElementById('initialSpeedResetBtn');
   const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
   const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
+  const projectileEquationTime = document.getElementById('projectileEquationTime');
+  const projectileEquationX = document.getElementById('projectileEquationX');
+
+  projectileEquationElement = document.getElementById('projectileEquationBlock');
+  projectileEquationTimeElement = projectileEquationTime;
+  projectileEquationXElement = projectileEquationX;
 
   if (playPauseBtn && resetBtn && speedSlider && speedValue &&
-    gravityInput && gravityApplyBtn &&
-    initialSpeedInput && initialSpeedApplyBtn) {
+    gravityInput && gravityApplyBtn && gravityResetBtn &&
+    initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn &&
+    projectileEquationTime && projectileEquationX) {
+
+    projectileEquationTime.textContent = "Launch the cart to see x(t) and y(t).";
+    projectileEquationX.textContent = "Launch the cart to see y(x).";
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -137,6 +267,18 @@ function setup() {
       projectileVy = 0.0;
       landingX = 0.0;
       projectileTrail = [];
+      rideTime = 0.0;
+      arcDistance = 0.0;
+      cameraWorldXMax = worldXMax;
+      cameraWorldYMax = 22.0;
+      lastLaunchX = null;
+      lastLaunchY = null;
+      lastLaunchVx = null;
+      lastLaunchVy = null;
+      if (projectileEquationTimeElement && projectileEquationXElement) {
+        projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
+        projectileEquationXElement.textContent = "Launch the cart to see y(x).";
+      }
     });
 
     speedSlider.addEventListener('input', () => {
@@ -149,9 +291,14 @@ function setup() {
 
     const applyGravity = () => {
       const newG = parseFloat(gravityInput.value);
-      if (!isNaN(newG) && newG > 0 && newG <= 30) {
+      if (!isNaN(newG) && newG > 0 && newG <= 1000000000) {
         g = newG;
         updateEnergyStartHeight();
+
+        if (lastLaunchX !== null && lastLaunchY !== null &&
+            lastLaunchVx !== null && lastLaunchVy !== null) {
+          updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
+        }
       } else {
         gravityInput.value = g.toFixed(2);
       }
@@ -160,9 +307,20 @@ function setup() {
     gravityApplyBtn.addEventListener('click', applyGravity);
     gravityInput.addEventListener('change', applyGravity);
 
+    gravityResetBtn.addEventListener('click', () => {
+      g = defaultG;
+      gravityInput.value = g.toFixed(2);
+      updateEnergyStartHeight();
+
+      if (lastLaunchX !== null && lastLaunchY !== null &&
+          lastLaunchVx !== null && lastLaunchVy !== null) {
+        updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
+      }
+    });
+
     const applyInitialSpeed = () => {
       const newV0 = parseFloat(initialSpeedInput.value);
-      if (!isNaN(newV0) && newV0 >= 0 && newV0 <= 50) {
+      if (!isNaN(newV0) && newV0 >= 0 && newV0 <= 1000000000) {
         initialSpeed = newV0;
         updateEnergyStartHeight();
       } else {
@@ -172,6 +330,12 @@ function setup() {
 
     initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
     initialSpeedInput.addEventListener('change', applyInitialSpeed);
+
+    initialSpeedResetBtn.addEventListener('click', () => {
+      initialSpeed = defaultInitialSpeed;
+      initialSpeedInput.value = initialSpeed.toFixed(2);
+      updateEnergyStartHeight();
+    });
 
     if (openOverlayBtn && canvasOverlayBackdrop && canvasOverlayCloseBtn) {
       const openOverlay = () => {
@@ -213,6 +377,8 @@ function draw() {
     verticalVel = slope * horizontalVel;
 
     if (running) {
+      rideTime += dt;
+      arcDistance += v * dt;
       cartX += horizontalVel * dt;
 
       if (cartX >= 35) {
@@ -231,6 +397,7 @@ function draw() {
         landedTimer = 0.0;
         teleportTimer = 0.0;
         landingX = projectileX;
+        updateProjectileEquation(projectileX, projectileY, projectileVx, projectileVy);
       } else {
         cartY = f(cartX);
       }
@@ -259,14 +426,23 @@ function draw() {
     cartY = projectileY;
 
     v = Math.sqrt(projectileVx * projectileVx + projectileVy * projectileVy);
+    horizontalVel = projectileVx;
+    verticalVel = projectileVy;
     slope = 0;
     concavity = 0;
+
+    if (running) {
+      rideTime += dt;
+      arcDistance += v * dt;
+    }
   } else if (hasLanded && !isTeleporting) {
     // Landed on the ground: pause before teleport
     cartX = projectileX;
     cartY = 0;
 
     v = 0;
+    horizontalVel = 0;
+    verticalVel = 0;
     slope = 0;
     concavity = 0;
 
@@ -293,6 +469,11 @@ function draw() {
         projectileVx = 0.0;
         projectileVy = 0.0;
         projectileTrail = [];
+        rideTime = 0.0;
+        arcDistance = 0.0;
+        landingX = 0.0;
+        cameraWorldXMax = worldXMax;
+        cameraWorldYMax = 22.0;
       } else {
         let t = teleportTimer / teleportDuration;
 
@@ -309,6 +490,8 @@ function draw() {
 
     if (!onTrack) {
       v = 0;
+      horizontalVel = 0;
+      verticalVel = 0;
       slope = 0;
       concavity = 0;
     } else {
@@ -316,6 +499,8 @@ function draw() {
       slope = fPrime(cartX);
       concavity = fDoublePrime(cartX);
       v = 0;
+      horizontalVel = 0;
+      verticalVel = 0;
     }
   }
 
@@ -323,6 +508,30 @@ function draw() {
   if (!onTrack || hasLanded || isTeleporting) {
     h = cartY;
   }
+
+  let baseWorldXMax = worldXMax;
+  let baseWorldYMax = 22.0;
+  let paddingX = 5.0;
+  let paddingY = 2.0;
+
+  // Requested bounds from current simulation state
+  let farthestX = Math.max(cartX, projectileX, landingX);
+  let farthestY = Math.max(cartY, projectileY, f(0), f(35));
+  let requestedXMax = Math.max(baseWorldXMax, farthestX + paddingX);
+  let requestedYMax = Math.max(baseWorldYMax, farthestY + paddingY);
+
+  if (isTeleporting && teleportTimer >= 0.5) {
+    // After 0.5 s of teleport, snap back to default bounds
+    cameraWorldXMax = baseWorldXMax;
+    cameraWorldYMax = baseWorldYMax;
+  } else {
+    // Expand sticky camera bounds during a run as needed
+    cameraWorldXMax = Math.max(cameraWorldXMax, requestedXMax);
+    cameraWorldYMax = Math.max(cameraWorldYMax, requestedYMax);
+  }
+
+  let displayWorldXMax = cameraWorldXMax;
+  let displayWorldYMax = cameraWorldYMax;
 
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
@@ -334,14 +543,14 @@ function draw() {
 
   // --- C. Coordinate Transformation ---
   // Map our new [0m, 22m] height range to the canvas
-  let screenX = map(cartX, 0, worldXMax, 50, width - 50);
+  let screenX = map(cartX, 0, displayWorldXMax, 50, width - 50);
 
-  let screenY = map(cartY, 0, 22, height - 50, 50);
+  let screenY = map(cartY, 0, displayWorldYMax, height - 50, 50);
 
   // Draw ground at y = 0
   stroke(120, 100, 80);
   strokeWeight(3);
-  let groundY = map(0, 0, 22, height - 50, 50);
+  let groundY = map(0, 0, displayWorldYMax, height - 50, 50);
   line(50, groundY, width - 50, groundY);
 
   // --- D. Draw the Track ---
@@ -351,8 +560,8 @@ function draw() {
   for (let x = 0; x <= 35; x += 0.1) {
     let y = f(x);
     // Map each point to the new [0m, 22m] height range
-    let plotX = map(x, 0, worldXMax, 50, width - 50);
-    let plotY = map(y, 0, 22, height - 50, 50);
+    let plotX = map(x, 0, displayWorldXMax, 50, width - 50);
+    let plotY = map(y, 0, displayWorldYMax, height - 50, 50);
     vertex(plotX, plotY);
   }
   endShape();
@@ -370,24 +579,94 @@ function draw() {
   // Save current drawing settings
   push();
 
-  // Draw the text
-  fill(0); // Black text
-  noStroke();
-  textSize(16);
-  textAlign(LEFT);
-  fill(255, 255, 255, 180); // Semi-transparent white box
-  rect(screenX + 20, screenY - 10, 160, 50);
-  fill(0); // Black text
-  text("Speed: " + speedKPH.toFixed(1) + " km/h", screenX + 25, screenY + 10);
-  text("G-Force: " + Gs.toFixed(2) + " Gs", screenX + 25, screenY + 30);
+  if (!isTeleporting) {
+
+    // Draw the text
+    fill(0); // Black text
+    noStroke();
+    textSize(16);
+    textAlign(LEFT);
+
+    // Base HUD position next to the cart
+    let hudWidth = 220;
+    let hudHeight = 130;
+    let margin = 25;
+
+    // Treat the cart as a small box for overlap checks
+    let cartRadius = 10;
+    let cartLeft = screenX - cartRadius;
+    let cartRight = screenX + cartRadius;
+    let cartTop = screenY - cartRadius;
+    let cartBottom = screenY + cartRadius;
+
+    // Candidate HUD positions around the cart. We will clamp each
+    // candidate to the canvas margins and pick the first that does
+    // not overlap the cart box.
+    let candidates = [
+      // Right of cart
+      { x: screenX + 20, y: screenY - hudHeight / 2 },
+      // Above cart
+      { x: screenX - hudWidth / 2, y: screenY - hudHeight - 20 },
+      // Below cart
+      { x: screenX - hudWidth / 2, y: screenY + 20 },
+      // Left of cart
+      { x: screenX - hudWidth - 20, y: screenY - hudHeight / 2 }
+    ];
+
+    // Default to the first candidate; we will refine below
+    let hudX = candidates[0].x;
+    let hudY = candidates[0].y;
+
+    for (let i = 0; i < candidates.length; i++) {
+      let c = candidates[i];
+
+      // Clamp candidate inside margins
+      let candidateX = Math.min(
+        Math.max(c.x, margin),
+        width - margin - hudWidth
+      );
+      let candidateY = Math.min(
+        Math.max(c.y, margin),
+        height - margin - hudHeight
+      );
+
+      let hudLeft = candidateX;
+      let hudRight = candidateX + hudWidth;
+      let hudTop = candidateY;
+      let hudBottom = candidateY + hudHeight;
+
+      let overlapsCart = !(
+        hudLeft > cartRight ||
+        hudRight < cartLeft ||
+        hudTop > cartBottom ||
+        hudBottom < cartTop
+      );
+
+      if (!overlapsCart) {
+        hudX = candidateX;
+        hudY = candidateY;
+        break;
+      }
+    }
+
+    fill(255, 255, 255, 180); // Semi-transparent white box
+    rect(hudX, hudY, hudWidth, hudHeight);
+    fill(0); // Black text
+    text("Speed: " + speedKPH.toFixed(1) + " km/h", hudX + 5, hudY + 20);
+    text("G-Force: " + Gs.toFixed(2) + " Gs", hudX + 5, hudY + 40);
+    text("Vx: " + horizontalVel.toFixed(2) + " m/s", hudX + 5, hudY + 60);
+    text("Vy: " + verticalVel.toFixed(2) + " m/s", hudX + 5, hudY + 80);
+    text("Dist: " + arcDistance.toFixed(2) + " m", hudX + 5, hudY + 100);
+    text("Time: " + rideTime.toFixed(2) + " s", hudX + 5, hudY + 120);
+  }
 
   // Projectile trail (dotted red/blue) during projectile flight
   if (!onTrack && !hasLanded && !isTeleporting && projectileTrail.length > 1) {
     noStroke();
     for (let i = 0; i < projectileTrail.length; i += 2) {
       let p = projectileTrail[i];
-      let px = map(p.x, 0, worldXMax, 50, width - 50);
-      let py = map(p.y, 0, 22, height - 50, 50);
+      let px = map(p.x, 0, displayWorldXMax, 50, width - 50);
+      let py = map(p.y, 0, displayWorldYMax, height - 50, 50);
       if (((i / 2) % 2) === 0) {
         fill(255, 0, 0); // red
       } else {
@@ -406,10 +685,10 @@ function draw() {
 
   // Teleportation pixel effect
   if (isTeleporting) {
-    let landingScreenX = map(landingX, 0, worldXMax, 50, width - 50);
+    let landingScreenX = map(landingX, 0, displayWorldXMax, 50, width - 50);
     let landingScreenY = groundY;
-    let startScreenX = map(0, 0, worldXMax, 50, width - 50);
-    let startScreenY = map(f(0), 0, 22, height - 50, 50);
+    let startScreenX = map(0, 0, displayWorldXMax, 50, width - 50);
+    let startScreenY = map(f(0), 0, displayWorldYMax, height - 50, 50);
     let steps = 30;
     let progress = teleportTimer / teleportDuration;
     if (progress < 0) progress = 0;

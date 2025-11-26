@@ -273,10 +273,78 @@
                 <div class="purpose-box">
                     <h4>How This Connects to the Simulation:</h4>
                     <ul>
-                        <li>The times \(T_1, T_2, T_3, T_4\) are the instants when the cart passes x = 5, x = 15, x = 25, and finally reaches x = 35.</li>
-                        <li>In the p5.js code, time advances in small steps \(\Delta t\) using the frame time (<texttt>deltaTime</texttt>) and the speed slider multiplier.</li>
+                        <li>The times $T_1, T_2, T_3, T_4$ are the instants when the cart passes x = 5, x = 15, x = 25, and finally reaches x = 35.</li>
+                        <li>In the p5.js code, time advances in small steps $\Delta t$ using the frame time (<texttt>deltaTime</texttt>) and the speed slider multiplier.</li>
                         <li>At each step, the simulation updates x(t), then recomputes v(x(t)) and draws the new point on the track.</li>
-                        <li>If you plotted \(v(t)\) while the ride runs, you would see four connected graphs: one for each track segment.</li>
+                        <li>If you plotted $v(t)$ while the ride runs, you would see four connected graphs: one for each track segment.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Projectile Motion After Leaving the Track -->
+            <div class="theory-section">
+                <h2>Projectile Motion After Leaving the Track</h2>
+                <p class="section-intro"><strong>Goal:</strong> Derive the equations that describe the cart's flight once it leaves the track and follows a projectile path.</p>
+
+                <div class="master-equation">
+                    <h3>Step 1: Initial Conditions at Launch</h3>
+                    <p>At the instant the cart reaches the end of the track, we record its position and velocity:</p>
+                    <div class="equation">
+                        $$ x(0) = x_0, \quad y(0) = y_0, \quad v_x(0) = v_{x0}, \quad v_y(0) = v_{y0} $$
+                    </div>
+                    <p>Gravity provides a constant downward acceleration $$g$$, so the horizontal acceleration is zero and the vertical acceleration is $$-g$$.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Step 2: Time&ndash;Parametric Equations $x(t)$ and $y(t)$</h3>
+                    <p>Using standard constant-acceleration kinematics with these initial conditions:</p>
+                    <div class="equation">
+                        $$
+                        \begin{aligned}
+                        x(t) &= x_0 + v_{x0}\,t, \\
+                        y(t) &= y_0 + v_{y0}\,t - \tfrac{1}{2} g t^2
+                        \end{aligned}
+                        $$
+                    </div>
+                    <p>These are exactly the equations shown in the simulation panel as $x(t)$ and $y(t)$.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Step 3: Eliminating Time to Get $y(x)$</h3>
+                    <p>When the horizontal component of velocity is non-zero ($v_{x0} \neq 0$), we can solve the first equation for time:</p>
+                    <div class="equation">
+                        $$ t = \dfrac{x - x_0}{v_{x0}} $$
+                    </div>
+                    <p>Substituting this into the vertical equation gives a quadratic expression in terms of $x$:</p>
+                    <div class="equation">
+                        $$
+                        \begin{aligned}
+                        y(x)
+                        &= y_0 + v_{y0} \left(\dfrac{x - x_0}{v_{x0}}\right)
+                           - \tfrac{1}{2} g \left(\dfrac{x - x_0}{v_{x0}}\right)^2 \\
+                        &= y_0 + \dfrac{v_{y0}}{v_{x0}}(x - x_0)
+                           - \dfrac{g}{2 v_{x0}^2}(x - x_0)^2
+                        \end{aligned}
+                        $$
+                    </div>
+                    <p>This downward-opening parabola in $x$ is the "Cartesian" form $y(x)$ displayed under the simulation canvas.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Step 4: Special Case &mdash; Nearly Vertical Launch</h3>
+                    <p>If $v_{x0} \approx 0$, then the motion is (almost) vertical and $x(t) \approx x_0$. In this case it is not meaningful to write $y$ as a single-valued function of $x$, so the simulation:</p>
+                    <ul>
+                        <li>still shows the parametric equations $x(t)$ and $y(t)$,</li>
+                        <li>but explains that $y(x)$ is undefined for a vertical launch.</li>
+                    </ul>
+                </div>
+
+                <div class="purpose-box">
+                    <h4>Connection to the Code and Simulation Panel:</h4>
+                    <ul>
+                        <li>The launch data $x_0, y_0, v_{x0}, v_{y0}$ are taken from the last point on the track just before the cart becomes a projectile.</li>
+                        <li>The p5.js code uses these formulas to update the projectile's position frame by frame and to render the dotted flight path.</li>
+                        <li>The equation panel beneath the canvas prints both forms: the time-parametric equations $x(t), y(t)$ and the Cartesian parabola $y(x)$, directly matching the derivations above.</li>
                     </ul>
                 </div>
             </div>
