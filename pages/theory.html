@@ -369,6 +369,7 @@
                         $$
                     </div>
                     <p>The total ride time combines the on-track time and the in-air time until the cart lands back on the ground.</p>
+                    <p>In the simulation code, the same time step $\Delta t = \dfrac{\texttt{deltaTime}}{1000}\cdot \texttt{timeScale}$ is used during projectile motion: the equations above update $(x(t), y(t))$ each frame while the running clock <code>rideTime</code> continues to accumulate until the cart reaches the ground.</p>
                 </div>
             </div>
 
@@ -437,6 +438,72 @@
                         <li>The p5.js code uses these formulas to update the projectile's position frame by frame and to render the dotted flight path.</li>
                         <li>The equation panel beneath the canvas prints both forms: the time-parametric equations $x(t), y(t)$ and the Cartesian parabola $y(x)$, directly matching the derivations above.</li>
                     </ul>
+                </div>
+            </div>
+
+            <!-- Arc Length of the Track -->
+            <div class="theory-section">
+                <h2>Arc Length of the Track</h2>
+                <p class="section-intro"><strong>Goal:</strong> Compute the total distance along the track by integrating the length of each piecewise segment.</p>
+
+                <div class="master-equation">
+                    <h3>General Arc Length Formula</h3>
+                    <p>For a curve defined as $y = f(x)$, the arc length from $x = a$ to $x = b$ is</p>
+                    <div class="equation">
+                        $$
+                        L(a,b) = \int_a^b \sqrt{1 + [f'(x)]^2}\,dx.
+                        $$
+                    </div>
+                </div>
+
+                <div class="piecewise-function">
+                    <h3>Piecewise Arc Length for the Four Segments</h3>
+                    <div class="piece">
+                        <span class="condition">Segment 1: 0 \le x < 5</span>
+                        <div class="equation">
+                            $$
+                            f_1'(x) = -0.64 x,\qquad
+                            L_1 = \int_0^5 \sqrt{1 + (-0.64 x)^2}\,dx.
+                            $$
+                        </div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">Segment 2: 5 \le x < 15</span>
+                        <div class="equation">
+                            $$
+                            f_2'(x) = 0.0256 (x - 10)^3,\qquad
+                            L_2 = \int_5^{15} \sqrt{1 + \bigl(0.0256 (x - 10)^3\bigr)^2}\,dx.
+                            $$
+                        </div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">Segment 3: 15 \le x < 25</span>
+                        <div class="equation">
+                            $$
+                            f_3'(x) = -0.64 (x - 20),\qquad
+                            L_3 = \int_{15}^{25} \sqrt{1 + \bigl(-0.64 (x - 20)\bigr)^2}\,dx.
+                            $$
+                        </div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">Segment 4: 25 \le x \le 35</span>
+                        <div class="equation">
+                            $$
+                            f_4'(x) = 0.64 (x - 30),\qquad
+                            L_4 = \int_{25}^{35} \sqrt{1 + \bigl(0.64 (x - 30)\bigr)^2}\,dx.
+                            $$
+                        </div>
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Total Track Length</h3>
+                    <div class="equation">
+                        $$
+                        L_{\text{total}} = L_1 + L_2 + L_3 + L_4.
+                        $$
+                    </div>
+                    <p>In practice, these integrals are evaluated numerically (for example, using Mathematica). In the simulation, a related running distance variable <code>arcDistance</code> accumulates the distance the cart has actually traveled during the ride.</p>
                 </div>
             </div>
 

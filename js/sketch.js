@@ -41,6 +41,10 @@ let arcDistance = 0.0;
 let projectileEquationElement = null;
 let projectileEquationTimeElement = null;
 let projectileEquationXElement = null;
+let trackTimeElement = null;
+let totalTimeElement = null;
+let trackTime = null;
+let totalTime = null;
 
 let lastLaunchX = null;
 let lastLaunchY = null;
@@ -235,18 +239,26 @@ function setup() {
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
   const projectileEquationTime = document.getElementById('projectileEquationTime');
   const projectileEquationX = document.getElementById('projectileEquationX');
+  const trackTimeDisplay = document.getElementById('trackTimeDisplay');
+  const totalTimeDisplay = document.getElementById('totalTimeDisplay');
 
   projectileEquationElement = document.getElementById('projectileEquationBlock');
   projectileEquationTimeElement = projectileEquationTime;
   projectileEquationXElement = projectileEquationX;
+  trackTimeElement = trackTimeDisplay;
+  totalTimeElement = totalTimeDisplay;
 
   if (playPauseBtn && resetBtn && speedSlider && speedValue &&
     gravityInput && gravityApplyBtn && gravityResetBtn &&
     initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn &&
-    projectileEquationTime && projectileEquationX) {
+    projectileEquationTime && projectileEquationX &&
+    trackTimeDisplay && totalTimeDisplay) {
 
     projectileEquationTime.textContent = "Launch the cart to see x(t) and y(t).";
     projectileEquationX.textContent = "Launch the cart to see y(x).";
+
+    trackTimeDisplay.textContent = "Time to cover track: \u2014";
+    totalTimeDisplay.textContent = "Total time until landing: \u2014";
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -278,6 +290,12 @@ function setup() {
       if (projectileEquationTimeElement && projectileEquationXElement) {
         projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
         projectileEquationXElement.textContent = "Launch the cart to see y(x).";
+      }
+      trackTime = null;
+      totalTime = null;
+      if (trackTimeElement && totalTimeElement) {
+        trackTimeElement.textContent = "Time to cover track: \u2014";
+        totalTimeElement.textContent = "Total time until landing: \u2014";
       }
     });
 
@@ -397,6 +415,13 @@ function draw() {
         landedTimer = 0.0;
         teleportTimer = 0.0;
         landingX = projectileX;
+        if (trackTime === null) {
+          trackTime = rideTime;
+          if (trackTimeElement) {
+            trackTimeElement.textContent =
+              "Time to cover track: " + trackTime.toFixed(2) + " s";
+          }
+        }
         updateProjectileEquation(projectileX, projectileY, projectileVx, projectileVy);
       } else {
         cartY = f(cartX);
@@ -417,6 +442,13 @@ function draw() {
         landedTimer = 0.0;
         projectileVy = 0.0;
         landingX = projectileX;
+        if (totalTime === null) {
+          totalTime = rideTime;
+          if (totalTimeElement) {
+            totalTimeElement.textContent =
+              "Total time until landing: " + totalTime.toFixed(2) + " s";
+          }
+        }
       }
 
       projectileTrail.push({ x: projectileX, y: projectileY });
