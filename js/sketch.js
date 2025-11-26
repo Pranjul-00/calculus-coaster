@@ -45,6 +45,8 @@ let trackTimeElement = null;
 let totalTimeElement = null;
 let trackTime = null;
 let totalTime = null;
+let trackDistance = null;
+let totalDistance = null;
 
 let lastLaunchX = null;
 let lastLaunchY = null;
@@ -251,14 +253,17 @@ function setup() {
   if (playPauseBtn && resetBtn && speedSlider && speedValue &&
     gravityInput && gravityApplyBtn && gravityResetBtn &&
     initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn &&
-    projectileEquationTime && projectileEquationX &&
-    trackTimeDisplay && totalTimeDisplay) {
+    projectileEquationTime && projectileEquationX) {
 
     projectileEquationTime.textContent = "Launch the cart to see x(t) and y(t).";
     projectileEquationX.textContent = "Launch the cart to see y(x).";
 
-    trackTimeDisplay.textContent = "Time to cover track: \u2014";
-    totalTimeDisplay.textContent = "Total time until landing: \u2014";
+    if (trackTimeDisplay) {
+      trackTimeDisplay.textContent = "Time to cover track: \u2014";
+    }
+    if (totalTimeDisplay) {
+      totalTimeDisplay.textContent = "Total time until landing: \u2014";
+    }
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -293,6 +298,8 @@ function setup() {
       }
       trackTime = null;
       totalTime = null;
+      trackDistance = null;
+      totalDistance = null;
       if (trackTimeElement && totalTimeElement) {
         trackTimeElement.textContent = "Time to cover track: \u2014";
         totalTimeElement.textContent = "Total time until landing: \u2014";
@@ -401,6 +408,7 @@ function draw() {
 
       if (cartX >= 35) {
         cartX = 35;
+
         cartY = f(cartX);
         projectileX = cartX;
         projectileY = cartY;
@@ -417,9 +425,11 @@ function draw() {
         landingX = projectileX;
         if (trackTime === null) {
           trackTime = rideTime;
+          trackDistance = arcDistance;
           if (trackTimeElement) {
             trackTimeElement.textContent =
               "Time to cover track: " + trackTime.toFixed(2) + " s";
+
           }
         }
         updateProjectileEquation(projectileX, projectileY, projectileVx, projectileVy);
@@ -444,9 +454,11 @@ function draw() {
         landingX = projectileX;
         if (totalTime === null) {
           totalTime = rideTime;
+          totalDistance = arcDistance;
           if (totalTimeElement) {
             totalTimeElement.textContent =
               "Total time until landing: " + totalTime.toFixed(2) + " s";
+
           }
         }
       }
@@ -506,6 +518,10 @@ function draw() {
         landingX = 0.0;
         cameraWorldXMax = worldXMax;
         cameraWorldYMax = 22.0;
+        trackTime = null;
+        totalTime = null;
+        trackDistance = null;
+        totalDistance = null;
       } else {
         let t = teleportTimer / teleportDuration;
 
@@ -778,4 +794,51 @@ function draw() {
     // Restore settings
     pop();
   }
+
+  // Pinned summary HUDs at top center (screen space, independent of zoom)
+  push();
+  textAlign(CENTER);
+  textSize(14);
+  noStroke();
+
+  let summaryHudWidth = 430;
+  let summaryHudHeight = 30;
+  let summaryMarginTop = 30;
+  let centerX = width / 2;
+
+  if (trackTime !== null && trackDistance !== null) {
+    fill(255, 255, 255, 210);
+    let boxX = centerX - summaryHudWidth / 2;
+    let boxY = summaryMarginTop;
+    rect(boxX, boxY, summaryHudWidth, summaryHudHeight);
+
+    fill(0);
+    let textY = boxY + summaryHudHeight / 2 + 5;
+    text(
+      "Track 0-35 m: Dist " + trackDistance.toFixed(2) + " m, Time " + trackTime.toFixed(2) + " s",
+      centerX,
+      textY
+    );
+  }
+
+  if (totalTime !== null && totalDistance !== null &&
+      trackTime !== null && trackDistance !== null) {
+    let projDist = totalDistance - trackDistance;
+    let projTime = totalTime - trackTime;
+
+    fill(255, 255, 255, 210);
+    let boxX2 = centerX - summaryHudWidth / 2;
+    let boxY2 = summaryMarginTop + summaryHudHeight + 10;
+    rect(boxX2, boxY2, summaryHudWidth, summaryHudHeight);
+
+    fill(0);
+    let textY2 = boxY2 + summaryHudHeight / 2 + 5;
+    text(
+      "Projectile: Dist " + projDist.toFixed(2) + " m, Time " + projTime.toFixed(2) + " s",
+      centerX,
+      textY2
+    );
+  }
+
+  pop();
 }
