@@ -281,6 +281,97 @@
                 </div>
             </div>
 
+            <!-- Time Along the Track and Total Ride Time -->
+            <div class="theory-section">
+                <h2>Time Along the Track and Total Ride Time</h2>
+                <p class="section-intro">
+                    <strong>Physical Meaning:</strong>
+                    How long the ride has been running, measured along the curved track and during the projectile flight.
+                </p>
+
+                <div class="master-equation">
+                    <h3>Infinitesimal Time Step from Geometry and Energy</h3>
+                    <p>At a point x on the track, the small piece of track length is</p>
+                    <div class="equation">
+                        $$
+                        ds = \sqrt{1 + [f'(x)]^{2}}\,dx,
+                        \qquad
+                        v(x) = \sqrt{2g\bigl(h_{start} - f(x)\bigr)}.
+                        $$
+                    </div>
+                    <p>Time is distance divided by speed, so the small time needed to move from x to x + dx is</p>
+                    <div class="equation">
+                        $$
+                        dt = \frac{ds}{v(x)}
+                           = \frac{\sqrt{1 + [f'(x)]^{2}}}{\sqrt{2g\bigl(h_{start} - f(x)\bigr)}}\,dx.
+                        $$
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Time to Reach a Point on the Track</h3>
+                    <p>The theoretical time to reach horizontal position X on the track is the integral of these tiny time steps:</p>
+                    <div class="equation">
+                        $$
+                        T_{track}(X)
+                          = \int_{0}^{X}
+                            \frac{\sqrt{1 + [f'(u)]^{2}}}{\sqrt{2g\bigl(h_{start} - f(u)\bigr)}}
+                            \,du.
+                        $$
+                    </div>
+                    <p>In particular, the ideal time to reach the end of the track (x = 35) is</p>
+                    <div class="equation">
+                        $$
+                        T_{end} = T_{track}(35).
+                        $$
+                    </div>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Numerical Time Update in the Simulation</h3>
+                    <p>Instead of evaluating this integral exactly, the code keeps a running clock <code>rideTime</code> and updates it each frame by a small time step &Delta;t:</p>
+                    <div class="equation">
+                        $$
+                        \Delta t
+                          = \frac{\texttt{deltaTime}}{1000}\cdot \texttt{timeScale}.
+                        $$
+                    </div>
+                    <div class="equation">
+                        $$
+                        T_{sim}(t + \Delta t)
+                          = T_{sim}(t) + \Delta t.
+                        $$
+                    </div>
+                    <p>At the same time, the simulation moves the cart using the horizontal component of velocity</p>
+                    <div class="equation">
+                        $$
+                        v_x(x) = \frac{v(x)}{\sqrt{1 + [f'(x)]^{2}}},
+                        $$
+                    </div>
+                    <p>via the Euler update</p>
+                    <div class="equation">
+                        $$
+                        x(t + \Delta t)
+                          = x(t) + v_x\bigl(x(t)\bigr)\,\Delta t.
+                        $$
+                    </div>
+                    <p>The value labeled <strong>Time</strong> in the simulation HUD is exactly this accumulated $T_{sim}$.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>Including Projectile Flight</h3>
+                    <p>After the cart leaves the track at x = 35, time continues to increase while the motion follows the projectile equations</p>
+                    <div class="equation">
+                        $$
+                        x(t) = x_0 + v_{x0} t,
+                        \qquad
+                        y(t) = y_0 + v_{y0} t - \tfrac{1}{2} g t^2.
+                        $$
+                    </div>
+                    <p>The total ride time combines the on-track time and the in-air time until the cart lands back on the ground.</p>
+                </div>
+            </div>
+
             <!-- Projectile Motion After Leaving the Track -->
             <div class="theory-section">
                 <h2>Projectile Motion After Leaving the Track</h2>
