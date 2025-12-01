@@ -1,8 +1,9 @@
-/* === ROLLER COASTER SIMULATOR (V4: FINAL WITH GRID) ===
+/* === ROLLER COASTER SIMULATOR (V5: FINAL WITH RANGE & HEIGHT) ===
    - Deeper, steeper track for more "thrill"
    - Real-time G-force and Speed (km/h) display
    - Tangent and Normal vectors
-   - COORDINATE GRID ADDED for mathematical rigor
+   - COORDINATE GRID included
+   - ADDED: Live Height (y) and Range (x) display
 */
 
 // --- 1. Global Variables & Constants ---
@@ -17,15 +18,14 @@ let initialSpeed = defaultInitialSpeed;
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
-// Sticky camera bounds (world coordinates). These expand as needed during a run
-// to keep the cart, projectile path, and HUD visible, and reset between runs.
+// Sticky camera bounds (world coordinates).
 let cameraWorldXMax = worldXMax;
 let cameraWorldYMax = 22.0;
 
-let cartX = 0.0; // Cart's current X position (in meters, 0 to 25)
-let cartY = 0.0; // Cart's current Y position (in meters)
-let running = true; // Whether the animation is running
-let timeScale = 1.0; // Speed multiplier for the animation
+let cartX = 0.0; // Cart's current X position
+let cartY = 0.0; // Cart's current Y position
+let running = true;
+let timeScale = 1.0;
 let onTrack = true;
 let projectileX = 0.0;
 let projectileY = 0.0;
@@ -84,20 +84,17 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
   const gHalf = 0.5 * g;
   const gHalfStr = formatProjectileNumber(gHalf);
 
-  // Cache last launch parameters so we can re-render equations when g changes.
   lastLaunchX = x0;
   lastLaunchY = y0;
   lastLaunchVx = vx0;
   lastLaunchVy = vy0;
 
-  // LaTeX for parametric equations at this launch.
   const timeLatex =
     "\\begin{aligned}" +
     "x(t) &= " + x0Str + " + " + vx0Str + " t\\\\" +
     "y(t) &= " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2" +
     "\\end{aligned}";
 
-  // Prefer KaTeX rendering, fall back to plain text if unavailable.
   if (window.katex && window.katex.render) {
     projectileEquationTimeElement.innerHTML = "";
     window.katex.render(timeLatex, projectileEquationTimeElement, {
@@ -105,11 +102,8 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
       throwOnError: false
     });
   } else {
-    const fallback =
-      "x(t) = " + x0Str + " + " + vx0Str + " t; " +
-      "y(t) = " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2";
-
-    projectileEquationTimeElement.textContent = fallback;
+    projectileEquationTimeElement.textContent = 
+      "x(t) = " + x0Str + " + " + vx0Str + " t; y(t) = " + y0Str + " + " + vy0Str + " t - " + gHalfStr + " t^2";
   }
 
   if (Math.abs(vx0) < 1e-6) {
@@ -122,7 +116,6 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
   const aStr = formatProjectileNumber(a);
   const bStr = formatProjectileNumber(b);
 
-  // Expand y(x) = y0 + a(x - x0) - b(x - x0)^2 into Ax^2 + Bx + C.
   const A = -b;
   const B = a + 2 * b * x0;
   const C = y0 - a * x0 - b * x0 * x0;
@@ -130,7 +123,6 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
   const BStr = formatProjectileNumber(B);
   const CStr = formatProjectileNumber(C);
 
-  // LaTeX for Cartesian equation y(x) for this launch: vertex form and expanded form.
   const xLatex =
     "\\begin{aligned}" +
     "y(x) &= " + y0Str +
@@ -146,12 +138,8 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
       throwOnError: false
     });
   } else {
-    const fallbackX =
-      "y(x) = " + y0Str +
-      " + " + aStr + " (x - " + x0Str + ")" +
-      " - " + bStr + " (x - " + x0Str + ")^2; " +
+    projectileEquationXElement.textContent = 
       "y(x) = " + AStr + " x^2 + " + BStr + " x + " + CStr;
-    projectileEquationXElement.textContent = fallbackX;
   }
 }
 
@@ -159,74 +147,57 @@ function updateEnergyStartHeight() {
   energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 }
 
-// --- 2. The Track Functions (NEW, Steeper) ---
-
-// f(x): Returns the height (y) of the track at a given x
+// --- 2. The Track Functions ---
 function f(x) {
   if (x >= 0 && x < 5) {
-    // f1(x) = 20 - 0.32*x^2
     return 20.0 - 0.32 * Math.pow(x, 2);
   } else if (x >= 5 && x < 15) {
-    // f2(x) = 0.0064*(x - 10)^4 + 8.0
     return 0.0064 * Math.pow(x - 10, 4) + 8.0;
   } else if (x >= 15 && x < 25) {
-    // f3(x) = 20.0 - 0.32*(x - 20)^2
     return 20.0 - 0.32 * Math.pow(x - 20, 2);
   } else if (x >= 25 && x <= 35) {
-    // f4(x) = 0.32*(x - 30)^2 + 4.0 (deeper valley than f2)
     return 0.32 * Math.pow(x - 30, 2) + 4.0;
   } else {
-    // Default case (if x goes out of bounds)
     return trackStartHeight;
   }
 }
 
-// f'(x): Returns the slope of the track at a given x
 function fPrime(x) {
   if (x >= 0 && x < 5) {
-    // f1'(x) = -0.64*x
     return -0.64 * x;
   } else if (x >= 5 && x < 15) {
-    // f2'(x) = 0.0256*(x - 10)^3
     return 0.0256 * Math.pow(x - 10, 3);
   } else if (x >= 15 && x < 25) {
-    // f3'(x) = -0.64*(x - 20)
     return -0.64 * (x - 20);
   } else if (x >= 25 && x <= 35) {
-    // f4'(x) = 0.64*(x - 30)
     return 0.64 * (x - 30);
   } else {
     return 0;
   }
 }
 
-// f''(x): Returns the concavity of the track at a given x
 function fDoublePrime(x) {
   if (x >= 0 && x < 5) {
-    // f1''(x) = -0.64
     return -0.64;
   } else if (x >= 5 && x < 15) {
-    // f2''(x) = 0.0768*(x - 10)^2
     return 0.0768 * Math.pow(x - 10, 2);
   } else if (x >= 15 && x < 25) {
-    // f3''(x) = -0.64
     return -0.64;
   } else if (x >= 25 && x <= 35) {
-    // f4''(x) = 0.64
     return 0.64;
   } else {
     return 0;
   }
 }
 
-// --- 3. The Setup Function (Runs Once) ---
+// --- 3. The Setup Function ---
 function setup() {
-  // 1200x500 pixel canvas
   let canvas = createCanvas(1200, 500);
-  // Tell the canvas to live inside the div we made in index.html
   canvas.parent('canvas-container');
-  cartX = 0; // Start cart at x=0
+  cartX = 0; 
   cartY = f(cartX);
+  
+  // Element selections (standard setup code)
   const playPauseBtn = document.getElementById('playPauseBtn');
   const resetBtn = document.getElementById('resetBtn');
   const speedSlider = document.getElementById('speedSlider');
@@ -251,20 +222,12 @@ function setup() {
   trackTimeElement = trackTimeDisplay;
   totalTimeElement = totalTimeDisplay;
 
-  if (playPauseBtn && resetBtn && speedSlider && speedValue &&
-    gravityInput && gravityApplyBtn && gravityResetBtn &&
-    initialSpeedInput && initialSpeedApplyBtn && initialSpeedResetBtn &&
-    projectileEquationTime && projectileEquationX) {
-
+  if (playPauseBtn) {
     projectileEquationTime.textContent = "Launch the cart to see x(t) and y(t).";
     projectileEquationX.textContent = "Launch the cart to see y(x).";
 
-    if (trackTimeDisplay) {
-      trackTimeDisplay.textContent = "Time to cover track: \u2014";
-    }
-    if (totalTimeDisplay) {
-      totalTimeDisplay.textContent = "Total time until landing: \u2014";
-    }
+    if (trackTimeDisplay) trackTimeDisplay.textContent = "Time to cover track: \u2014";
+    if (totalTimeDisplay) totalTimeDisplay.textContent = "Total time until landing: \u2014";
 
     playPauseBtn.addEventListener('click', () => {
       running = !running;
@@ -272,36 +235,17 @@ function setup() {
     });
 
     resetBtn.addEventListener('click', () => {
-      cartX = 0;
-      cartY = f(cartX);
-      onTrack = true;
-      hasLanded = false;
-      isTeleporting = false;
-      landedTimer = 0.0;
-      teleportTimer = 0.0;
-      projectileX = 0.0;
-      projectileY = 0.0;
-      projectileVx = 0.0;
-      projectileVy = 0.0;
-      landingX = 0.0;
-      projectileTrail = [];
-      rideTime = 0.0;
-      arcDistance = 0.0;
-      cameraWorldXMax = worldXMax;
-      cameraWorldYMax = 22.0;
-      lastLaunchX = null;
-      lastLaunchY = null;
-      lastLaunchVx = null;
-      lastLaunchVy = null;
-      if (projectileEquationTimeElement && projectileEquationXElement) {
+      cartX = 0; cartY = f(cartX); onTrack = true; hasLanded = false; isTeleporting = false;
+      landedTimer = 0.0; teleportTimer = 0.0; projectileX = 0.0; projectileY = 0.0;
+      projectileVx = 0.0; projectileVy = 0.0; landingX = 0.0; projectileTrail = [];
+      rideTime = 0.0; arcDistance = 0.0; cameraWorldXMax = worldXMax; cameraWorldYMax = 22.0;
+      lastLaunchX = null; lastLaunchY = null; lastLaunchVx = null; lastLaunchVy = null;
+      if (projectileEquationTimeElement) {
         projectileEquationTimeElement.textContent = "Launch the cart to see x(t) and y(t).";
         projectileEquationXElement.textContent = "Launch the cart to see y(x).";
       }
-      trackTime = null;
-      totalTime = null;
-      trackDistance = null;
-      totalDistance = null;
-      if (trackTimeElement && totalTimeElement) {
+      trackTime = null; totalTime = null; trackDistance = null; totalDistance = null;
+      if (trackTimeElement) {
         trackTimeElement.textContent = "Time to cover track: \u2014";
         totalTimeElement.textContent = "Total time until landing: \u2014";
       }
@@ -318,86 +262,42 @@ function setup() {
     const applyGravity = () => {
       const newG = parseFloat(gravityInput.value);
       if (!isNaN(newG) && newG > 0 && newG <= 1000000000) {
-        g = newG;
-        updateEnergyStartHeight();
-
-        if (lastLaunchX !== null && lastLaunchY !== null &&
-            lastLaunchVx !== null && lastLaunchVy !== null) {
-          updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
-        }
-      } else {
-        gravityInput.value = g.toFixed(2);
-      }
+        g = newG; updateEnergyStartHeight();
+        if (lastLaunchX !== null) updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
+      } else { gravityInput.value = g.toFixed(2); }
     };
-
     gravityApplyBtn.addEventListener('click', applyGravity);
     gravityInput.addEventListener('change', applyGravity);
-
-    gravityResetBtn.addEventListener('click', () => {
-      g = defaultG;
-      gravityInput.value = g.toFixed(2);
-      updateEnergyStartHeight();
-
-      if (lastLaunchX !== null && lastLaunchY !== null &&
-          lastLaunchVx !== null && lastLaunchVy !== null) {
-        updateProjectileEquation(lastLaunchX, lastLaunchY, lastLaunchVx, lastLaunchVy);
-      }
-    });
+    gravityResetBtn.addEventListener('click', () => { g = defaultG; gravityInput.value = g.toFixed(2); updateEnergyStartHeight(); });
 
     const applyInitialSpeed = () => {
       const newV0 = parseFloat(initialSpeedInput.value);
-      if (!isNaN(newV0) && newV0 >= 0 && newV0 <= 1000000000) {
-        initialSpeed = newV0;
-        updateEnergyStartHeight();
-      } else {
-        initialSpeedInput.value = initialSpeed.toFixed(2);
-      }
+      if (!isNaN(newV0) && newV0 >= 0) { initialSpeed = newV0; updateEnergyStartHeight(); } 
+      else { initialSpeedInput.value = initialSpeed.toFixed(2); }
     };
-
     initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
     initialSpeedInput.addEventListener('change', applyInitialSpeed);
+    initialSpeedResetBtn.addEventListener('click', () => { initialSpeed = defaultInitialSpeed; initialSpeedInput.value = initialSpeed.toFixed(2); updateEnergyStartHeight(); });
 
-    initialSpeedResetBtn.addEventListener('click', () => {
-      initialSpeed = defaultInitialSpeed;
-      initialSpeedInput.value = initialSpeed.toFixed(2);
-      updateEnergyStartHeight();
-    });
-
-    if (openOverlayBtn && canvasOverlayBackdrop && canvasOverlayCloseBtn) {
-      const openOverlay = () => {
-        document.body.classList.add('canvas-overlay-active');
-      };
-
-      const closeOverlay = () => {
-        document.body.classList.remove('canvas-overlay-active');
-      };
-
-      openOverlayBtn.addEventListener('click', openOverlay);
-      canvasOverlayCloseBtn.addEventListener('click', closeOverlay);
-      canvasOverlayBackdrop.addEventListener('click', closeOverlay);
+    if (openOverlayBtn) {
+      openOverlayBtn.addEventListener('click', () => document.body.classList.add('canvas-overlay-active'));
+      canvasOverlayCloseBtn.addEventListener('click', () => document.body.classList.remove('canvas-overlay-active'));
+      canvasOverlayBackdrop.addEventListener('click', () => document.body.classList.remove('canvas-overlay-active'));
     }
   }
-
-  strokeWeight(4); // Thicker lines
+  strokeWeight(4);
 }
 
-// --- 4. The Draw Function (The Animation Loop) ---
+// --- 4. The Draw Function ---
 function draw() {
-  // --- A. Update Physics ---
   let dt = (deltaTime / 1000) * timeScale;
-  let h = 0;
-  let slope = 0;
-  let concavity = 0;
-  let v = 0;
-  let horizontalVel = 0;
-  let verticalVel = 0;
+  let h = 0; let slope = 0; let concavity = 0;
+  let v = 0; let horizontalVel = 0; let verticalVel = 0;
 
   if (onTrack) {
     h = f(cartX);
-
     slope = fPrime(cartX);
     concavity = fDoublePrime(cartX);
-
     v = Math.sqrt(2 * g * (energyStartHeight - h));
     horizontalVel = v / Math.sqrt(1 + slope * slope);
     verticalVel = slope * horizontalVel;
@@ -408,475 +308,219 @@ function draw() {
       cartX += horizontalVel * dt;
 
       if (cartX >= 35) {
-        cartX = 35;
-
-        cartY = f(cartX);
-        projectileX = cartX;
-        projectileY = cartY;
-        projectileVx = horizontalVel;
-        projectileVy = verticalVel;
-        projectileTrail = [];
-        projectileTrail.push({ x: projectileX, y: projectileY });
-        onTrack = false;
-        hasLanded = false;
-        isTeleporting = false;
-
-        landedTimer = 0.0;
-        teleportTimer = 0.0;
-        landingX = projectileX;
+        cartX = 35; cartY = f(cartX);
+        projectileX = cartX; projectileY = cartY;
+        projectileVx = horizontalVel; projectileVy = verticalVel;
+        projectileTrail = []; projectileTrail.push({ x: projectileX, y: projectileY });
+        onTrack = false; hasLanded = false; isTeleporting = false;
+        landedTimer = 0.0; teleportTimer = 0.0; landingX = projectileX;
         if (trackTime === null) {
-          trackTime = rideTime;
-          trackDistance = arcDistance;
-          if (trackTimeElement) {
-            trackTimeElement.textContent =
-              "Time to cover track: " + trackTime.toFixed(2) + " s";
-
-          }
+          trackTime = rideTime; trackDistance = arcDistance;
+          if (trackTimeElement) trackTimeElement.textContent = "Time to cover track: " + trackTime.toFixed(2) + " s";
         }
         updateProjectileEquation(projectileX, projectileY, projectileVx, projectileVy);
-      } else {
-        cartY = f(cartX);
-      }
-    } else {
-      cartY = f(cartX);
-    }
+      } else { cartY = f(cartX); }
+    } else { cartY = f(cartX); }
   } else if (!hasLanded && !isTeleporting) {
-    // Projectile flight phase
     if (running) {
       projectileVy -= g * dt;
       projectileX += projectileVx * dt;
       projectileY += projectileVy * dt;
-
       if (projectileY <= 0) {
-        projectileY = 0;
-        hasLanded = true;
-        landedTimer = 0.0;
-        projectileVy = 0.0;
-        landingX = projectileX;
+        projectileY = 0; hasLanded = true; landedTimer = 0.0; projectileVy = 0.0; landingX = projectileX;
         if (totalTime === null) {
-          totalTime = rideTime;
-          totalDistance = arcDistance;
-          if (totalTimeElement) {
-            totalTimeElement.textContent =
-              "Total time until landing: " + totalTime.toFixed(2) + " s";
-
-          }
+          totalTime = rideTime; totalDistance = arcDistance;
+          if (totalTimeElement) totalTimeElement.textContent = "Total time until landing: " + totalTime.toFixed(2) + " s";
         }
       }
-
       projectileTrail.push({ x: projectileX, y: projectileY });
     }
-
-    cartX = projectileX;
-    cartY = projectileY;
-
+    cartX = projectileX; cartY = projectileY;
     v = Math.sqrt(projectileVx * projectileVx + projectileVy * projectileVy);
-    horizontalVel = projectileVx;
-    verticalVel = projectileVy;
-    slope = 0;
-    concavity = 0;
-
-    if (running) {
-      rideTime += dt;
-      arcDistance += v * dt;
-    }
+    horizontalVel = projectileVx; verticalVel = projectileVy;
+    slope = 0; concavity = 0;
+    if (running) { rideTime += dt; arcDistance += v * dt; }
   } else if (hasLanded && !isTeleporting) {
-    // Landed on the ground: pause before teleport
-    cartX = projectileX;
-    cartY = 0;
-
-    v = 0;
-    horizontalVel = 0;
-    verticalVel = 0;
-    slope = 0;
-    concavity = 0;
-
-    if (running) {
-      landedTimer += dt;
-      if (landedTimer >= landedPauseDuration) {
-        isTeleporting = true;
-        teleportTimer = 0.0;
-      }
-    }
+    cartX = projectileX; cartY = 0;
+    v = 0; horizontalVel = 0; verticalVel = 0; slope = 0; concavity = 0;
+    if (running) { landedTimer += dt; if (landedTimer >= landedPauseDuration) { isTeleporting = true; teleportTimer = 0.0; } }
   } else if (hasLanded && isTeleporting) {
-    // Teleportation phase: move from landing point back to start of the track
     if (running) {
       teleportTimer += dt;
       if (teleportTimer >= teleportDuration) {
-        // Respawn at the beginning of the track and start again
-        cartX = 0;
-        cartY = f(cartX);
-        onTrack = true;
-        hasLanded = false;
-        isTeleporting = false;
-        projectileX = 0.0;
-        projectileY = 0.0;
-        projectileVx = 0.0;
-        projectileVy = 0.0;
-        projectileTrail = [];
-        rideTime = 0.0;
-        arcDistance = 0.0;
-        landingX = 0.0;
-        cameraWorldXMax = worldXMax;
-        cameraWorldYMax = 22.0;
-        trackTime = null;
-        totalTime = null;
-        trackDistance = null;
-        totalDistance = null;
+        cartX = 0; cartY = f(cartX); onTrack = true; hasLanded = false; isTeleporting = false;
+        projectileX = 0.0; projectileY = 0.0; projectileVx = 0.0; projectileVy = 0.0;
+        projectileTrail = []; rideTime = 0.0; arcDistance = 0.0; landingX = 0.0;
+        cameraWorldXMax = worldXMax; cameraWorldYMax = 22.0; trackTime = null; totalTime = null;
+        trackDistance = null; totalDistance = null;
       } else {
         let t = teleportTimer / teleportDuration;
-
-        if (t < 0) t = 0;
-        if (t > 1) t = 1;
-        let startX = 0;
-        let startY = f(0);
+        if (t < 0) t = 0; if (t > 1) t = 1;
+        let startX = 0; let startY = f(0);
         let curX = landingX + (startX - landingX) * t;
         let curY = 0 + (startY - 0) * t;
-        cartX = curX;
-        cartY = curY;
+        cartX = curX; cartY = curY;
       }
     }
-
-    if (!onTrack) {
-      v = 0;
-      horizontalVel = 0;
-      verticalVel = 0;
-      slope = 0;
-      concavity = 0;
-    } else {
-      h = f(cartX);
-      slope = fPrime(cartX);
-      concavity = fDoublePrime(cartX);
-      v = 0;
-      horizontalVel = 0;
-      verticalVel = 0;
-    }
+    if (!onTrack) { v = 0; horizontalVel = 0; verticalVel = 0; slope = 0; concavity = 0; }
+    else { h = f(cartX); slope = fPrime(cartX); concavity = fDoublePrime(cartX); v = 0; horizontalVel = 0; verticalVel = 0; }
   }
 
-  // For non-track phases, set height to the cart's current y for G-force formula
-  if (!onTrack || hasLanded || isTeleporting) {
-    h = cartY;
-  }
+  if (!onTrack || hasLanded || isTeleporting) { h = cartY; }
 
-  let baseWorldXMax = worldXMax;
-  let baseWorldYMax = 22.0;
-  let paddingX = 5.0;
-  let paddingY = 2.0;
-
-  // Requested bounds from current simulation state
+  let baseWorldXMax = worldXMax; let baseWorldYMax = 22.0; let paddingX = 5.0; let paddingY = 2.0;
   let farthestX = Math.max(cartX, projectileX, landingX);
   let farthestY = Math.max(cartY, projectileY, f(0), f(35));
   let requestedXMax = Math.max(baseWorldXMax, farthestX + paddingX);
   let requestedYMax = Math.max(baseWorldYMax, farthestY + paddingY);
 
-  if (isTeleporting && teleportTimer >= 0.5) {
-    // After 0.5 s of teleport, snap back to default bounds
-    cameraWorldXMax = baseWorldXMax;
-    cameraWorldYMax = baseWorldYMax;
-  } else {
-    // Expand sticky camera bounds during a run as needed
-    cameraWorldXMax = Math.max(cameraWorldXMax, requestedXMax);
-    cameraWorldYMax = Math.max(cameraWorldYMax, requestedYMax);
-  }
+  if (isTeleporting && teleportTimer >= 0.5) { cameraWorldXMax = baseWorldXMax; cameraWorldYMax = baseWorldYMax; }
+  else { cameraWorldXMax = Math.max(cameraWorldXMax, requestedXMax); cameraWorldYMax = Math.max(cameraWorldYMax, requestedYMax); }
 
-  let displayWorldXMax = cameraWorldXMax;
-  let displayWorldYMax = cameraWorldYMax;
+  let displayWorldXMax = cameraWorldXMax; let displayWorldYMax = cameraWorldYMax;
 
-  // --- B. Draw Everything to the Screen ---
-  background(210, 230, 255); // Light blue sky
+  // --- DRAWING ---
+  background(210, 230, 255);
 
-  // --- DRAW COORDINATE GRID (MATHEMATICAL BACKGROUND) ---
+  // --- COORDINATE GRID ---
   push();
-  stroke(255, 255, 255, 100); // Faint white lines
-  strokeWeight(1);
-  textSize(10);
-  fill(100);
-  noStroke();
-  
-  // Vertical Grid Lines (Every 5 meters)
+  stroke(255, 255, 255, 100); strokeWeight(1); textSize(10); fill(100); noStroke();
   for (let gx = 0; gx <= displayWorldXMax; gx += 5) {
     let sx = map(gx, 0, displayWorldXMax, 50, width - 50);
-    
-    // Draw line
-    stroke(255);
-    line(sx, 50, sx, height - 50);
-    
-    // Draw Number
-    noStroke();
-    text(gx + "m", sx - 10, height - 35);
+    stroke(255); line(sx, 50, sx, height - 50);
+    noStroke(); text(gx + "m", sx - 10, height - 35);
   }
-
-  // Horizontal Grid Lines (Every 5 meters)
   for (let gy = 0; gy <= displayWorldYMax; gy += 5) {
     let sy = map(gy, 0, displayWorldYMax, height - 50, 50);
-    
-    // Draw line
-    stroke(255);
-    line(50, sy, width - 50, sy);
-    
-    // Draw Number
-    noStroke();
-    text(gy + "m", 25, sy + 4);
+    stroke(255); line(50, sy, width - 50, sy);
+    noStroke(); text(gy + "m", 25, sy + 4);
   }
   pop();
-  // --- END COORDINATE GRID ---
 
-  stroke(30, 64, 175);
-  strokeWeight(4);
-  noFill();
+  stroke(30, 64, 175); strokeWeight(4); noFill();
   rect(20, 20, width - 40, height - 40, 16);
 
-  // --- C. Coordinate Transformation ---
-  // Map our new [0m, 22m] height range to the canvas
   let screenX = map(cartX, 0, displayWorldXMax, 50, width - 50);
-
   let screenY = map(cartY, 0, displayWorldYMax, height - 50, 50);
-
-  // Draw ground at y = 0
-  stroke(120, 100, 80);
-  strokeWeight(3);
   let groundY = map(0, 0, displayWorldYMax, height - 50, 50);
-  line(50, groundY, width - 50, groundY);
+  stroke(120, 100, 80); strokeWeight(3); line(50, groundY, width - 50, groundY);
 
-  // --- D. Draw the Track ---
-  stroke(60, 60, 60); // Dark grey track
-  noFill();
-  beginShape();
+  stroke(60, 60, 60); noFill(); beginShape();
   for (let x = 0; x <= 35; x += 0.1) {
     let y = f(x);
-    // Map each point to the new [0m, 22m] height range
     let plotX = map(x, 0, displayWorldXMax, 50, width - 50);
     let plotY = map(y, 0, displayWorldYMax, height - 50, 50);
     vertex(plotX, plotY);
   }
   endShape();
 
-  // --- E. Calculate G-Force & Speed ---
-  // Gs = ( (1 + f'(x)^2) + 2(h_start - h) * f''(x) ) / (1 + f'(x)^2)^(3/2)
   let numerator = (1 + slope * slope) + 2 * (energyStartHeight - h) * concavity;
   let denominator = Math.pow(1 + slope * slope, 1.5);
   let Gs = numerator / denominator;
-
-  // Calculate Speed in km/h (v is in m/s, so * 3.6)
   let speedKPH = v * 3.6;
 
-  // --- F. Draw the Cart & Data Text ---
-  // Save current drawing settings
+  // --- DRAW HUD ---
   push();
-
   if (!isTeleporting) {
-
-    // Draw the text
-    fill(0); // Black text
-    noStroke();
-    textSize(16);
-    textAlign(LEFT);
-
-    // Base HUD position next to the cart
-    let hudWidth = 220;
-    let hudHeight = 130;
-    let margin = 25;
-
-    // Treat the cart as a small box for overlap checks
+    fill(0); noStroke(); textSize(16); textAlign(LEFT);
+    // Increase box height to fit new lines (was 130, now 175)
+    let hudWidth = 230; let hudHeight = 175; let margin = 25;
     let cartRadius = 10;
-    let cartLeft = screenX - cartRadius;
-    let cartRight = screenX + cartRadius;
-    let cartTop = screenY - cartRadius;
-    let cartBottom = screenY + cartRadius;
+    let cartLeft = screenX - cartRadius; let cartRight = screenX + cartRadius;
+    let cartTop = screenY - cartRadius; let cartBottom = screenY + cartRadius;
 
-    // Candidate HUD positions around the cart. We will clamp each
-    // candidate to the canvas margins and pick the first that does
-    // not overlap the cart box.
     let candidates = [
-      // Right of cart
       { x: screenX + 20, y: screenY - hudHeight / 2 },
-      // Above cart
       { x: screenX - hudWidth / 2, y: screenY - hudHeight - 20 },
-      // Below cart
       { x: screenX - hudWidth / 2, y: screenY + 20 },
-      // Left of cart
       { x: screenX - hudWidth - 20, y: screenY - hudHeight / 2 }
     ];
 
-    // Default to the first candidate; we will refine below
-    let hudX = candidates[0].x;
-    let hudY = candidates[0].y;
-
+    let hudX = candidates[0].x; let hudY = candidates[0].y;
     for (let i = 0; i < candidates.length; i++) {
       let c = candidates[i];
-
-      // Clamp candidate inside margins
-      let candidateX = Math.min(
-        Math.max(c.x, margin),
-        width - margin - hudWidth
-      );
-      let candidateY = Math.min(
-        Math.max(c.y, margin),
-        height - margin - hudHeight
-      );
-
-      let hudLeft = candidateX;
-      let hudRight = candidateX + hudWidth;
-      let hudTop = candidateY;
-      let hudBottom = candidateY + hudHeight;
-
-      let overlapsCart = !(
-        hudLeft > cartRight ||
-        hudRight < cartLeft ||
-        hudTop > cartBottom ||
-        hudBottom < cartTop
-      );
-
-      if (!overlapsCart) {
-        hudX = candidateX;
-        hudY = candidateY;
-        break;
-      }
+      let candidateX = Math.min(Math.max(c.x, margin), width - margin - hudWidth);
+      let candidateY = Math.min(Math.max(c.y, margin), height - margin - hudHeight);
+      let hudLeft = candidateX; let hudRight = candidateX + hudWidth;
+      let hudTop = candidateY; let hudBottom = candidateY + hudHeight;
+      let overlapsCart = !(hudLeft > cartRight || hudRight < cartLeft || hudTop > cartBottom || hudBottom < cartTop);
+      if (!overlapsCart) { hudX = candidateX; hudY = candidateY; break; }
     }
 
-    fill(255, 255, 255, 180); // Semi-transparent white box
-    rect(hudX, hudY, hudWidth, hudHeight);
-    fill(0); // Black text
-    text("Speed: " + speedKPH.toFixed(1) + " km/h", hudX + 5, hudY + 20);
-    text("G-Force: " + Gs.toFixed(2) + " Gs", hudX + 5, hudY + 40);
-    text("Vx: " + horizontalVel.toFixed(2) + " m/s", hudX + 5, hudY + 60);
-    text("Vy: " + verticalVel.toFixed(2) + " m/s", hudX + 5, hudY + 80);
-    text("Dist: " + arcDistance.toFixed(2) + " m", hudX + 5, hudY + 100);
-    text("Time: " + rideTime.toFixed(2) + " s", hudX + 5, hudY + 120);
+    fill(255, 255, 255, 180); rect(hudX, hudY, hudWidth, hudHeight);
+    fill(0);
+    // Add Range and Height lines here
+    text("Height: " + cartY.toFixed(2) + " m", hudX + 5, hudY + 20);
+    text("Range (x): " + cartX.toFixed(2) + " m", hudX + 5, hudY + 40);
+    text("Speed: " + speedKPH.toFixed(1) + " km/h", hudX + 5, hudY + 65);
+    text("G-Force: " + Gs.toFixed(2) + " Gs", hudX + 5, hudY + 85);
+    text("Vx: " + horizontalVel.toFixed(2) + " m/s", hudX + 5, hudY + 105);
+    text("Vy: " + verticalVel.toFixed(2) + " m/s", hudX + 5, hudY + 125);
+    text("Dist: " + arcDistance.toFixed(2) + " m", hudX + 5, hudY + 145);
+    text("Time: " + rideTime.toFixed(2) + " s", hudX + 5, hudY + 165);
   }
 
-  // Projectile trail (dotted red/blue) during projectile flight
   if (!onTrack && !hasLanded && !isTeleporting && projectileTrail.length > 1) {
     noStroke();
     for (let i = 0; i < projectileTrail.length; i += 2) {
       let p = projectileTrail[i];
       let px = map(p.x, 0, displayWorldXMax, 50, width - 50);
       let py = map(p.y, 0, displayWorldYMax, height - 50, 50);
-      if (((i / 2) % 2) === 0) {
-        fill(255, 0, 0); // red
-      } else {
-        fill(30, 64, 175); // blue-ish
-      }
+      if (((i / 2) % 2) === 0) fill(255, 0, 0); else fill(30, 64, 175);
       circle(px, py, 4);
     }
   }
 
-  // Draw the Cart
-  stroke(200, 0, 0); // Red outline
-  fill(255, 0, 0); // Red fill
-  if (!isTeleporting) {
-    circle(screenX, screenY, 20); // 20px circle
-  }
+  stroke(200, 0, 0); fill(255, 0, 0);
+  if (!isTeleporting) circle(screenX, screenY, 20);
 
-  // Teleportation pixel effect
   if (isTeleporting) {
     let landingScreenX = map(landingX, 0, displayWorldXMax, 50, width - 50);
     let landingScreenY = groundY;
     let startScreenX = map(0, 0, displayWorldXMax, 50, width - 50);
     let startScreenY = map(f(0), 0, displayWorldYMax, height - 50, 50);
-    let steps = 30;
-    let progress = teleportTimer / teleportDuration;
-    if (progress < 0) progress = 0;
-    if (progress > 1) progress = 1;
+    let steps = 30; let progress = teleportTimer / teleportDuration;
+    if (progress < 0) progress = 0; if (progress > 1) progress = 1;
     noStroke();
     for (let i = 0; i < steps; i++) {
       let frac = (i + 1) / steps;
-      if (frac > progress) {
-        continue;
-      }
+      if (frac > progress) continue;
       let px = landingScreenX + (startScreenX - landingScreenX) * frac;
       let pyBase = landingScreenY + (startScreenY - landingScreenY) * frac;
-      let jitterX = random(-3, 3);
-      let jitterY = random(-3, 3);
-      let size = random(3, 5);
-      let fillVal = color(255, 0, 0, 210);
-      fill(fillVal);
-      rect(px + jitterX, pyBase + jitterY, size, size);
+      let jitterX = random(-3, 3); let jitterY = random(-3, 3); let size = random(3, 5);
+      fill(255, 0, 0, 210); rect(px + jitterX, pyBase + jitterY, size, size);
     }
   }
-
-  // Restore drawing settings
   pop();
 
-  // --- G. Draw Vectors ---
   if (!isTeleporting) {
-    // Save settings again
     push();
-
-    // 1. Velocity Vector (Tangent)
-    let v_scale = 5; // Scale factor: 5 pixels per m/s
-    // We flip vy because p5's Y-axis is inverted
-    strokeWeight(3);
-    stroke(0, 150, 0); // Green
-    line(screenX, screenY, 
-         screenX + (horizontalVel * v_scale), 
-         screenY - (verticalVel * v_scale));
-
-    // 2. G-Force Vector (Normal)
-    // The normal vector is perpendicular to the tangent (-slope, 1)
-    let nx = -slope;
-    let ny = 1;
-    // Normalize it (make its length 1)
-    let n_mag = sqrt(nx*nx + ny*ny);
-    nx = nx / n_mag;
-    ny = ny / n_mag;
-    
-    let g_scale = 20; // Scale factor: 20 pixels per G
-    strokeWeight(3);
-    stroke(0, 0, 200); // Blue
-    // We draw (-nx, -ny) to point "up" and "out"
-    line(screenX, screenY, 
-         screenX + (nx * Gs * g_scale), 
-         screenY - (ny * Gs * g_scale)); // Flip Y-axis
-    
-    // Restore settings
+    let v_scale = 5; strokeWeight(3); stroke(0, 150, 0);
+    line(screenX, screenY, screenX + (horizontalVel * v_scale), screenY - (verticalVel * v_scale));
+    let nx = -slope; let ny = 1; let n_mag = sqrt(nx * nx + ny * ny); nx = nx / n_mag; ny = ny / n_mag;
+    let g_scale = 20; stroke(0, 0, 200);
+    line(screenX, screenY, screenX + (nx * Gs * g_scale), screenY - (ny * Gs * g_scale));
     pop();
   }
 
-  // Pinned summary HUDs at top center (screen space, independent of zoom)
   push();
-  textAlign(CENTER);
-  textSize(14);
-  noStroke();
-
-  let summaryHudWidth = 430;
-  let summaryHudHeight = 30;
-  let summaryMarginTop = 30;
-  let centerX = width / 2;
+  textAlign(CENTER); textSize(14); noStroke();
+  let summaryHudWidth = 430; let summaryHudHeight = 30; let summaryMarginTop = 30; let centerX = width / 2;
 
   if (trackTime !== null && trackDistance !== null) {
-    fill(255, 255, 255, 210);
-    let boxX = centerX - summaryHudWidth / 2;
-    let boxY = summaryMarginTop;
-    rect(boxX, boxY, summaryHudWidth, summaryHudHeight);
-
-    fill(0);
+    fill(255, 255, 255, 210); let boxX = centerX - summaryHudWidth / 2; let boxY = summaryMarginTop;
+    rect(boxX, boxY, summaryHudWidth, summaryHudHeight); fill(0);
     let textY = boxY + summaryHudHeight / 2 + 5;
-    text(
-      "Track 0-35 m: Dist " + trackDistance.toFixed(2) + " m, Time " + trackTime.toFixed(2) + " s",
-      centerX,
-      textY
-    );
+    text("Track 0-35 m: Dist " + trackDistance.toFixed(2) + " m, Time " + trackTime.toFixed(2) + " s", centerX, textY);
   }
 
-  if (totalTime !== null && totalDistance !== null &&
-      trackTime !== null && trackDistance !== null) {
-    let projDist = totalDistance - trackDistance;
-    let projTime = totalTime - trackTime;
-
-    fill(255, 255, 255, 210);
-    let boxX2 = centerX - summaryHudWidth / 2;
-    let boxY2 = summaryMarginTop + summaryHudHeight + 10;
-    rect(boxX2, boxY2, summaryHudWidth, summaryHudHeight);
-
-    fill(0);
+  if (totalTime !== null && totalDistance !== null && trackTime !== null && trackDistance !== null) {
+    let projDist = totalDistance - trackDistance; let projTime = totalTime - trackTime;
+    fill(255, 255, 255, 210); let boxX2 = centerX - summaryHudWidth / 2; let boxY2 = summaryMarginTop + summaryHudHeight + 10;
+    rect(boxX2, boxY2, summaryHudWidth, summaryHudHeight); fill(0);
     let textY2 = boxY2 + summaryHudHeight / 2 + 5;
-    text(
-      "Projectile: Dist " + projDist.toFixed(2) + " m, Time " + projTime.toFixed(2) + " s",
-      centerX,
-      textY2
-    );
+    // UPDATED: Clarified text to show Total Range (Landing X)
+    text("Projectile: Total Range " + landingX.toFixed(2) + " m, Time " + projTime.toFixed(2) + " s", centerX, textY2);
   }
-
   pop();
 }
