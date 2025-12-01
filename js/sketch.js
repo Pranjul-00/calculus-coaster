@@ -9,12 +9,17 @@
 // --- 1. Global Variables & Constants ---
 const defaultG = 9.81;
 const defaultInitialSpeed = 0.5;
+const defaultStartX = 0.0;
 let g = defaultG; 
+
 const trackStartHeight = 20.0; 
 const worldXMax = 50.0;
+
 const landedPauseDuration = 1.5; // Not used when auto-stop is on
 const teleportDuration = 1.5;
 let initialSpeed = defaultInitialSpeed;
+let startX = defaultStartX;
+let useTopAsEnergyReference = true; // true: energy from x=0, false: energy from x₀
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
@@ -102,7 +107,8 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
 }
 
 function updateEnergyStartHeight() {
-  energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
+  const referenceHeight = useTopAsEnergyReference ? trackStartHeight : f(startX);
+  energyStartHeight = referenceHeight + (initialSpeed * initialSpeed) / (2 * g);
 }
 
 // --- 2. Track Functions ---
@@ -134,7 +140,7 @@ function fDoublePrime(x) {
 function setup() {
   let canvas = createCanvas(1200, 500);
   canvas.parent('canvas-container');
-  cartX = 0; cartY = f(cartX);
+  cartX = startX; cartY = f(cartX);
   
   const playPauseBtn = document.getElementById('playPauseBtn');
   const resetBtn = document.getElementById('resetBtn');
@@ -146,6 +152,12 @@ function setup() {
   const initialSpeedInput = document.getElementById('initialSpeedInput');
   const initialSpeedApplyBtn = document.getElementById('initialSpeedApplyBtn');
   const initialSpeedResetBtn = document.getElementById('initialSpeedResetBtn');
+  const startXInput = document.getElementById('startXInput');
+  const startXApplyBtn = document.getElementById('startXApplyBtn');
+  const startXResetBtn = document.getElementById('startXResetBtn');
+  const startModeFromTop = document.getElementById('startModeFromTop');
+  const startModeFromX = document.getElementById('startModeFromX');
+  
   const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
   const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
@@ -178,24 +190,24 @@ function setup() {
     playPauseBtn.addEventListener('click', () => {
       // If we have landed, 'Play' acts as a Reset+Start
       if (hasLanded) {
-         resetSimulation();
+         resetSimulation(true);
       } else {
          running = !running;
          playPauseBtn.textContent = running ? 'Pause' : 'Play';
       }
     });
 
-    resetBtn.addEventListener('click', resetSimulation);
+    resetBtn.addEventListener('click', () => resetSimulation(false));
 
-    function resetSimulation() {
-      cartX = 0; cartY = f(cartX); onTrack = true; hasLanded = false;
+    function resetSimulation(shouldRunAfter = false) {
+      cartX = startX; cartY = f(cartX); onTrack = true; hasLanded = false;
       projectileX = 0.0; projectileY = 0.0; projectileVx = 0.0; projectileVy = 0.0;
       landingX = 0.0; projectileRange = 0.0; projectileTrail = [];
       rideTime = 0.0; arcDistance = 0.0; 
       cameraWorldXMax = worldXMax; cameraWorldYMax = 22.0;
       trackTime = null; totalTime = null; trackDistance = null; totalDistance = null;
-      running = true; 
-      playPauseBtn.textContent = 'Pause';
+      running = shouldRunAfter; 
+      playPauseBtn.textContent = shouldRunAfter ? 'Pause' : 'Play';
       
       // Reset Text
       if (trackTimeElement) trackTimeElement.textContent = "0.00 s";
@@ -210,6 +222,7 @@ function setup() {
 
     gravityInput.value = g.toFixed(2);
     initialSpeedInput.value = initialSpeed.toFixed(2);
+    if (startXInput) startXInput.value = startX.toFixed(2);
 
     const applyGravity = () => {
       const newG = parseFloat(gravityInput.value);
@@ -226,6 +239,44 @@ function setup() {
     };
     initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
     initialSpeedResetBtn.addEventListener('click', () => { initialSpeed = defaultInitialSpeed; initialSpeedInput.value = initialSpeed.toFixed(2); updateEnergyStartHeight(); });
+
+    if (startXInput && startXApplyBtn && startXResetBtn) {
+      const applyStartX = () => {
+        const newX = parseFloat(startXInput.value);
+        if (!isNaN(newX)) {
+          let clampedX = Math.max(0, Math.min(35, newX));
+          startX = clampedX;
+          startXInput.value = startX.toFixed(2);
+          updateEnergyStartHeight();
+        } else {
+          startXInput.value = startX.toFixed(2);
+        }
+      };
+      startXApplyBtn.addEventListener('click', applyStartX);
+      startXResetBtn.addEventListener('click', () => {
+        startX = defaultStartX;
+        startXInput.value = startX.toFixed(2);
+        updateEnergyStartHeight();
+      });
+    }
+
+    if (startModeFromTop && startModeFromX) {
+      // Initialize radio buttons based on current mode
+      startModeFromTop.checked = useTopAsEnergyReference;
+      startModeFromX.checked = !useTopAsEnergyReference;
+
+      const applyStartMode = (fromTop) => {
+        useTopAsEnergyReference = fromTop;
+        updateEnergyStartHeight();
+      };
+
+      startModeFromTop.addEventListener('change', () => {
+        if (startModeFromTop.checked) applyStartMode(true);
+      });
+      startModeFromX.addEventListener('change', () => {
+        if (startModeFromX.checked) applyStartMode(false);
+      });
+    }
 
     if (openOverlayBtn) {
       openOverlayBtn.addEventListener('click', () => document.body.classList.add('canvas-overlay-active'));
