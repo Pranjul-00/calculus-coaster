@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physics Model - The Calculus of Thrill</title>
     <link rel="stylesheet" href="../css/style.css">
-    <!-- KaTeX for mathematical equations -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="container">
             <div class="header-content">
@@ -32,244 +30,56 @@
         </div>
     </header>
 
-    <!-- Page Content Header -->
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Physics Model: Realistic Motion</h2>
-            <p class="page-description">How conservation of energy creates authentic roller coaster physics through mathematical modeling and real-time calculations.</p>
+            <p class="page-description">How conservation of energy creates authentic roller coaster physics through mathematical modeling.</p>
         </div>
     </section>
 
-    <!-- Physics Content -->
     <section class="physics-content">
         <div class="container">
             
-            <!-- Energy Conservation Section -->
             <div class="physics-section">
-                <h2>Conservation of Energy: The Foundation</h2>
-                <p class="section-intro">The animation is not pre-set. It's a live physics simulation governed by the Conservation of Energy.</p>
-                
-                <div class="energy-principle">
-                    <h3>The Principle:</h3>
-                    <p>We assume the cart starts at height h<sub>start</sub> (with a tiny "push") and trades its Potential Energy (PE) for Kinetic Energy (KE).</p>
-                    
-                    <div class="equation">$$PE_{initial} = PE_{current} + KE_{current}$$</div>
-                    <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
-                </div>
-                
-                <div class="energy-explanation">
-                    <div class="energy-card">
-                        <h4>🏔️ At the Top</h4>
-                        <p>Maximum potential energy, minimum kinetic energy (slow speed)</p>
-                    </div>
-                    <div class="energy-card">
-                        <h4>🏎️ In the Valley</h4>
-                        <p>Minimum potential energy, maximum kinetic energy (high speed)</p>
-                    </div>
+                <h2>Conservation of Energy</h2>
+                <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
+            </div>
+
+            <div class="physics-section">
+                <h2>Calculated Velocity v(x)</h2>
+                <div class="master-equation">
+                    <h3>Master Equation (Updated Constants):</h3>
+                    <div class="equation">$$v(x) = \sqrt{2g(20.0 - f(x))}$$</div>
                 </div>
             </div>
 
-            <!-- Velocity Section -->
             <div class="physics-section">
-                <h2>🚀 Velocity (Speed): v(x)</h2>
-                <p class="section-intro">By solving the energy equation for v (velocity), we get the master formula for the cart's speed at any point.</p>
+                <h2>G-Forces and Centripetal Acceleration</h2>
+                <p class="section-intro">The force felt by the rider depends on the speed and the tightness of the curve.</p>
                 
                 <div class="master-equation">
-                    <h3>Master Equation:</h3>
-                    <div class="equation">$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
+                    <h3>Centripetal Acceleration ($a_c$):</h3>
+                    <div class="equation">$$a_c = \frac{v^2}{\rho} = v^2 \cdot \kappa$$</div>
+                    <p>This explains why high speed ($v$) combined with high curvature ($\kappa$) creates the strongest forces.</p>
                 </div>
-                
-                <div class="velocity-breakdown">
-                    <h3>The "Four Equations":</h3>
-                    <p>Because f(x) has four different formulas, this master equation results in four different, specific velocity equations:</p>
-                    
-                    <div class="velocity-equations">
-                        <div class="equation">$$v_1(x) = \sqrt{2g(h_{start} - f_1(x))}$$</div>
-                        <div class="equation">$$v_2(x) = \sqrt{2g(h_{start} - f_2(x))}$$</div>
-                        <div class="equation">$$v_3(x) = \sqrt{2g(h_{start} - f_3(x))}$$</div>
-                        <div class="equation">$$v_4(x) = \sqrt{2g(h_{start} - f_4(x))}$$</div>
-                    </div>
-                </div>
-                
-                <div class="simulation-note">
-                    <h4>🎮 In the Simulation:</h4>
-                    <p>Our code calculates this value 60 times per second to find the cart's true speed. This is why it speeds up in the valleys and slows down on the hills - pure physics!</p>
-                </div>
-            </div>
 
-            <!-- G-Forces Section -->
-            <div class="physics-section">
-                <h2>⚡ G-Forces: Gs(x)</h2>
-                <p class="section-intro">The "apparent weight" a rider feels. It's a combination of Earth's gravity (1 G) and the centripetal acceleration from the curve.</p>
-                
                 <div class="master-equation">
-                    <h3>Master Equation:</h3>
+                    <h3>Total G-Force Equation:</h3>
                     <div class="equation">$$Gs(x) = \frac{1 + [f'(x)]^2 + 2(h_{start} - f(x)) \cdot f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
                 </div>
-                
-                <div class="gforce-effects">
-                    <h3>What Riders Feel:</h3>
-                    <div class="effect-grid">
-                        <div class="effect">
-                            <h4>🏔️ Valley Bottom (x=10)</h4>
-                            <p>f''(x) is positive → Gs > 1</p>
-                            <p class="feeling">"Pressed into your seat" feeling</p>
-                        </div>
-                        <div class="effect">
-                            <h4>🎈 Hill Top (x=20)</h4>
-                            <p>f''(x) is negative → Gs < 1</p>
-                            <p class="feeling">"Airtime" or weightless feeling</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="gforce-scale">
-                    <h3>G-Force Scale:</h3>
-                    <ul>
-                        <li><strong>1 G:</strong> Normal Earth gravity</li>
-                        <li><strong>2-3 G:</strong> Intense but safe (pressed into seat)</li>
-                        <li><strong>0.5 G:</strong> Light, floating sensation</li>
-                        <li><strong>0 G:</strong> Complete weightlessness (airtime)</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- Projectile Motion Section -->
-            <div class="physics-section">
-                <h2>🎯 Projectile Flight After the Track</h2>
-                <p class="section-intro">After the cart leaves the final hill, it is no longer constrained by the track and follows pure projectile motion under gravity.</p>
-
-                <div class="master-equation">
-                    <h3>Launch Conditions:</h3>
-                    <p>At the last point on the track, we record the cart's position and velocity components:</p>
-                    <div class="equation">
-                        $$ x(0) = x_0, \quad y(0) = y_0, \quad v_x(0) = v_{x0}, \quad v_y(0) = v_{y0} $$
-                    </div>
-                    <p>The values $x_0$, $y_0$, $v_{x0}$, and $v_{y0}$ come from the energy-based speed and the track slope at the launch point.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Time-Parametric Equations x(t) and y(t):</h3>
-                    <p>Once in the air, horizontal acceleration is zero and vertical acceleration is $-g$, so the motion is governed by:</p>
-                    <div class="equation">
-                        $$ x(t) = x_0 + v_{x0} t, \quad y(t) = y_0 + v_{y0} t - \tfrac{1}{2} g t^2 $$
-                    </div>
-                    <p>The simulation updates these equations frame by frame and uses them to draw the dotted flight path.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Cartesian Flight Path y(x):</h3>
-                    <p>When the horizontal velocity component is non-zero ($v_{x0} \neq 0$), we can rewrite the motion as a single function of $x$:</p>
-                    <div class="equation">
-                        $$ y(x) = y_0 + \frac{v_{y0}}{v_{x0}} (x - x_0) - \frac{g}{2 v_{x0}^2} (x - x_0)^2 $$
-                    </div>
-                    <p>This downward-opening parabola is the equation shown under the simulation canvas during flight.</p>
-                    <p>If $v_{x0} \approx 0$ (a nearly vertical launch), $x(t) \approx x_0$ and it is not meaningful to write $y$ as a single-valued function of $x$, so the simulation only reports the parametric form.</p>
-                </div>
-
-                <div class="simulation-note">
-                    <h4>🎮 In the Simulation:</h4>
-                    <p>As soon as the cart leaves the track, the track-based G-force and $v(x)$ formulas stop applying. The motion is now governed entirely by gravity and the launch velocity components, exactly matching the projectile equations described on the Theory page.</p>
-                </div>
-            </div>
-
-            <!-- Real-time Calculation Section -->
-            <div class="physics-section highlight-section">
-                <h2>🔄 Real-time Physics Simulation</h2>
-                <p class="section-intro">Every frame of our simulation involves complex calculations happening 60 times per second.</p>
-                
-                <div class="calculation-flow">
-                    <div class="calc-step">
-                        <h4>Step 1: Position</h4>
-                        <p>Calculate current height using f(x)</p>
-                    </div>
-                    <div class="calc-step">
-                        <h4>Step 2: Derivatives</h4>
-                        <p>Find slope f'(x) and concavity f''(x)</p>
-                    </div>
-                    <div class="calc-step">
-                        <h4>Step 3: Velocity</h4>
-                        <p>Apply energy conservation formula</p>
-                    </div>
-                    <div class="calc-step">
-                        <h4>Step 4: G-Forces</h4>
-                        <p>Calculate apparent weight from curvature</p>
-                    </div>
-                    <div class="calc-step">
-                        <h4>Step 5: Motion</h4>
-                        <p>Update cart position for next frame</p>
-                    </div>
-                </div>
-                
-                <div class="physics-accuracy">
-                    <h4>Why This Matters:</h4>
-                    <p>This isn't just animation - it's a genuine physics simulation. The cart behaves exactly as it would in real life, following the same laws of physics that govern actual roller coasters.</p>
-                </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Navigation to Other Pages -->
-    <section class="page-navigation">
-        <div class="container">
-            <h2>Continue Exploring</h2>
-            <div class="nav-cards-small">
-                <a href="simulation.html" class="nav-card-small">
-                    <div class="card-icon">🎮</div>
-                    <h4>See Physics in Action</h4>
-                    <p>Watch these equations work in real-time</p>
-                </a>
-                <a href="theory.html" class="nav-card-small">
-                    <div class="card-icon">📐</div>
-                    <h4>Mathematical Theory</h4>
-                    <p>The calculus behind these physics</p>
-                </a>
-                <a href="design.html" class="nav-card-small">
-                    <div class="card-icon">🏗️</div>
-                    <h4>Track Design</h4>
-                    <p>How we built the track functions</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-main">
-                    <h3>The Calculus of Thrill</h3>
-                    <p>Physics modeling demonstrating conservation of energy, velocity calculations, and G-force analysis in roller coaster dynamics.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-section">
-                        <h4>Project Sections</h4>
-                        <ul>
-                            <li><a href="../index.html">Project Home</a></li>
-                            <li><a href="simulation.html">Interactive Simulation</a></li>
-                            <li><a href="theory.html">Mathematical Theory</a></li>
-                            <li><a href="design.html">Track Design</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Physics Concepts</h4>
-                        <ul>
-                            <li>Energy Conservation</li>
-                            <li>Velocity Calculations</li>
-                            <li>G-Force Analysis</li>
-                            <li>Projectile Motion</li>
-                            <li>Real-time Simulation</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
+                <p>&copy; 2024 Team Roller Riders | Calculus Class Project</p>
             </div>
         </div>
     </footer>
 
-    <!-- Initialize KaTeX -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof renderMathInElement !== 'undefined') {
