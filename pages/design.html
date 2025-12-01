@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Design - The Calculus of Thrill</title>
     <link rel="stylesheet" href="../css/style.css">
-    <!-- KaTeX for mathematical equations -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="container">
             <div class="header-content">
@@ -32,43 +30,18 @@
         </div>
     </header>
 
-    <!-- Page Content Header -->
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Track Design: Piecewise Functions & C¹ Continuity</h2>
-            <p class="page-description">How we mathematically designed a smooth, thrilling roller coaster track using advanced calculus concepts and continuity analysis.</p>
+            <p class="page-description">How we mathematically designed a smooth, thrilling roller coaster track using advanced calculus concepts.</p>
         </div>
     </section>
 
-    <!-- Design Content -->
     <section class="design-content">
         <div class="container">
             
-            <!-- Introduction Section -->
-            <div class="design-section">
-                <h2>Why Piecewise Functions?</h2>
-                <p class="section-intro">A realistic track cannot be modeled by a single simple function. Our track is designed by connecting four separate mathematical functions (a "piecewise" function).</p>
-                
-                <div class="design-reasoning">
-                    <div class="reason-card">
-                        <h4>🎢 Variety</h4>
-                        <p>Different sections provide different experiences - drops, valleys, hills</p>
-                    </div>
-                    <div class="reason-card">
-                        <h4>🎯 Control</h4>
-                        <p>Each piece can be optimized for specific thrills or safety requirements</p>
-                    </div>
-                    <div class="reason-card">
-                        <h4>🔧 Flexibility</h4>
-                        <p>Easy to modify individual sections without affecting the whole track</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- The Four Functions -->
             <div class="design-section">
                 <h2>The Four Track Pieces</h2>
-                
                 <div class="function-showcase">
                     <div class="function-card">
                         <div class="function-header">
@@ -76,11 +49,6 @@
                             <span class="domain">Domain: 0 ≤ x < 5</span>
                         </div>
                         <div class="equation">$$f_1(x) = 20 - 0.32x^2$$</div>
-                        <div class="function-details">
-                            <p><strong>Type:</strong> Parabola (quadratic function)</p>
-                            <p><strong>Purpose:</strong> Creates the thrilling initial descent</p>
-                            <p><strong>Characteristics:</strong> Starts high, curves downward, builds speed</p>
-                        </div>
                     </div>
 
                     <div class="function-card">
@@ -89,161 +57,47 @@
                             <span class="domain">Domain: 5 ≤ x < 15</span>
                         </div>
                         <div class="equation">$$f_2(x) = 0.0064(x-10)^4 + 8.0$$</div>
-                        <div class="function-details">
-                            <p><strong>Type:</strong> Quartic function (4th degree polynomial)</p>
-                            <p><strong>Purpose:</strong> Creates the deep valley experience</p>
-                            <p><strong>Characteristics:</strong> Smooth U-shape, maximum speed at bottom</p>
-                        </div>
                     </div>
 
                     <div class="function-card">
                         <div class="function-header">
                             <h3>Function 3: Second Hill</h3>
-                            <span class="domain">Domain: 15 ≤ x ≤ 25</span>
+                            <span class="domain">Domain: 15 ≤ x < 25</span>
                         </div>
                         <div class="equation">$$f_3(x) = 20 - 0.32(x-20)^2$$</div>
-                        <div class="function-details">
-                            <p><strong>Type:</strong> Parabola (shifted quadratic)</p>
-                            <p><strong>Purpose:</strong> Final hill for airtime experience</p>
-                            <p><strong>Characteristics:</strong> Rises to create weightless feeling at peak</p>
-                        </div>
                     </div>
-
+                    
                     <div class="function-card">
                         <div class="function-header">
-                            <h3>Function 4: Final Ramp & Return</h3>
+                            <h3>Function 4: Final Ramp</h3>
                             <span class="domain">Domain: 25 ≤ x ≤ 35</span>
                         </div>
                         <div class="equation">$$f_4(x) = 0.32(x-30)^2 + 4.0$$</div>
-                        <div class="function-details">
-                            <p><strong>Type:</strong> Parabola (upright, shifted)</p>
-                            <p><strong>Purpose:</strong> Smoothly brings the cart back toward ground level</p>
-                            <p><strong>Characteristics:</strong> Gently rises from the valley exit and controls landing height and speed before launch into projectile motion.</p>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- C¹ Continuity Section -->
             <div class="design-section highlight-section">
-                <h2>🔗 C¹ Continuity: The Key to Smooth Rides</h2>
-                <p class="section-intro">The most critical part of the design is making the track smooth. If the pieces just "meet," they would create a sharp "kink."</p>
+                <h2>🔗 Mathematical Proof: Continuity Check at x = 5</h2>
+                <p class="section-intro">To prove the track is safe, we calculate the limits from the left and right at the connection point.</p>
                 
-                <div class="continuity-explanation">
-                    <h3>The Problem:</h3>
-                    <p>Simply connecting four functions at their endpoints would create dangerous sharp corners that could:</p>
-                    <ul>
-                        <li>❌ Cause uncomfortable jolts for riders</li>
-                        <li>❌ Create infinite G-forces at connection points</li>
-                        <li>❌ Make the track physically impossible to build</li>
-                    </ul>
-                </div>
-                
-                <div class="continuity-solution">
-                    <h3>The Solution: C¹ Continuity</h3>
-                    <p>We enforced <strong>C¹ Continuity</strong>, a mathematical condition requiring two things at every connection point:</p>
+                <div class="continuity-conditions">
+                    <div class="condition">
+                        <h4>1. Checking Height (C⁰)</h4>
+                        <p><strong>Left Limit (Parabola):</strong></p>
+                        <div class="equation">$$f_1(5) = 20 - 0.32(5)^2 = 20 - 8 = 12$$</div>
+                        <p><strong>Right Limit (Quartic):</strong></p>
+                        <div class="equation">$$f_2(5) = 0.0064(5-10)^4 + 8 = 0.0064(625) + 8 = 12$$</div>
+                        <p style="color: green; font-weight: bold; text-align: center;">✓ Heights match (12m)</p>
+                    </div>
                     
-                    <div class="continuity-conditions">
-                        <div class="condition">
-                            <h4>1. Height Continuity</h4>
-                            <div class="equation">$$f_1(x) = f_2(x) \text{ at connection points}$$</div>
-                            <p>The heights are equal - no sudden jumps up or down</p>
-                        </div>
-                        
-                        <div class="condition">
-                            <h4>2. Slope Continuity</h4>
-                            <div class="equation">$$f'_1(x) = f'_2(x) \text{ at connection points}$$</div>
-                            <p>The slopes are equal - no sharp corners or kinks</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="continuity-result">
-                    <h3>✅ The Result:</h3>
-                    <p>This ensures a seamless transition with no sharp corners that could be dangerous or uncomfortable. The track flows smoothly from piece to piece, just like a real roller coaster.</p>
-                </div>
-            </div>
-
-            <!-- Launch Geometry & Projectile Setup -->
-            <div class="design-section">
-                <h2>🎯 Launch Geometry: Handing Off to Projectile Motion</h2>
-                <p class="section-intro">The final part of the track is designed so the cart can safely "take off" into the air and follow the projectile equations described on the Theory and Physics pages.</p>
-
-                <div class="continuity-explanation">
-                    <h3>Exit Height and Slope:</h3>
-                    <p>At the end of the track, two design choices matter most:</p>
-                    <ul>
-                        <li><strong>Height at exit:</strong> The value of $f(x)$ at the last point becomes the launch height $y_0$.</li>
-                        <li><strong>Slope at exit:</strong> The derivative $f'(x)$ at that point sets the launch angle, which splits the speed into horizontal $v_{x0}$ and vertical $v_{y0}$ components.</li>
-                    </ul>
-                    <p>Together with the speed computed from energy conservation, these values form the initial conditions $(x_0, y_0, v_{x0}, v_{y0})$ for the projectile motion.</p>
-                </div>
-
-                <div class="continuity-solution">
-                    <h3>Design Goals for the Launch:</h3>
-                    <ul>
-                        <li>Keep the exit ramp smooth and continuous with the rest of the track (no sudden kinks).</li>
-                        <li>Avoid a perfectly vertical slope so that $v_{x0}$ is not zero and the flight path is a clear, long arc.</li>
-                        <li>Choose a height and angle that produce a visually satisfying flight before the cart lands.</li>
-                    </ul>
-                </div>
-
-                <div class="continuity-result">
-                    <h3>Connection to the Simulation:</h3>
-                    <p>The p5.js code reads the final track point and its slope to compute $x_0, y_0, v_{x0}, v_{y0}$. These feed directly into the projectile equations $x(t)$, $y(t)$ and $y(x)$ shown beneath the simulation canvas.</p>
-                </div>
-            </div>
-
-            <!-- Design Process Section -->
-            <div class="design-section">
-                <h2>🛠️ The Design Process</h2>
-                
-                <div class="process-steps">
-                    <div class="process-step">
-                        <div class="step-number">1</div>
-                        <h4>Choose Function Types</h4>
-                        <p>Select mathematical functions that create the desired track shapes</p>
-                    </div>
-                    <div class="process-step">
-                        <div class="step-number">2</div>
-                        <h4>Set Connection Points</h4>
-                        <p>Determine where the track pieces will connect (x = 5, x = 15, and x = 25)</p>
-                    </div>
-                    <div class="process-step">
-                        <div class="step-number">3</div>
-                        <h4>Enforce Height Continuity</h4>
-                        <p>Adjust parameters so function values match at connection points</p>
-                    </div>
-                    <div class="process-step">
-                        <div class="step-number">4</div>
-                        <h4>Enforce Slope Continuity</h4>
-                        <p>Adjust parameters so derivatives match at connection points</p>
-                    </div>
-                    <div class="process-step">
-                        <div class="step-number">5</div>
-                        <h4>Test and Refine</h4>
-                        <p>Verify the track provides good thrills while maintaining safety</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Real-world Connection -->
-            <div class="design-section">
-                <h2>🌍 Real-world Application</h2>
-                <p class="section-intro">Our mathematical approach mirrors how professional roller coaster designers work.</p>
-                
-                <div class="real-world-grid">
-                    <div class="real-world-card">
-                        <h4>Professional Design</h4>
-                        <p>Real coaster designers use similar piecewise mathematical models, often with even more complex functions and higher-order continuity requirements.</p>
-                    </div>
-                    <div class="real-world-card">
-                        <h4>Safety Standards</h4>
-                        <p>The continuity requirements we enforced are similar to real safety standards that prevent dangerous track geometry.</p>
-                    </div>
-                    <div class="real-world-card">
-                        <h4>Computer-Aided Design</h4>
-                        <p>Modern coaster design software uses the same mathematical principles we've demonstrated in our project.</p>
+                    <div class="condition">
+                        <h4>2. Checking Slope (C¹)</h4>
+                        <p><strong>Left Slope (Derivative):</strong></p>
+                        <div class="equation">$$f'_1(5) = -0.64(5) = -3.2$$</div>
+                        <p><strong>Right Slope (Derivative):</strong></p>
+                        <div class="equation">$$f'_2(5) = 0.0256(5-10)^3 = 0.0256(-125) = -3.2$$</div>
+                        <p style="color: green; font-weight: bold; text-align: center;">✓ Slopes match (-3.2)</p>
                     </div>
                 </div>
             </div>
@@ -251,67 +105,14 @@
         </div>
     </section>
 
-    <!-- Navigation to Other Pages -->
-    <section class="page-navigation">
-        <div class="container">
-            <h2>Continue Exploring</h2>
-            <div class="nav-cards-small">
-                <a href="simulation.html" class="nav-card-small">
-                    <div class="card-icon">🎮</div>
-                    <h4>See the Design in Action</h4>
-                    <p>Watch our track design come to life</p>
-                </a>
-                <a href="theory.html" class="nav-card-small">
-                    <div class="card-icon">📐</div>
-                    <h4>Mathematical Analysis</h4>
-                    <p>Explore the derivatives of our functions</p>
-                </a>
-                <a href="physics.html" class="nav-card-small">
-                    <div class="card-icon">🔬</div>
-                    <h4>Physics Model</h4>
-                    <p>How physics brings the design to life</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-main">
-                    <h3>The Calculus of Thrill</h3>
-                    <p>Track design demonstrating piecewise functions, C¹ continuity, and mathematical modeling for smooth roller coaster construction.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-section">
-                        <h4>Project Sections</h4>
-                        <ul>
-                            <li><a href="../index.html">Project Home</a></li>
-                            <li><a href="simulation.html">Interactive Simulation</a></li>
-                            <li><a href="theory.html">Mathematical Theory</a></li>
-                            <li><a href="physics.html">Physics Model</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Design Concepts</h4>
-                        <ul>
-                            <li>Piecewise Functions</li>
-                            <li>C¹ Continuity</li>
-                            <li>Smooth Transitions</li>
-                            <li>Launch Geometry & Projectile Setup</li>
-                            <li>Mathematical Modeling</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
+                <p>&copy; 2024 Team Roller Riders | Calculus Class Project</p>
             </div>
         </div>
     </footer>
 
-    <!-- Initialize KaTeX -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof renderMathInElement !== 'undefined') {
