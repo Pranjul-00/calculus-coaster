@@ -1,7 +1,8 @@
-/* === ROLLER COASTER SIMULATOR (V3: VECTOR DISPLAY) ===
+/* === ROLLER COASTER SIMULATOR (V4: FINAL WITH GRID) ===
    - Deeper, steeper track for more "thrill"
    - Real-time G-force and Speed (km/h) display
-   - ADDED: Tangent (Velocity) and Normal (G-Force) vectors
+   - Tangent and Normal vectors
+   - COORDINATE GRID ADDED for mathematical rigor
 */
 
 // --- 1. Global Variables & Constants ---
@@ -135,7 +136,7 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
     "y(x) &= " + y0Str +
     " + " + aStr + " (x - " + x0Str + ")" +
     " - " + bStr + " (x - " + x0Str + ")^2 \\\\" +
-    "     &= " + AStr + " x^2 + " + BStr + " x + " + CStr +
+    " &= " + AStr + " x^2 + " + BStr + " x + " + CStr +
     "\\end{aligned}";
 
   if (window.katex && window.katex.render) {
@@ -584,6 +585,42 @@ function draw() {
   // --- B. Draw Everything to the Screen ---
   background(210, 230, 255); // Light blue sky
 
+  // --- DRAW COORDINATE GRID (MATHEMATICAL BACKGROUND) ---
+  push();
+  stroke(255, 255, 255, 100); // Faint white lines
+  strokeWeight(1);
+  textSize(10);
+  fill(100);
+  noStroke();
+  
+  // Vertical Grid Lines (Every 5 meters)
+  for (let gx = 0; gx <= displayWorldXMax; gx += 5) {
+    let sx = map(gx, 0, displayWorldXMax, 50, width - 50);
+    
+    // Draw line
+    stroke(255);
+    line(sx, 50, sx, height - 50);
+    
+    // Draw Number
+    noStroke();
+    text(gx + "m", sx - 10, height - 35);
+  }
+
+  // Horizontal Grid Lines (Every 5 meters)
+  for (let gy = 0; gy <= displayWorldYMax; gy += 5) {
+    let sy = map(gy, 0, displayWorldYMax, height - 50, 50);
+    
+    // Draw line
+    stroke(255);
+    line(50, sy, width - 50, sy);
+    
+    // Draw Number
+    noStroke();
+    text(gy + "m", 25, sy + 4);
+  }
+  pop();
+  // --- END COORDINATE GRID ---
+
   stroke(30, 64, 175);
   strokeWeight(4);
   noFill();
@@ -752,7 +789,8 @@ function draw() {
       let jitterX = random(-3, 3);
       let jitterY = random(-3, 3);
       let size = random(3, 5);
-      fill(255, 0, 0, 210);
+      let fillVal = color(255, 0, 0, 210);
+      fill(fillVal);
       rect(px + jitterX, pyBase + jitterY, size, size);
     }
   }
