@@ -46,81 +46,60 @@
                 
                 <div class="energy-principle">
                     <h3>The Principle:</h3>
-                    <p>We assume the cart starts at height h<sub>start</sub> (with a tiny "push") and trades its Potential Energy (PE) for Kinetic Energy (KE).</p>
+                    <p>We assume the cart starts at height $H_{total}$ (incorporating initial push) and trades its Potential Energy (PE) for Kinetic Energy (KE).</p>
                     
-                    <div class="equation">$$PE_{initial} = PE_{current} + KE_{current}$$</div>
-                    <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
+                    <div class="equation">$$PE_{top} = PE_{current} + KE_{current}$$</div>
+                    <div class="equation">$$mgH_{total} = mgh + \frac{1}{2}mv^2$$</div>
                 </div>
             </div>
 
             <div class="physics-section">
-                <h2>Calculated Velocity v(x)</h2>
-                <p class="section-intro">By solving the energy equation for v (velocity), we get the master formula for the cart's speed at any point.</p>
+                <h2>Velocity & Vectors</h2>
+                <p class="section-intro">By solving the energy equation for v (velocity), we get the scalar speed. We then use derivatives to find the vector components.</p>
                 
                 <div class="master-equation">
-                    <h3>Master Equation:</h3>
-                    <div class="equation">$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
+                    <h3>Master Velocity Equation:</h3>
+                    <div class="equation">$$v(x) = \sqrt{2g(H_{total} - f(x))}$$</div>
                 </div>
                 
                 <div class="velocity-breakdown">
                     <h3>Vector Decomposition:</h3>
-                    <p>To move the cart on the screen, we decompose this scalar speed into vector components using the track angle $\theta$ derived from the slope $f'(x)$:</p>
-                    <div class="equation">$$v_x = v \cos(\theta) = \frac{v}{\sqrt{1 + [f'(x)]^2}}$$</div>
-                    <div class="equation">$$v_y = v \sin(\theta) = v_x \cdot f'(x)$$</div>
+                    <p>To move the cart on the screen, we decompose this scalar speed using the slope $f'(x)$ from our Theory section:</p>
+                    <div class="equation">$$v_x = \frac{v}{\sqrt{1 + [f'(x)]^2}}$$</div>
+                    <div class="equation">$$v_y = v_x \cdot f'(x)$$</div>
                 </div>
             </div>
 
             <div class="physics-section">
-                <h2>G-Forces and Centripetal Acceleration</h2>
-                <p class="section-intro">The "apparent weight" a rider feels depends on gravity and the centripetal acceleration caused by the track's curvature.</p>
+                <h2>G-Forces</h2>
+                <p class="section-intro">The "apparent weight" a rider feels is the Normal Force. This is a combination of gravity and centripetal force.</p>
                 
                 <div class="master-equation">
-                    <h3>Centripetal Acceleration ($a_c$):</h3>
-                    <div class="equation">$$a_c = \frac{v^2}{\rho} = v^2 \cdot \kappa$$</div>
-                    <p>This explains why high speed ($v$) combined with high curvature ($\kappa$) creates the strongest forces.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Total G-Force Equation:</h3>
-                    <div class="equation">$$Gs(x) = \frac{1 + [f'(x)]^2 + 2(h_{start} - f(x)) \cdot f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+                    <h3>Normal Force (G-Force) Equation:</h3>
+                    <p>This equation accounts for gravity's component perpendicular to the track and the centripetal acceleration required to turn the cart.</p>
+                    <div class="equation">$$n = \frac{1 + [f'(x)]^2 + 2(H_{total} - f(x))f''(x)}{(1 + [f'(x)]^2)^{3/2}}$$</div>
+                    <p>If $n > 1$, you feel heavy. If $n < 1$, you feel light (airtime).</p>
                 </div>
             </div>
 
             <div class="physics-section highlight-section">
-                <h2>🎯 Derivation: Projectile Time & Range</h2>
-                <p class="section-intro">Once the cart leaves the track, it becomes a projectile. We must mathematically derive the exact time of flight and landing distance.</p>
+                <h2>🎯 Projectile Solutions</h2>
+                <p class="section-intro">When the track ends at $x=35$, the cart becomes a projectile. Here are the analytic solutions for Range and Time.</p>
 
                 <div class="master-equation">
-                    <h3>1. Initial Launch Conditions</h3>
-                    <p>At the end of the track (launch point), we have:</p>
-                    <ul>
-                        <li>Launch Height: $y_0 = f(35)$</li>
-                        <li>Launch Velocity Components: $v_{x0}, v_{y0}$ (calculated from energy & slope)</li>
-                    </ul>
-                </div>
-
-                <div class="master-equation">
-                    <h3>2. Deriving Flight Time ($t_{flight}$)</h3>
-                    <p>The vertical motion is governed by gravity ($g$). We need to find the time $t$ when the cart hits the ground ($y=0$).</p>
-                    <div class="equation">$$y(t) = y_0 + v_{y0}t - \frac{1}{2}gt^2 = 0$$</div>
-                    <p>This is a quadratic equation in the form $At^2 + Bt + C = 0$, where:</p>
-                    <div class="equation">$$A = -\frac{1}{2}g, \quad B = v_{y0}, \quad C = y_0$$</div>
-                    <p>Using the Quadratic Formula $t = \frac{-B \pm \sqrt{B^2 - 4AC}}{2A}$:</p>
-                    <div class="equation">$$t = \frac{-v_{y0} \pm \sqrt{v_{y0}^2 - 4(-\frac{1}{2}g)(y_0)}}{2(-\frac{1}{2}g)}$$</div>
-                    <p>Simplifying (and choosing the positive root for time forward):</p>
-                    <div class="equation" style="border: 2px solid var(--accent-teal); padding: 10px; background: white;">
+                    <h3>1. Total Flight Time ($t_{flight}$)</h3>
+                    <p>Solving the quadratic equation $y(t) = 0$ for time:</p>
+                    <div class="equation">
                         $$t_{flight} = \frac{v_{y0} + \sqrt{v_{y0}^2 + 2gy_0}}{g}$$
                     </div>
-                    <p>This is the exact equation our simulation uses to determine the flight duration.</p>
                 </div>
 
                 <div class="master-equation">
-                    <h3>3. Deriving Range ($R$)</h3>
-                    <p>Since horizontal velocity ($v_{x0}$) is constant (ignoring air resistance), the range is simply velocity times the calculated flight time.</p>
-                    <div class="equation" style="border: 2px solid var(--accent-teal); padding: 10px; background: white;">
+                    <h3>2. Horizontal Range ($R$)</h3>
+                    <p>Distance traveled from the ramp's end:</p>
+                    <div class="equation">
                         $$R = v_{x0} \cdot t_{flight} = v_{x0} \left( \frac{v_{y0} + \sqrt{v_{y0}^2 + 2gy_0}}{g} \right)$$
                     </div>
-                    <p>This calculates exactly how far the cart travels horizontally from the moment it leaves the track.</p>
                 </div>
             </div>
 
