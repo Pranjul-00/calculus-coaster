@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Simulation - The Calculus of Thrill</title>
     <link rel="stylesheet" href="../css/style.css">
-    <!-- KaTeX for mathematical equations in the projectile equation block -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
     <script src="../js/sketch.js"></script>
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="container">
             <div class="header-content">
@@ -33,7 +31,6 @@
         </div>
     </header>
 
-    <!-- Page Content Header -->
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Interactive Physics Simulation</h2>
@@ -41,7 +38,6 @@
         </div>
     </section>
 
-    <!-- Simulation Section -->
     <section class="simulation-page">
         <div class="container">
             <div class="simulation-layout">
@@ -50,8 +46,26 @@
                         <button id="openCanvasOverlayBtn" class="canvas-enlarge-icon" aria-label="Enlarge simulation">⤢</button>
                     </div>
 
+                    <div class="projectile-equation-block" style="margin-top: 1rem; border-color: var(--accent-teal);">
+                        <h3 style="color: var(--accent-teal);">Calculus Results: Track Segment</h3>
+                        <div class="simulation-stat-row" style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem;">
+                            <div class="stat-item" style="text-align: center;">
+                                <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-light); font-weight: 600;">Arc Length (Integral)</div>
+                                <div id="trackDistanceDisplay" style="font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">
+                                    0.00 m
+                                </div>
+                            </div>
+                            <div class="stat-item" style="text-align: center;">
+                                <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-light); font-weight: 600;">Time on Track</div>
+                                <div id="trackTimeDisplay" style="font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">
+                                    0.00 s
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="projectile-equation-block" id="projectileEquationBlock">
-                        <h3>Projectile Path Equations</h3>
+                        <h3>Calculus Results: Projectile Segment</h3>
                         <div class="projectile-equation-row">
                             <div class="projectile-equation-label">Parametric in time</div>
                             <p id="projectileEquationTime" class="projectile-equation-text">
@@ -63,6 +77,14 @@
                             <p id="projectileEquationX" class="projectile-equation-text">
                                 Launch the cart to see y(x).
                             </p>
+                        </div>
+                        <div class="simulation-stat-row" style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem;">
+                            <div class="stat-item" style="text-align: center;">
+                                <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-light); font-weight: 600;">Total Time (Landing)</div>
+                                <div id="totalTimeDisplay" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">
+                                    --
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -123,13 +145,9 @@
                     <div class="info-panel">
                         <h3>📊 Understanding the Data</h3>
                         <div class="data-explanation">
+                            <p><strong>Arc Length:</strong> The actual distance traveled along the curved track (calculated via integral).</p>
                             <p><strong>Speed (km/h):</strong> How fast the cart is moving</p>
                             <p><strong>G-Force (Gs):</strong> The apparent weight felt by riders</p>
-                            <ul>
-                                <li>1 G = Normal gravity</li>
-                                <li>&gt; 1 G = Pressed into seat</li>
-                                <li>&lt; 1 G = Weightless feeling</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -155,11 +173,9 @@
         </div>
     </section>
 
-    <!-- Canvas Overlay Elements for Enlarged View -->
     <div id="canvasOverlayBackdrop" class="canvas-overlay-backdrop"></div>
     <button id="canvasOverlayCloseBtn" class="sim-button canvas-overlay-close">X</button>
 
-    <!-- Navigation to Other Pages -->
     <section class="page-navigation">
         <div class="container">
             <h2>Continue Exploring</h2>
@@ -183,7 +199,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
             <div class="footer-content">
