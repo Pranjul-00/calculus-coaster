@@ -1,7 +1,7 @@
-/* === ROLLER COASTER SIMULATOR (V7: FINAL WITH PROJECTILE TIME) ===
+/* === ROLLER COASTER SIMULATOR (V8: FINAL WITH UI STATS) ===
    - Stops automatically on landing
    - Calculates Projectile Range
-   - ADDED: Projectile Time calculation (Total Time - Track Time)
+   - ADDED: Live UI updates for Arc Length and Time
    - Coordinate Grid enabled
 */
 
@@ -11,7 +11,7 @@ const defaultInitialSpeed = 0.5;
 let g = defaultG; 
 const trackStartHeight = 20.0; 
 const worldXMax = 50.0;
-const landedPauseDuration = 1.5; // Not used when auto-stop is on, but kept for logic safety
+const landedPauseDuration = 1.5; 
 const teleportDuration = 1.5;
 let initialSpeed = defaultInitialSpeed;
 
@@ -42,6 +42,7 @@ let projectileEquationElement = null;
 let projectileEquationTimeElement = null;
 let projectileEquationXElement = null;
 let trackTimeElement = null;
+let trackDistanceElement = null;
 let totalTimeElement = null;
 let trackTime = null;
 let totalTime = null;
@@ -147,23 +148,30 @@ function setup() {
   
   const projectileEquationTime = document.getElementById('projectileEquationTime');
   const projectileEquationX = document.getElementById('projectileEquationX');
+  
+  // NEW DOM ELEMENTS FOR STATS
   const trackTimeDisplay = document.getElementById('trackTimeDisplay');
+  const trackDistanceDisplay = document.getElementById('trackDistanceDisplay');
   const totalTimeDisplay = document.getElementById('totalTimeDisplay');
 
   projectileEquationElement = document.getElementById('projectileEquationBlock');
   projectileEquationTimeElement = projectileEquationTime;
   projectileEquationXElement = projectileEquationX;
+  
   trackTimeElement = trackTimeDisplay;
+  trackDistanceElement = trackDistanceDisplay; // Capture reference
   totalTimeElement = totalTimeDisplay;
 
   if (playPauseBtn) {
     projectileEquationTime.textContent = "Launch the cart to see x(t) and y(t).";
     projectileEquationX.textContent = "Launch the cart to see y(x).";
-    if (trackTimeDisplay) trackTimeDisplay.textContent = "Time to cover track: \u2014";
-    if (totalTimeDisplay) totalTimeDisplay.textContent = "Total time until landing: \u2014";
+    
+    // Set initial text
+    if (trackTimeElement) trackTimeElement.textContent = "0.00 s";
+    if (trackDistanceElement) trackDistanceElement.textContent = "0.00 m";
+    if (totalTimeElement) totalTimeElement.textContent = "--";
 
     playPauseBtn.addEventListener('click', () => {
-      // If we have landed, 'Play' acts as a Reset+Start
       if (hasLanded) {
          resetSimulation();
       } else {
@@ -184,8 +192,10 @@ function setup() {
       running = true; 
       playPauseBtn.textContent = 'Pause';
       
-      if (trackTimeElement) trackTimeElement.textContent = "Time to cover track: \u2014";
-      if (totalTimeElement) totalTimeElement.textContent = "Total time until landing: \u2014";
+      // Reset text
+      if (trackTimeElement) trackTimeElement.textContent = "0.00 s";
+      if (trackDistanceElement) trackDistanceElement.textContent = "0.00 m";
+      if (totalTimeElement) totalTimeElement.textContent = "--";
     }
 
     speedSlider.addEventListener('input', () => {
@@ -240,6 +250,10 @@ function draw() {
       rideTime += dt;
       arcDistance += v * dt;
       cartX += horizontalVel * dt;
+      
+      // LIVE UPDATE: Update distance/time while running
+      if (trackDistanceElement) trackDistanceElement.textContent = arcDistance.toFixed(2) + " m";
+      if (trackTimeElement) trackTimeElement.textContent = rideTime.toFixed(2) + " s";
 
       if (cartX >= 35) {
         cartX = 35; cartY = f(cartX);
@@ -249,7 +263,9 @@ function draw() {
         onTrack = false; hasLanded = false;
         if (trackTime === null) {
           trackTime = rideTime; trackDistance = arcDistance;
-          if (trackTimeElement) trackTimeElement.textContent = "Time to cover track: " + trackTime.toFixed(2) + " s";
+          // Final freeze of track stats
+          if (trackTimeElement) trackTimeElement.textContent = trackTime.toFixed(2) + " s";
+          if (trackDistanceElement) trackDistanceElement.textContent = trackDistance.toFixed(2) + " m";
         }
         updateProjectileEquation(projectileX, projectileY, projectileVx, projectileVy);
       } else { cartY = f(cartX); }
@@ -258,6 +274,8 @@ function draw() {
   else if (!hasLanded) {
     // Projectile Mode
     if (running) {
+      rideTime += dt; // Keep adding to total time
+      
       projectileVy -= g * dt;
       projectileX += projectileVx * dt;
       projectileY += projectileVy * dt;
@@ -266,15 +284,15 @@ function draw() {
       if (projectileY <= 0) {
         projectileY = 0;
         hasLanded = true; 
-        running = false; // STOP THE SIMULATION HERE
+        running = false; 
         document.getElementById('playPauseBtn').textContent = "Restart"; 
         
         landingX = projectileX;
-        projectileRange = landingX - 35.0; // Calculate Range from Launch Point
+        projectileRange = landingX - 35.0; 
 
         if (totalTime === null) {
           totalTime = rideTime; totalDistance = arcDistance;
-          if (totalTimeElement) totalTimeElement.textContent = "Total time until landing: " + totalTime.toFixed(2) + " s";
+          if (totalTimeElement) totalTimeElement.textContent = totalTime.toFixed(2) + " s";
         }
       }
       projectileTrail.push({ x: projectileX, y: projectileY });
@@ -283,9 +301,8 @@ function draw() {
     v = Math.sqrt(projectileVx * projectileVx + projectileVy * projectileVy);
     horizontalVel = projectileVx; verticalVel = projectileVy;
     slope = 0; concavity = 0;
-    if (running) { rideTime += dt; arcDistance += v * dt; }
   } else {
-    // Landed - ensure variables stay static
+    // Landed
     cartX = projectileX; cartY = 0;
     v = 0; horizontalVel = 0; verticalVel = 0; slope = 0; concavity = 0;
   }
@@ -342,7 +359,7 @@ function draw() {
   let Gs = numerator / denominator;
   let speedKPH = v * 3.6;
 
-  // --- LIVE HUD ---
+  // --- LIVE HUD ON CANVAS ---
   push();
   if (running || (!hasLanded && !running)) {
     fill(0); noStroke(); textSize(16); textAlign(LEFT);
@@ -378,15 +395,7 @@ function draw() {
     text("G-Force: " + Gs.toFixed(2) + " Gs", hudX + 5, hudY + 85);
     text("Vx: " + horizontalVel.toFixed(2) + " m/s", hudX + 5, hudY + 105);
     text("Vy: " + verticalVel.toFixed(2) + " m/s", hudX + 5, hudY + 125);
-    text("Dist: " + arcDistance.toFixed(2) + " m", hudX + 5, hudY + 145);
-    
-    // Show live projectile time if in air
-    if (!onTrack) {
-        let currentProjTime = rideTime - trackTime;
-        text("Proj. Time: " + currentProjTime.toFixed(2) + " s", hudX + 5, hudY + 165);
-    } else {
-        text("Time: " + rideTime.toFixed(2) + " s", hudX + 5, hudY + 165);
-    }
+    // Removed duplicate dist/time from HUD since it's now below canvas
   }
 
   if (!onTrack && projectileTrail.length > 1) {
@@ -412,26 +421,4 @@ function draw() {
     line(screenX, screenY, screenX + (nx * Gs * g_scale), screenY - (ny * Gs * g_scale));
     pop();
   }
-
-  // --- FINAL RESULTS BOX (Top Center) ---
-  push();
-  textAlign(CENTER); textSize(14); noStroke();
-  let summaryHudWidth = 480; let summaryHudHeight = 30; let summaryMarginTop = 30; let centerX = width / 2;
-
-  if (trackTime !== null && trackDistance !== null) {
-    fill(255, 255, 255, 210); let boxX = centerX - summaryHudWidth / 2; let boxY = summaryMarginTop;
-    rect(boxX, boxY, summaryHudWidth, summaryHudHeight); fill(0);
-    text("Track 0-35 m: Dist " + trackDistance.toFixed(2) + " m, Time " + trackTime.toFixed(2) + " s", centerX, boxY + 20);
-  }
-
-  if (hasLanded) {
-    let projTime = totalTime - trackTime;
-    
-    fill(255, 255, 255, 210); let boxX2 = centerX - summaryHudWidth / 2; let boxY2 = summaryMarginTop + summaryHudHeight + 10;
-    rect(boxX2, boxY2, summaryHudWidth, summaryHudHeight); fill(0);
-    
-    // Displaying RANGE and TIME of flight
-    text("Projectile: Range " + projectileRange.toFixed(2) + " m, Time " + projTime.toFixed(2) + " s", centerX, boxY2 + 20);
-  }
-  pop();
 }
