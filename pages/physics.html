@@ -33,7 +33,7 @@
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Physics Model: Realistic Motion</h2>
-            <p class="page-description">How conservation of energy creates authentic roller coaster physics through mathematical modeling.</p>
+            <p class="page-description">How conservation of energy creates authentic roller coaster physics through mathematical modeling and real-time calculations.</p>
         </div>
     </section>
 
@@ -41,21 +41,38 @@
         <div class="container">
             
             <div class="physics-section">
-                <h2>Conservation of Energy</h2>
-                <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
+                <h2>Conservation of Energy: The Foundation</h2>
+                <p class="section-intro">The animation is not pre-set. It is a live physics simulation governed by the Conservation of Energy.</p>
+                
+                <div class="energy-principle">
+                    <h3>The Principle:</h3>
+                    <p>We assume the cart starts at height h<sub>start</sub> (with a tiny "push") and trades its Potential Energy (PE) for Kinetic Energy (KE).</p>
+                    
+                    <div class="equation">$$PE_{initial} = PE_{current} + KE_{current}$$</div>
+                    <div class="equation">$$mgh_{start} = mgh + \frac{1}{2}mv^2$$</div>
+                </div>
             </div>
 
             <div class="physics-section">
                 <h2>Calculated Velocity v(x)</h2>
+                <p class="section-intro">By solving the energy equation for v (velocity), we get the master formula for the cart's speed at any point.</p>
+                
                 <div class="master-equation">
-                    <h3>Master Equation (Updated Constants):</h3>
-                    <div class="equation">$$v(x) = \sqrt{2g(20.0 - f(x))}$$</div>
+                    <h3>Master Equation:</h3>
+                    <div class="equation">$$v(x) = \sqrt{2g(h_{start} - f(x))}$$</div>
+                </div>
+                
+                <div class="velocity-breakdown">
+                    <h3>Vector Decomposition:</h3>
+                    <p>To move the cart on the screen, we decompose this scalar speed into vector components using the track angle $\theta$ derived from the slope $f'(x)$:</p>
+                    <div class="equation">$$v_x = v \cos(\theta) = \frac{v}{\sqrt{1 + [f'(x)]^2}}$$</div>
+                    <div class="equation">$$v_y = v \sin(\theta) = v_x \cdot f'(x)$$</div>
                 </div>
             </div>
 
             <div class="physics-section">
                 <h2>G-Forces and Centripetal Acceleration</h2>
-                <p class="section-intro">The force felt by the rider depends on the speed and the tightness of the curve.</p>
+                <p class="section-intro">The "apparent weight" a rider feels depends on gravity and the centripetal acceleration caused by the track's curvature.</p>
                 
                 <div class="master-equation">
                     <h3>Centripetal Acceleration ($a_c$):</h3>
@@ -69,13 +86,68 @@
                 </div>
             </div>
 
+            <div class="physics-section highlight-section">
+                <h2>🎯 Derivation: Projectile Time & Range</h2>
+                <p class="section-intro">Once the cart leaves the track, it becomes a projectile. We must mathematically derive the exact time of flight and landing distance.</p>
+
+                <div class="master-equation">
+                    <h3>1. Initial Launch Conditions</h3>
+                    <p>At the end of the track (launch point), we have:</p>
+                    <ul>
+                        <li>Launch Height: $y_0 = f(35)$</li>
+                        <li>Launch Velocity Components: $v_{x0}, v_{y0}$ (calculated from energy & slope)</li>
+                    </ul>
+                </div>
+
+                <div class="master-equation">
+                    <h3>2. Deriving Flight Time ($t_{flight}$)</h3>
+                    <p>The vertical motion is governed by gravity ($g$). We need to find the time $t$ when the cart hits the ground ($y=0$).</p>
+                    <div class="equation">$$y(t) = y_0 + v_{y0}t - \frac{1}{2}gt^2 = 0$$</div>
+                    <p>This is a quadratic equation in the form $At^2 + Bt + C = 0$, where:</p>
+                    <div class="equation">$$A = -\frac{1}{2}g, \quad B = v_{y0}, \quad C = y_0$$</div>
+                    <p>Using the Quadratic Formula $t = \frac{-B \pm \sqrt{B^2 - 4AC}}{2A}$:</p>
+                    <div class="equation">$$t = \frac{-v_{y0} \pm \sqrt{v_{y0}^2 - 4(-\frac{1}{2}g)(y_0)}}{2(-\frac{1}{2}g)}$$</div>
+                    <p>Simplifying (and choosing the positive root for time forward):</p>
+                    <div class="equation" style="border: 2px solid var(--accent-teal); padding: 10px; background: white;">
+                        $$t_{flight} = \frac{v_{y0} + \sqrt{v_{y0}^2 + 2gy_0}}{g}$$
+                    </div>
+                    <p>This is the exact equation our simulation uses to determine the flight duration.</p>
+                </div>
+
+                <div class="master-equation">
+                    <h3>3. Deriving Range ($R$)</h3>
+                    <p>Since horizontal velocity ($v_{x0}$) is constant (ignoring air resistance), the range is simply velocity times the calculated flight time.</p>
+                    <div class="equation" style="border: 2px solid var(--accent-teal); padding: 10px; background: white;">
+                        $$R = v_{x0} \cdot t_{flight} = v_{x0} \left( \frac{v_{y0} + \sqrt{v_{y0}^2 + 2gy_0}}{g} \right)$$
+                    </div>
+                    <p>This calculates exactly how far the cart travels horizontally from the moment it leaves the track.</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <footer class="site-footer">
         <div class="container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <h3>The Calculus of Thrill</h3>
+                    <p>Physics modeling demonstrating conservation of energy, velocity calculations, and G-force analysis in roller coaster dynamics.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Project Sections</h4>
+                        <ul>
+                            <li><a href="../index.html">Project Home</a></li>
+                            <li><a href="simulation.html">Interactive Simulation</a></li>
+                            <li><a href="theory.html">Mathematical Theory</a></li>
+                            <li><a href="design.html">Track Design</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Team Roller Riders | Calculus Class Project</p>
+                <p>&copy; 2024 Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
             </div>
         </div>
     </footer>
