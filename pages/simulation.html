@@ -61,11 +61,16 @@
                                     0.00 s
                                 </div>
                             </div>
+                            <div class="stat-item" style="text-align: center;">
+                                <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-light); font-weight: 600;">Total Time (Landing)</div>
+                                <div id="totalTimeDisplay" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">
+                                    --
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                     <div class="projectile-equation-block" id="projectileEquationBlock">
-                        <h3>Calculus Results: Projectile Segment</h3>
+                        <h3>Projectile Path Equations</h3>
                         <div class="projectile-equation-row">
                             <div class="projectile-equation-label">Parametric in time</div>
                             <p id="projectileEquationTime" class="projectile-equation-text">
@@ -77,14 +82,6 @@
                             <p id="projectileEquationX" class="projectile-equation-text">
                                 Launch the cart to see y(x).
                             </p>
-                        </div>
-                        <div class="simulation-stat-row" style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem;">
-                            <div class="stat-item" style="text-align: center;">
-                                <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-light); font-weight: 600;">Total Time (Landing)</div>
-                                <div id="totalTimeDisplay" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">
-                                    --
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -145,9 +142,13 @@
                     <div class="info-panel">
                         <h3>📊 Understanding the Data</h3>
                         <div class="data-explanation">
-                            <p><strong>Arc Length:</strong> The actual distance traveled along the curved track (calculated via integral).</p>
                             <p><strong>Speed (km/h):</strong> How fast the cart is moving</p>
                             <p><strong>G-Force (Gs):</strong> The apparent weight felt by riders</p>
+                            <ul>
+                                <li>1 G = Normal gravity</li>
+                                <li>&gt; 1 G = Pressed into seat</li>
+                                <li>&lt; 1 G = Weightless feeling</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
