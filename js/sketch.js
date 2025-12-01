@@ -63,6 +63,9 @@ let lastLaunchY = null;
 let lastLaunchVx = null;
 let lastLaunchVy = null;
 
+let spaceStars = [];
+let spacePlanets = [];
+
 function formatProjectileNumber(n) {
   if (Number.isFinite(n)) return n.toFixed(2);
   return String(n);
@@ -111,6 +114,35 @@ function updateEnergyStartHeight() {
   energyStartHeight = referenceHeight + (initialSpeed * initialSpeed) / (2 * g);
 }
 
+function initSpaceObjects() {
+  if (spaceStars.length === 0) {
+    for (let i = 0; i < 80; i++) {
+      spaceStars.push({
+        x: random(0, width),
+        y: random(0, height * 0.6),
+        r: random(1, 2),
+        alpha: random(150, 255)
+      });
+    }
+  }
+  if (spacePlanets.length === 0) {
+    spacePlanets.push({
+      x: width * 0.18,
+      y: height * 0.16,
+      r: 26,
+      inner: color(255, 245, 200),
+      outer: color(255, 200, 80)
+    });
+    spacePlanets.push({
+      x: width * 0.75,
+      y: height * 0.22,
+      r: 18,
+      inner: color(190, 220, 255),
+      outer: color(70, 110, 210)
+    });
+  }
+}
+
 // --- 2. Track Functions ---
 function f(x) {
   if (x >= 0 && x < 5) return 20.0 - 0.32 * Math.pow(x, 2);
@@ -141,6 +173,7 @@ function setup() {
   let canvas = createCanvas(1200, 500);
   canvas.parent('canvas-container');
   cartX = startX; cartY = f(cartX);
+  initSpaceObjects();
   
   const playPauseBtn = document.getElementById('playPauseBtn');
   const resetBtn = document.getElementById('resetBtn');
@@ -377,6 +410,48 @@ function draw() {
   let displayWorldXMax = cameraWorldXMax; let displayWorldYMax = cameraWorldYMax;
 
   background(210, 230, 255);
+
+  if (displayWorldYMax > 80) {
+    let spaceWorldY = 80;
+    let boundaryScreenY = map(spaceWorldY, 0, displayWorldYMax, height - 50, 50);
+    let topY = 0;
+    let bottomY = max(boundaryScreenY, 0);
+    let cTop = color(5, 5, 25);
+    let cMid = color(40, 20, 80);
+    let cBottom = color(210, 230, 255);
+    noStroke();
+    for (let y = topY; y < bottomY; y += 2) {
+      let t = map(y, topY, bottomY, 0, 1);
+      let c;
+      if (t < 0.5) {
+        c = lerpColor(cTop, cMid, t * 2);
+      } else {
+        c = lerpColor(cMid, cBottom, (t - 0.5) * 2);
+      }
+      fill(c);
+      rect(0, y, width, 2);
+    }
+
+    noStroke();
+    for (let i = 0; i < spaceStars.length; i++) {
+      let s = spaceStars[i];
+      if (s.y < bottomY) {
+        fill(255, 255, 255, s.alpha);
+        circle(s.x, s.y, s.r * 2);
+      }
+    }
+    for (let i = 0; i < spacePlanets.length; i++) {
+      let p = spacePlanets[i];
+      if (p.y + p.r < bottomY) {
+        for (let rr = p.r; rr > 0; rr -= 1.5) {
+          let t2 = rr / p.r;
+          let c2 = lerpColor(p.inner, p.outer, t2);
+          fill(c2);
+          circle(p.x, p.y, rr * 2);
+        }
+      }
+    }
+  }
 
   // --- COORDINATE GRID ---
   push();
