@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mathematical Theory - The Calculus of Thrill</title>
     <link rel="stylesheet" href="../css/style.css">
-    <!-- KaTeX for mathematical equations -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="container">
             <div class="header-content">
@@ -32,7 +30,6 @@
         </div>
     </header>
 
-    <!-- Page Content Header -->
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Mathematical Theory</h2>
@@ -40,68 +37,34 @@
         </div>
     </section>
 
-    <!-- Theory Content -->
     <section class="theory-content">
         <div class="container">
-            <!-- Track Function Section -->
             <div class="theory-section">
                 <h2>Track Function f(x): Piecewise Shape of the Coaster</h2>
                 <p class="section-intro"><strong>Physical Meaning:</strong> The height of the roller coaster track at each horizontal position x.</p>
 
                 <div class="piecewise-function">
-                    <h3>Four Track Segments (from the Mathematica model):</h3>
+                    <h3>Four Track Segments (updated coefficients):</h3>
                     <div class="piece">
                         <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$f_1(x) = 20 - 0.2 x^2$$</div>
+                        <div class="equation">$$f_1(x) = 20 - 0.32 x^2$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$f_2(x) = 0.004 (x - 10)^4 + 12.5$$</div>
+                        <div class="equation">$$f_2(x) = 0.0064 (x - 10)^4 + 8.0$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 15 ≤ x < 25:</span>
-                        <div class="equation">$$f_3(x) = -0.2 (x - 20)^2 + 20$$</div>
+                        <div class="equation">$$f_3(x) = 20.0 - 0.32 (x - 20)^2$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 25 ≤ x ≤ 35:</span>
-                        <div class="equation">$$f_4(x) = 0.2 (x - 30)^2 + 10$$</div>
+                        <div class="equation">$$f_4(x) = 0.32 (x - 30)^2 + 4.0$$</div>
                     </div>
                 </div>
 
                 <div class="master-equation">
                     <h3>Combined Piecewise Track:</h3>
-                    <div class="equation">
-                        $$
-                        f(x) =
-                        \begin{cases}
-                        20 - 0.2 x^2, & 0 \le x < 5 \\
-                        0.004 (x-10)^4 + 12.5, & 5 \le x < 15 \\
-                        -0.2 (x-20)^2 + 20, & 15 \le x < 25 \\
-                        0.2 (x-30)^2 + 10, & 25 \le x \le 35
-                        \end{cases}
-                        $$
-                    </div>
-                </div>
-
-                <div class="purpose-box">
-                    <h4>Why This Matters:</h4>
-                    <ul>
-                        <li>The track is smooth and continuous at x = 5 and x = 15 (the pieces meet exactly).</li>
-                        <li>Each segment controls a different "story" of the ride: initial drop, valley, and final hill.</li>
-                        <li>This is implemented directly in Mathematica using a <code>Piecewise</code> definition for f(x).</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Position Equations Section -->
-            <div class="theory-section">
-                <h2>Position Equations: x and x(t)</h2>
-                <p class="section-intro"><strong>Mathematical Equations:</strong> The explicit formulas for horizontal position and its time dependence.</p>
-
-                <div class="master-equation">
-                    <h3>Horizontal Position x - Parametric Track Equation:</h3>
-                    <div class="equation">$$\vec{r}(x) = \langle x, f(x) \rangle = \langle x, f(x) \rangle$$</div>
-                    <p><strong>Where f(x) is the piecewise track function:</strong></p>
                     <div class="equation">
                         $$
                         f(x) =
@@ -114,459 +77,66 @@
                         $$
                     </div>
                 </div>
-
-                <div class="master-equation">
-                    <h3>Position as Function of Time x(t) - Differential Equation:</h3>
-                    <div class="equation">
-                        $$
-                        \frac{dx}{dt} = \frac{\sqrt{2g(h_{start} - f(x))}}{\sqrt{1 + [f'(x)]^2}}
-                        $$
-                    </div>
-                    <p><strong>Initial Condition:</strong> x(0) = 0</p>
-                    <p><strong>Expanded Form:</strong></p>
-                    <div class="equation">
-                        $$
-                        \frac{dx}{dt} =
-                        \begin{cases}
-                        \frac{\sqrt{2g \cdot 0.32 x^2}}{\sqrt{1 + (0.64 x)^2}}, & 0 \le x < 5 \\[8pt]
-                        \frac{\sqrt{2g(12.0 - 0.0064 (x-10)^4)}}{\sqrt{1 + [0.0256 (x-10)^3]^2}}, & 5 \le x < 15 \\[8pt]
-                        \frac{\sqrt{2g \cdot 0.32 (x-20)^2}}{\sqrt{1 + [0.64 (x-20)]^2}}, & 15 \le x < 25 \\[8pt]
-                        \frac{\sqrt{2g(16.0 - 0.32 (x-30)^2)}}{\sqrt{1 + [0.64 (x-30)]^2}}, & 25 \le x \le 35
-                        \end{cases}
-                        $$
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Numerical Integration Formula:</h3>
-                    <p><strong>Euler's Method (used in simulation):</strong></p>
-                    <div class="equation">
-                        $$
-                        x(t + \Delta t) = x(t) + \frac{\sqrt{2g(h_{start} - f(x(t)))}}{\sqrt{1 + [f'(x(t))]^2}} \cdot \Delta t
-                        $$
-                    </div>
-                </div>
             </div>
 
-            <!-- Velocity Function Section -->
-            <div class="theory-section">
-                <h2>Velocity Along the Track v(x): Energy to Speed</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> The speed of the coaster car at each horizontal position x, computed from the vertical drop under gravity.</p>
-
-                <div class="master-equation">
-                    <h3>Gravitational Acceleration:</h3>
-                    <div class="equation">$$g = 9.81\,\text{m/s}^2$$</div>
-                </div>
-
-                <div class="piecewise-function">
-                    <h3>Velocity Pieces (from the Mathematica model):</h3>
-                    <div class="piece">
-                        <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$v_1(x) = \sqrt{2 g\,(0.2 x^2)}$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$v_2(x) = \sqrt{2 g\,\bigl(7.5 - 0.004 (x - 10)^4\bigr)}$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 15 ≤ x < 25:</span>
-                        <div class="equation">$$v_3(x) = \sqrt{2 g\,\bigl(0.2 (x - 20)^2\bigr)}$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 25 ≤ x ≤ 35:</span>
-                        <div class="equation">$$v_4(x) = \sqrt{2 g\,\bigl(10 - 0.2 (x - 30)^2\bigr)}$$</div>
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Combined Piecewise Velocity:</h3>
-                    <div class="equation">
-                        $$
-                        v(x) =
-                        \begin{cases}
-                        \sqrt{2 g\,(0.2 x^2)}, & 0 \le x < 5 \\
-                        \sqrt{2 g\,\bigl(7.5 - 0.004 (x - 10)^4\bigr)}, & 5 \le x < 15 \\
-                        \sqrt{2 g\,\bigl(0.2 (x - 20)^2\bigr)}, & 15 \le x < 25 \\
-                        \sqrt{2 g\,\bigl(10 - 0.2 (x - 30)^2\bigr)}, & 25 \le x \le 35
-                        \end{cases}
-                        $$
-                    </div>
-                </div>
-
-                <div class="purpose-box">
-                    <h4>Why This Matches the Code:</h4>
-                    <ul>
-                        <li>Each expression comes directly from the Mathematica definitions <code>v1[x]</code>, <code>v2[x]</code>, and <code>v3[x]</code>.</li>
-                        <li>The square roots come from energy conservation: potential energy lost becomes kinetic energy.</li>
-                        <li>The simulation shows this as the "Current Real Velocity" readout in m/s.</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Velocity as a Function of Time Section -->
-            <div class="theory-section">
-                <h2>Velocity as a Function of Time v(t)</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> How fast the cart moves at each instant of time as it travels through the three track segments.</p>
-
-                <div class="master-equation">
-                    <h3>How x(t) is Determined - The Differential Equation:</h3>
-                    <div class="equation">
-                        $$
-                        \frac{dx}{dt} = \frac{v(x(t))}{\sqrt{1 + [f'(x(t))]^2}}
-                        $$
-                    </div>
-                    <p><strong>Initial Condition:</strong> x(0) = 0</p>
-                    <p><strong>Explanation:</strong> This differential equation determines how the horizontal position x changes with time t. The right side represents the horizontal component of velocity along the curved track.</p>
-                    <ul>
-                        <li><strong>v(x(t)):</strong> The speed at position x(t) (from energy conservation)</li>
-                        <li><strong>f'(x(t)):</strong> The slope of the track at position x(t)</li>
-                        <li><strong>√(1 + [f'(x)]²):</strong> Converts speed along the curve to horizontal speed</li>
-                    </ul>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Numerical Solution:</h3>
-                    <p>Since this differential equation cannot be solved analytically, x(t) is found through <strong>numerical integration</strong> in the simulation:</p>
-                    <div class="equation">
-                        $$
-                        x(t + \Delta t) \approx x(t) + \frac{v(x(t))}{\sqrt{1 + [f'(x(t))]^2}} \cdot \Delta t
-                        $$
-                    </div>
-                    <p>The simulation uses small time steps Δt to approximate the continuous motion.</p>
-                </div>
-
-                <div class="piecewise-function">
-                    <h3>Four Time Phases (Four Velocity Graphs):</h3>
-                    <div class="piece">
-                        <span class="condition">Phase 1: While the cart is on 0 ≤ x(t) < 5</span>
-                        <div class="equation">$$v_1(t) = v(x(t)) \text{ with } x(t) \in [0,5)$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">Phase 2: While the cart is on 5 ≤ x(t) < 15</span>
-                        <div class="equation">$$v_2(t) = v(x(t)) \text{ with } x(t) \in [5,15)$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">Phase 3: While the cart is on 15 ≤ x(t) < 25</span>
-                        <div class="equation">$$v_3(t) = v(x(t)) \text{ with } x(t) \in [15,25)$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">Phase 4: While the cart is on 25 ≤ x(t) ≤ 35</span>
-                        <div class="equation">$$v_4(t) = v(x(t)) \text{ with } x(t) \in [25,35]$$</div>
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Combined Piecewise Velocity in Time:</h3>
-                    <div class="equation">
-                        $$
-                        v(t) =
-                        \begin{cases}
-                        v_1(t), & 0 \le t < T_1 \\[-2pt]
-                        v_2(t), & T_1 \le t < T_2 \\[-2pt]
-                        v_3(t), & T_2 \le t < T_3 \\[-2pt]
-                        v_4(t), & T_3 \le t \le T_4
-                        \end{cases}
-                        $$
-                    </div>
-                </div>
-
-                <div class="purpose-box">
-                    <h4>How This Connects to the Simulation:</h4>
-                    <ul>
-                        <li>The times $T_1, T_2, T_3, T_4$ are the instants when the cart passes x = 5, x = 15, x = 25, and finally reaches x = 35.</li>
-                        <li>In the p5.js code, time advances in small steps $\Delta t$ using the frame time (<texttt>deltaTime</texttt>) and the speed slider multiplier.</li>
-                        <li>At each step, the simulation updates x(t), then recomputes v(x(t)) and draws the new point on the track.</li>
-                        <li>If you plotted $v(t)$ while the ride runs, you would see four connected graphs: one for each track segment.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Time Along the Track and Total Ride Time -->
-            <div class="theory-section">
-                <h2>Time Along the Track and Total Ride Time</h2>
-                <p class="section-intro">
-                    <strong>Physical Meaning:</strong>
-                    How long the ride has been running, measured along the curved track and during the projectile flight.
-                </p>
-
-                <div class="master-equation">
-                    <h3>Infinitesimal Time Step from Geometry and Energy</h3>
-                    <p>At a point x on the track, the small piece of track length is</p>
-                    <div class="equation">
-                        $$
-                        ds = \sqrt{1 + [f'(x)]^{2}}\,dx,
-                        \qquad
-                        v(x) = \sqrt{2g\bigl(h_{start} - f(x)\bigr)}.
-                        $$
-                    </div>
-                    <p>Time is distance divided by speed, so the small time needed to move from x to x + dx is</p>
-                    <div class="equation">
-                        $$
-                        dt = \frac{ds}{v(x)}
-                           = \frac{\sqrt{1 + [f'(x)]^{2}}}{\sqrt{2g\bigl(h_{start} - f(x)\bigr)}}\,dx.
-                        $$
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Time to Reach a Point on the Track</h3>
-                    <p>The theoretical time to reach horizontal position X on the track is the integral of these tiny time steps:</p>
-                    <div class="equation">
-                        $$
-                        T_{track}(X)
-                          = \int_{0}^{X}
-                            \frac{\sqrt{1 + [f'(u)]^{2}}}{\sqrt{2g\bigl(h_{start} - f(u)\bigr)}}
-                            \,du.
-                        $$
-                    </div>
-                    <p>In particular, the ideal time to reach the end of the track (x = 35) is</p>
-                    <div class="equation">
-                        $$
-                        T_{end} = T_{track}(35).
-                        $$
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Numerical Time Update in the Simulation</h3>
-                    <p>Instead of evaluating this integral exactly, the code keeps a running clock <code>rideTime</code> and updates it each frame by a small time step &Delta;t:</p>
-                    <div class="equation">
-                        $$
-                        \Delta t
-                          = \frac{\texttt{deltaTime}}{1000}\cdot \texttt{timeScale}.
-                        $$
-                    </div>
-                    <div class="equation">
-                        $$
-                        T_{sim}(t + \Delta t)
-                          = T_{sim}(t) + \Delta t.
-                        $$
-                    </div>
-                    <p>At the same time, the simulation moves the cart using the horizontal component of velocity</p>
-                    <div class="equation">
-                        $$
-                        v_x(x) = \frac{v(x)}{\sqrt{1 + [f'(x)]^{2}}},
-                        $$
-                    </div>
-                    <p>via the Euler update</p>
-                    <div class="equation">
-                        $$
-                        x(t + \Delta t)
-                          = x(t) + v_x\bigl(x(t)\bigr)\,\Delta t.
-                        $$
-                    </div>
-                    <p>The value labeled <strong>Time</strong> in the simulation HUD is exactly this accumulated $T_{sim}$.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Including Projectile Flight</h3>
-                    <p>After the cart leaves the track at x = 35, time continues to increase while the motion follows the projectile equations</p>
-                    <div class="equation">
-                        $$
-                        x(t) = x_0 + v_{x0} t,
-                        \qquad
-                        y(t) = y_0 + v_{y0} t - \tfrac{1}{2} g t^2.
-                        $$
-                    </div>
-                    <p>The total ride time combines the on-track time and the in-air time until the cart lands back on the ground.</p>
-                    <p>In the simulation code, the same time step $\Delta t = \dfrac{\texttt{deltaTime}}{1000}\cdot \texttt{timeScale}$ is used during projectile motion: the equations above update $(x(t), y(t))$ each frame while the running clock <code>rideTime</code> continues to accumulate until the cart reaches the ground.</p>
-                </div>
-            </div>
-
-            <!-- Projectile Motion After Leaving the Track -->
-            <div class="theory-section">
-                <h2>Projectile Motion After Leaving the Track</h2>
-                <p class="section-intro"><strong>Goal:</strong> Derive the equations that describe the cart's flight once it leaves the track and follows a projectile path.</p>
-
-                <div class="master-equation">
-                    <h3>Step 1: Initial Conditions at Launch</h3>
-                    <p>At the instant the cart reaches the end of the track, we record its position and velocity:</p>
-                    <div class="equation">
-                        $$ x(0) = x_0, \quad y(0) = y_0, \quad v_x(0) = v_{x0}, \quad v_y(0) = v_{y0} $$
-                    </div>
-                    <p>Gravity provides a constant downward acceleration $$g$$, so the horizontal acceleration is zero and the vertical acceleration is $$-g$$.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Step 2: Time&ndash;Parametric Equations $x(t)$ and $y(t)$</h3>
-                    <p>Using standard constant-acceleration kinematics with these initial conditions:</p>
-                    <div class="equation">
-                        $$
-                        \begin{aligned}
-                        x(t) &= x_0 + v_{x0}\,t, \\
-                        y(t) &= y_0 + v_{y0}\,t - \tfrac{1}{2} g t^2
-                        \end{aligned}
-                        $$
-                    </div>
-                    <p>These are exactly the equations shown in the simulation panel as $x(t)$ and $y(t)$.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Step 3: Eliminating Time to Get $y(x)$</h3>
-                    <p>When the horizontal component of velocity is non-zero ($v_{x0} \neq 0$), we can solve the first equation for time:</p>
-                    <div class="equation">
-                        $$ t = \dfrac{x - x_0}{v_{x0}} $$
-                    </div>
-                    <p>Substituting this into the vertical equation gives a quadratic expression in terms of $x$:</p>
-                    <div class="equation">
-                        $$
-                        \begin{aligned}
-                        y(x)
-                        &= y_0 + v_{y0} \left(\dfrac{x - x_0}{v_{x0}}\right)
-                           - \tfrac{1}{2} g \left(\dfrac{x - x_0}{v_{x0}}\right)^2 \\
-                        &= y_0 + \dfrac{v_{y0}}{v_{x0}}(x - x_0)
-                           - \dfrac{g}{2 v_{x0}^2}(x - x_0)^2
-                        \end{aligned}
-                        $$
-                    </div>
-                    <p>This downward-opening parabola in $x$ is the "Cartesian" form $y(x)$ displayed under the simulation canvas.</p>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Step 4: Special Case &mdash; Nearly Vertical Launch</h3>
-                    <p>If $v_{x0} \approx 0$, then the motion is (almost) vertical and $x(t) \approx x_0$. In this case it is not meaningful to write $y$ as a single-valued function of $x$, so the simulation:</p>
-                    <ul>
-                        <li>still shows the parametric equations $x(t)$ and $y(t)$,</li>
-                        <li>but explains that $y(x)$ is undefined for a vertical launch.</li>
-                    </ul>
-                </div>
-
-                <div class="purpose-box">
-                    <h4>Connection to the Code and Simulation Panel:</h4>
-                    <ul>
-                        <li>The launch data $x_0, y_0, v_{x0}, v_{y0}$ are taken from the last point on the track just before the cart becomes a projectile.</li>
-                        <li>The p5.js code uses these formulas to update the projectile's position frame by frame and to render the dotted flight path.</li>
-                        <li>The equation panel beneath the canvas prints both forms: the time-parametric equations $x(t), y(t)$ and the Cartesian parabola $y(x)$, directly matching the derivations above.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Arc Length of the Track -->
-            <div class="theory-section">
-                <h2>Arc Length of the Track</h2>
-                <p class="section-intro"><strong>Goal:</strong> Compute the total distance along the track by integrating the length of each piecewise segment.</p>
-
-                <div class="master-equation">
-                    <h3>General Arc Length Formula</h3>
-                    <p>For a curve defined as $y = f(x)$, the arc length from $x = a$ to $x = b$ is</p>
-                    <div class="equation">
-                        $$
-                        L(a,b) = \int_a^b \sqrt{1 + [f'(x)]^2}\,dx.
-                        $$
-                    </div>
-                </div>
-
-                <div class="piecewise-function">
-                    <h3>Piecewise Arc Length for the Four Segments</h3>
-                    <div class="piece">
-                        <span class="condition">Segment 1: 0 \le x < 5</span>
-                        <div class="equation">
-                            $$
-                            f_1'(x) = -0.64 x,\qquad
-                            L_1 = \int_0^5 \sqrt{1 + (-0.64 x)^2}\,dx.
-                            $$
-                        </div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">Segment 2: 5 \le x < 15</span>
-                        <div class="equation">
-                            $$
-                            f_2'(x) = 0.0256 (x - 10)^3,\qquad
-                            L_2 = \int_5^{15} \sqrt{1 + \bigl(0.0256 (x - 10)^3\bigr)^2}\,dx.
-                            $$
-                        </div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">Segment 3: 15 \le x < 25</span>
-                        <div class="equation">
-                            $$
-                            f_3'(x) = -0.64 (x - 20),\qquad
-                            L_3 = \int_{15}^{25} \sqrt{1 + \bigl(-0.64 (x - 20)\bigr)^2}\,dx.
-                            $$
-                        </div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">Segment 4: 25 \le x \le 35</span>
-                        <div class="equation">
-                            $$
-                            f_4'(x) = 0.64 (x - 30),\qquad
-                            L_4 = \int_{25}^{35} \sqrt{1 + \bigl(0.64 (x - 30)\bigr)^2}\,dx.
-                            $$
-                        </div>
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Total Track Length</h3>
-                    <div class="equation">
-                        $$
-                        L_{\text{total}} = L_1 + L_2 + L_3 + L_4.
-                        $$
-                    </div>
-                    <p>In practice, these integrals are evaluated numerically (for example, using Mathematica). In the simulation, a related running distance variable <code>arcDistance</code> accumulates the distance the cart has actually traveled during the ride.</p>
-                </div>
-            </div>
-
-            <!-- Slope and Animation Direction Section -->
             <div class="theory-section highlight-section">
-                <h2>Slope f'(x) and Animation Logic</h2>
-                <p class="section-intro">The Mathematica code differentiates the piecewise track to get the slope f'(x) and uses it to move the coaster car along the track.</p>
+                <h2>First Derivative f'(x): Slope & Direction</h2>
+                <p class="section-intro">The first derivative represents the instantaneous slope (steepness) of the track.</p>
 
                 <div class="piecewise-function">
-                    <h3>First Derivative Pieces:</h3>
+                    <h3>Calculated Derivatives:</h3>
                     <div class="piece">
                         <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$f'_1(x) = -0.4 x$$</div>
+                        <div class="equation">$$f'_1(x) = -0.64 x$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$f'_2(x) = 0.016 (x - 10)^3$$</div>
+                        <div class="equation">$$f'_2(x) = 0.0256 (x - 10)^3$$</div>
                     </div>
                     <div class="piece">
                         <span class="condition">For 15 ≤ x ≤ 25:</span>
-                        <div class="equation">$$f'_3(x) = -0.4 (x - 20)$$</div>
+                        <div class="equation">$$f'_3(x) = -0.64 (x - 20)$$</div>
+                    </div>
+                    <div class="piece">
+                        <span class="condition">For 25 ≤ x ≤ 35:</span>
+                        <div class="equation">$$f'_4(x) = 0.64 (x - 30)$$</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="theory-section">
+                <h2>Curvature (κ) and Radius (ρ)</h2>
+                <p class="section-intro">To determine safety (G-forces), we need the curvature of the track. Engineers often use the Radius of Curvature.</p>
+
+                <div class="master-equation">
+                    <h3>Curvature Formula (κ):</h3>
+                    <div class="equation">
+                        $$ \kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}} $$
                     </div>
                 </div>
 
-                <div class="application-box">
-                    <h4>How the Animation Uses f'(x) and v(x):</h4>
-                    <ul>
-                        <li>The code computes the angle of the track with <code>angle = ArcTan[fPrime[x]]</code>.</li>
-                        <li>The horizontal step is <code>dx = (vMag * Cos[angle]) * timeSpeed</code>, so the point moves along the track at a controllable speed.</li>
-                        <li>When <code>running</code> is <code>True</code>, x is updated; when it reaches the end of the track, it loops back to the start.</li>
-                        <li>Play / Pause, Reset, and the Speed Slider in the control panel all manipulate these variables in real time.</li>
-                    </ul>
+                <div class="master-equation">
+                    <h3>Radius of Curvature (ρ):</h3>
+                    <p>The radius of the imaginary circle that "kisses" the track at a specific point.</p>
+                    <div class="equation">
+                        $$ \rho(x) = \frac{1}{\kappa(x)} = \frac{(1 + [f'(x)]^2)^{3/2}}{|f''(x)|} $$
+                    </div>
+                </div>
+            </div>
+
+            <div class="theory-section">
+                <h2>Engineering Limitations: The "Jerk"</h2>
+                <div class="safety-note" style="border-color: #ef4444; background: rgba(239, 68, 68, 0.05);">
+                    <p style="color: #b91c1c;"><strong>Academic Note on C² Continuity:</strong></p>
+                    <p style="color: #334155; margin-top: 0.5rem;">
+                        While our track is <strong>C¹ Continuous</strong> (smooth slope), it is not <strong>C² Continuous</strong>. At the connection points (e.g., x=5), the second derivative (curvature) jumps instantaneously from a constant value (parabola) to a variable value (quartic). In physics, this sudden change in acceleration is called a "Jerk." In real-world engineering, transition curves (like Euler spirals) are inserted between segments to smooth out these G-force spikes.
+                    </p>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Navigation to Other Pages -->
-    <section class="page-navigation">
-        <div class="container">
-            <h2>Continue Exploring</h2>
-            <div class="nav-cards-small">
-                <a href="simulation.html" class="nav-card-small">
-                    <div class="card-icon">🎮</div>
-                    <h4>See It in Action</h4>
-                    <p>Watch these equations work in the simulation</p>
-                </a>
-                <a href="physics.html" class="nav-card-small">
-                    <div class="card-icon">🔬</div>
-                    <h4>Physics Model</h4>
-                    <p>How we use these derivatives for physics</p>
-                </a>
-                <a href="design.html" class="nav-card-small">
-                    <div class="card-icon">🏗️</div>
-                    <h4>Track Design</h4>
-                    <p>The original piecewise functions</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
             <div class="footer-content">
@@ -584,24 +154,14 @@
                             <li><a href="design.html">Track Design</a></li>
                         </ul>
                     </div>
-                    <div class="footer-section">
-                        <h4>Mathematical Concepts</h4>
-                        <ul>
-                            <li>First & Second Derivatives</li>
-                            <li>Curvature Analysis</li>
-                            <li>Piecewise Functions</li>
-                            <li>C¹ Continuity</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
+                <p>&copy; 2024 Team Roller Riders | Calculus Class Project</p>
             </div>
         </div>
     </footer>
 
-    <!-- Initialize KaTeX -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof renderMathInElement !== 'undefined') {
