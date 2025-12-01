@@ -33,104 +33,143 @@
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Mathematical Theory</h2>
-            <p class="page-description">The calculus concepts that make our roller coaster simulation possible through derivatives, curvature, and continuity analysis.</p>
+            <p class="page-description">A deep dive into the calculus controlling the coaster: Definite integrals for time and distance, piecewise derivatives, and the equations of motion.</p>
         </div>
     </section>
 
     <section class="theory-content">
         <div class="container">
+            
             <div class="theory-section">
-                <h2>Track Function f(x): Piecewise Shape of the Coaster</h2>
-                <p class="section-intro"><strong>Physical Meaning:</strong> The height of the roller coaster track at each horizontal position x.</p>
+                <h2>1. The Calculus of Motion</h2>
+                <p class="section-intro">To determine exactly how long the ride takes and how far the cart travels, we cannot use simple algebra because the speed and slope change constantly. We must use <strong>Definite Integrals</strong>.</p>
 
-                <div class="piecewise-function">
-                    <h3>Four Track Segments (updated coefficients):</h3>
-                    <div class="piece">
-                        <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$f_1(x) = 20 - 0.32 x^2$$</div>
+                <div class="master-equation">
+                    <h3>Arc Length (Total Distance)</h3>
+                    <p>The total length $L$ of the track from $x=a$ to $x=b$ is calculated by integrating the arc length element $ds$:</p>
+                    <div class="equation">
+                        $$ L = \int_{a}^{b} \sqrt{1 + [f'(x)]^2} \, dx $$
                     </div>
-                    <div class="piece">
-                        <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$f_2(x) = 0.0064 (x - 10)^4 + 8.0$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 15 ≤ x < 25:</span>
-                        <div class="equation">$$f_3(x) = 20.0 - 0.32 (x - 20)^2$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 25 ≤ x ≤ 35:</span>
-                        <div class="equation">$$f_4(x) = 0.32 (x - 30)^2 + 4.0$$</div>
-                    </div>
+                    <p>This formula accounts for the steepness of the track. As the slope $f'(x)$ increases, the distance traveled per unit of horizontal $x$ increases.</p>
                 </div>
 
                 <div class="master-equation">
-                    <h3>Combined Piecewise Track:</h3>
+                    <h3>Total Time of Travel</h3>
+                    <p>Since velocity $v(x)$ depends on height, and height depends on $x$, time is the integral of the inverse velocity with respect to arc length:</p>
                     <div class="equation">
-                        $$
-                        f(x) =
-                        \begin{cases}
-                        20 - 0.32 x^2, & 0 \le x < 5 \\
-                        0.0064 (x-10)^4 + 8.0, & 5 \le x < 15 \\
-                        20.0 - 0.32 (x-20)^2, & 15 \le x < 25 \\
-                        0.32 (x-30)^2 + 4.0, & 25 \le x \le 35
-                        \end{cases}
-                        $$
+                        $$ T = \int \frac{1}{v} \, ds = \int_{a}^{b} \frac{\sqrt{1 + [f'(x)]^2}}{v(x)} \, dx $$
+                    </div>
+                    <p>Substituting our Velocity Equation derived from energy conservation:</p>
+                    <div class="equation">
+                        $$ T = \int_{a}^{b} \frac{\sqrt{1 + [f'(x)]^2}}{\sqrt{2g(H_{total} - f(x))}} \, dx $$
+                    </div>
+                    <p><em>Note: In our simulation, this integral is approximated numerically using Riemann Sums (dt steps) at 60Hz.</em></p>
+                </div>
+            </div>
+
+            <div class="theory-section">
+                <h2>2. Detailed Analysis by Segment</h2>
+                <p class="section-intro">The track is composed of four distinct functions. Below are the position $f(x)$, slope $f'(x)$, and specific velocity equation $v(x)$ for each segment.</p>
+                <p style="text-align:center; font-style:italic; margin-bottom: 2rem;">Assuming Total Energy Height $H \approx 20.01m$ (based on initial push).</p>
+
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 1: The Drop</h3>
+                            <span class="domain">Domain: 0 ≤ x < 5</span>
+                        </div>
+                        <p><strong>Position $f(x)$:</strong></p>
+                        <div class="equation">$$ 20 - 0.32x^2 $$</div>
+                        <p><strong>Slope $f'(x)$:</strong></p>
+                        <div class="equation">$$ -0.64x $$</div>
+                        <p><strong>Velocity $v(x)$:</strong></p>
+                        <div class="equation">$$ \sqrt{2g(H - (20 - 0.32x^2))} $$</div>
+                        <p><em>Concavity: Down (Negative Acceleration)</em></p>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 2: The Valley</h3>
+                            <span class="domain">Domain: 5 ≤ x < 15</span>
+                        </div>
+                        <p><strong>Position $f(x)$:</strong></p>
+                        <div class="equation">$$ 0.0064(x-10)^4 + 8.0 $$</div>
+                        <p><strong>Slope $f'(x)$:</strong></p>
+                        <div class="equation">$$ 0.0256(x-10)^3 $$</div>
+                        <p><strong>Velocity $v(x)$:</strong></p>
+                        <div class="equation">$$ \sqrt{2g(H - (0.0064(x-10)^4 + 8))} $$</div>
+                        <p><em>Concavity: Up (High G-Force Zone)</em></p>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 3: The Camelback</h3>
+                            <span class="domain">Domain: 15 ≤ x < 25</span>
+                        </div>
+                        <p><strong>Position $f(x)$:</strong></p>
+                        <div class="equation">$$ 20 - 0.32(x-20)^2 $$</div>
+                        <p><strong>Slope $f'(x)$:</strong></p>
+                        <div class="equation">$$ -0.64(x-20) $$</div>
+                        <p><strong>Velocity $v(x)$:</strong></p>
+                        <div class="equation">$$ \sqrt{2g(H - (20 - 0.32(x-20)^2))} $$</div>
+                        <p><em>Concavity: Down (Weightlessness)</em></p>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 4: The Launch Ramp</h3>
+                            <span class="domain">Domain: 25 ≤ x ≤ 35</span>
+                        </div>
+                        <p><strong>Position $f(x)$:</strong></p>
+                        <div class="equation">$$ 0.32(x-30)^2 + 4.0 $$</div>
+                        <p><strong>Slope $f'(x)$:</strong></p>
+                        <div class="equation">$$ 0.64(x-30) $$</div>
+                        <p><strong>Velocity $v(x)$:</strong></p>
+                        <div class="equation">$$ \sqrt{2g(H - (0.32(x-30)^2 + 4))} $$</div>
+                        <p><em>Concavity: Up (Preparation for Flight)</em></p>
                     </div>
                 </div>
             </div>
 
             <div class="theory-section highlight-section">
-                <h2>First Derivative f'(x): Slope & Direction</h2>
-                <p class="section-intro">The first derivative represents the instantaneous slope (steepness) of the track.</p>
+                <h2>3. Calculus of Projectile Motion</h2>
+                <p class="section-intro">Once the cart leaves the track at $x=35$, it is governed solely by gravity. We derive the position equations by integrating the acceleration constant twice.</p>
 
-                <div class="piecewise-function">
-                    <h3>Calculated Derivatives:</h3>
-                    <div class="piece">
-                        <span class="condition">For 0 ≤ x < 5:</span>
-                        <div class="equation">$$f'_1(x) = -0.64 x$$</div>
+                <div class="continuity-conditions">
+                    <div class="condition">
+                        <h4>Step 1: Acceleration</h4>
+                        <p>Gravity acts only in the vertical direction.</p>
+                        <div class="equation">$$ a_x(t) = 0 $$</div>
+                        <div class="equation">$$ a_y(t) = -g $$</div>
                     </div>
-                    <div class="piece">
-                        <span class="condition">For 5 ≤ x < 15:</span>
-                        <div class="equation">$$f'_2(x) = 0.0256 (x - 10)^3$$</div>
+
+                    <div class="condition">
+                        <h4>Step 2: Velocity (First Integral)</h4>
+                        <p>Integrate acceleration w.r.t time:</p>
+                        <div class="equation">$$ v_x(t) = \int 0 \, dt = C_1 = v_{x0} $$</div>
+                        <div class="equation">$$ v_y(t) = \int -g \, dt = -gt + v_{y0} $$</div>
                     </div>
-                    <div class="piece">
-                        <span class="condition">For 15 ≤ x ≤ 25:</span>
-                        <div class="equation">$$f'_3(x) = -0.64 (x - 20)$$</div>
-                    </div>
-                    <div class="piece">
-                        <span class="condition">For 25 ≤ x ≤ 35:</span>
-                        <div class="equation">$$f'_4(x) = 0.64 (x - 30)$$</div>
+
+                    <div class="condition" style="grid-column: 1 / -1;">
+                        <h4>Step 3: Position (Second Integral)</h4>
+                        <p>Integrate velocity w.r.t time to find the parametric equations used in our simulation:</p>
+                        <div class="equation">$$ x(t) = \int v_{x0} \, dt = v_{x0}t + x_0 $$</div>
+                        <div class="equation">$$ y(t) = \int (-gt + v_{y0}) \, dt = -\frac{1}{2}gt^2 + v_{y0}t + y_0 $$</div>
                     </div>
                 </div>
             </div>
 
             <div class="theory-section">
-                <h2>Curvature (κ) and Radius (ρ)</h2>
-                <p class="section-intro">To determine safety (G-forces), we need the curvature of the track. Engineers often use the Radius of Curvature.</p>
+                <h2>4. Curvature & Radius</h2>
+                <p class="section-intro">To ensure the G-forces are survivable, we analyze the Curvature $\kappa$. The tighter the curve (smaller radius $\rho$), the higher the acceleration.</p>
 
                 <div class="master-equation">
-                    <h3>Curvature Formula (κ):</h3>
-                    <div class="equation">
-                        $$ \kappa(x) = \frac{|f''(x)|}{(1 + [f'(x)]^2)^{3/2}} $$
-                    </div>
-                </div>
-
-                <div class="master-equation">
-                    <h3>Radius of Curvature (ρ):</h3>
-                    <p>The radius of the imaginary circle that "kisses" the track at a specific point.</p>
+                    <h3>Radius of Curvature Formula</h3>
+                    <p>Derived from the second derivative of the track function:</p>
                     <div class="equation">
                         $$ \rho(x) = \frac{1}{\kappa(x)} = \frac{(1 + [f'(x)]^2)^{3/2}}{|f''(x)|} $$
                     </div>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <h2>Engineering Limitations: The "Jerk"</h2>
-                <div class="safety-note" style="border-color: #ef4444; background: rgba(239, 68, 68, 0.05);">
-                    <p style="color: #b91c1c;"><strong>Academic Note on C² Continuity:</strong></p>
-                    <p style="color: #334155; margin-top: 0.5rem;">
-                        While our track is <strong>C¹ Continuous</strong> (smooth slope), it is not <strong>C² Continuous</strong>. At the connection points (e.g., x=5), the second derivative (curvature) jumps instantaneously from a constant value (parabola) to a variable value (quartic). In physics, this sudden change in acceleration is called a "Jerk." In real-world engineering, transition curves (like Euler spirals) are inserted between segments to smooth out these G-force spikes.
-                    </p>
+                    <p>We use this $\rho$ to calculate Centripetal Acceleration: $a_c = \frac{v^2}{\rho}$.</p>
                 </div>
             </div>
 
@@ -142,7 +181,7 @@
             <div class="footer-content">
                 <div class="footer-main">
                     <h3>The Calculus of Thrill</h3>
-                    <p>Mathematical theory demonstrating the application of derivatives, curvature analysis, and continuity in roller coaster design.</p>
+                    <p>Detailed mathematical breakdown of arc length integrals, time integrals, and piecewise motion derivatives.</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-section">
