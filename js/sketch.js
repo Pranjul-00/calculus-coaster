@@ -114,6 +114,29 @@ function updateEnergyStartHeight() {
   energyStartHeight = referenceHeight + (initialSpeed * initialSpeed) / (2 * g);
 }
 
+function computePrerollFromZeroToStart() {
+  if (!useTopAsEnergyReference || startX <= 0) {
+    return { time: 0, dist: 0 };
+  }
+  const segments = Math.max(1, Math.floor(startX * 50));
+  const dx = startX / segments;
+  let tAccum = 0;
+  let sAccum = 0;
+  for (let i = 0; i < segments; i++) {
+    const xMid = (i + 0.5) * dx;
+    const yMid = f(xMid);
+    const slopeMid = fPrime(xMid);
+    const vSquared = 2 * g * (energyStartHeight - yMid);
+    if (vSquared <= 0) continue;
+    const vMid = Math.sqrt(vSquared);
+    const ds = Math.sqrt(1 + slopeMid * slopeMid) * dx;
+    const dt = ds / vMid;
+    sAccum += ds;
+    tAccum += dt;
+  }
+  return { time: tAccum, dist: sAccum };
+}
+
 function initSpaceObjects() {
   if (spaceStars.length === 0) {
     for (let i = 0; i < 80; i++) {
@@ -237,14 +260,19 @@ function setup() {
       projectileX = 0.0; projectileY = 0.0; projectileVx = 0.0; projectileVy = 0.0;
       landingX = 0.0; projectileRange = 0.0; projectileTrail = [];
       rideTime = 0.0; arcDistance = 0.0; 
+      if (useTopAsEnergyReference && startX > 0) {
+        const pre = computePrerollFromZeroToStart();
+        rideTime = pre.time;
+        arcDistance = pre.dist;
+      }
       cameraWorldXMax = worldXMax; cameraWorldYMax = 22.0;
       trackTime = null; totalTime = null; trackDistance = null; totalDistance = null;
       running = shouldRunAfter; 
       playPauseBtn.textContent = shouldRunAfter ? 'Pause' : 'Play';
       
       // Reset Text
-      if (trackTimeElement) trackTimeElement.textContent = "0.00 s";
-      if (trackDistanceElement) trackDistanceElement.textContent = "0.00 m";
+      if (trackTimeElement) trackTimeElement.textContent = rideTime.toFixed(2) + " s";
+      if (trackDistanceElement) trackDistanceElement.textContent = arcDistance.toFixed(2) + " m";
       if (totalTimeElement) totalTimeElement.textContent = "--";
     }
 
