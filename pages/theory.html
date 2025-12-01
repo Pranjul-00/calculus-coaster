@@ -33,7 +33,7 @@
     <section class="page-intro">
         <div class="container">
             <h2 class="page-title">Theoretical Framework</h2>
-            <p class="page-description">A rigorous examination of the differential and integral calculus governing particle motion along a constrained piecewise path.</p>
+            <p class="page-description">A rigorous derivation of the differential equations, velocity fields, and integral calculus governing the particle motion.</p>
         </div>
     </section>
 
@@ -41,136 +41,150 @@
         <div class="container">
             
             <div class="theory-section">
-                <h2>1. The Geometry of the Path</h2>
-                <p class="section-intro">The roller coaster track is modeled as a continuous piecewise function $f(x)$ defined on the domain $x \in [0, 35]$. The function relies on polynomial interpolation to achieve specific geometric constraints.</p>
-
-                <div class="master-equation">
-                    <h3>The Piecewise Definition</h3>
+                <h2>1. Fundamental Theorems</h2>
+                <p class="section-intro">The motion is governed by the Conservation of Energy on a constrained manifold. The total mechanical energy $E_{mech}$ remains constant throughout the system.</p><div class="master-equation">
+                    <h3>The Velocity Field Derivation</h3>
+                    <p>Given an initial height $H_{start} = 20m$ and initial velocity $v_0 = 0.5 m/s$, the total energy head $H$ is:</p>
                     <div class="equation">
-                        $$
-                        f(x) = 
-                        \begin{cases} 
-                        20 - 0.32 x^2 & \text{if } 0 \le x < 5 \\
-                        0.0064 (x-10)^4 + 8.0 & \text{if } 5 \le x < 15 \\
-                        20.0 - 0.32 (x-20)^2 & \text{if } 15 \le x < 25 \\
-                        0.32 (x-30)^2 + 4.0 & \text{if } 25 \le x \le 35
-                        \end{cases}
-                        $$
+                        $$ H = H_{start} + \frac{v_0^2}{2g} \approx 20 + \frac{0.5^2}{2(9.81)} \approx 20.0127 \text{ m} $$
+                    </div>
+                    <p>Solving for velocity $v(x)$ at any horizontal position $x$ where track height is $f(x)$:</p>
+                    <div class="equation" style="border: 2px solid var(--accent-blue); background: #f0f9ff;">
+                        $$ v(x) = \sqrt{2g (H - f(x))} $$
                     </div>
                 </div>
+            </div>
+
+            <div class="theory-section">
+                <h2>2. Detailed Kinematics by Segment</h2>
+                <p class="section-intro">We expand the general velocity equation into specific functions for each of the four distinct track segments.</p>
 
                 <div class="theory-grid">
                     <div class="theory-card">
                         <div class="card-header">
-                            <h3>Derivatives & Gradients</h3>
+                            <h3>Segment 1: The Parabolic Drop</h3>
+                            <span class="domain">Domain: $0 \le x < 5$</span>
                         </div>
-                        <p>The first derivative $f'(x)$ provides the instantaneous slope, which is crucial for determining the tangent vector $\vec{T}$.</p>
+                        <p><strong>Position $f_1(x)$:</strong></p>
+                        <div class="equation">$$ 20 - 0.32x^2 $$</div>
+                        <p><strong>Derivative (Slope) $f'_1(x)$:</strong></p>
+                        <div class="equation">$$ -0.64x $$</div>
+                        <p><strong>Velocity Equation $v_1(x)$:</strong></p>
                         <div class="equation">
-                            $$
-                            f'(x) = 
-                            \begin{cases} 
-                            -0.64 x & 0 \le x < 5 \\
-                            0.0256 (x-10)^3 & 5 \le x < 15 \\
-                            -0.64 (x-20) & 15 \le x < 25 \\
-                            0.64 (x-30) & 25 \le x \le 35
-                            \end{cases}
-                            $$
+                            $$ v_1(x) = \sqrt{2g(20.0127 - (20 - 0.32x^2))} $$
+                        </div>
+                        <p>Simplifies to:</p>
+                        <div class="equation">
+                            $$ v_1(x) \approx \sqrt{2g(0.0127 + 0.32x^2)} $$
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 2: The Quartic Valley</h3>
+                            <span class="domain">Domain: $5 \le x < 15$</span>
+                        </div>
+                        <p><strong>Position $f_2(x)$:</strong></p>
+                        <div class="equation">$$ 0.0064(x-10)^4 + 8.0 $$</div>
+                        <p><strong>Derivative (Slope) $f'_2(x)$:</strong></p>
+                        <div class="equation">$$ 0.0256(x-10)^3 $$</div>
+                        <p><strong>Velocity Equation $v_2(x)$:</strong></p>
+                        <div class="equation">
+                            $$ v_2(x) = \sqrt{2g(20.0127 - (0.0064(x-10)^4 + 8))} $$
+                        </div>
+                        <p><em>This high-order polynomial creates a flat bottom to minimize peak G-forces.</em></p>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 3: The Parabolic Hill</h3>
+                            <span class="domain">Domain: $15 \le x < 25$</span>
+                        </div>
+                        <p><strong>Position $f_3(x)$:</strong></p>
+                        <div class="equation">$$ 20 - 0.32(x-20)^2 $$</div>
+                        <p><strong>Derivative (Slope) $f'_3(x)$:</strong></p>
+                        <div class="equation">$$ -0.64(x-20) $$</div>
+                        <p><strong>Velocity Equation $v_3(x)$:</strong></p>
+                        <div class="equation">
+                            $$ v_3(x) = \sqrt{2g(20.0127 - (20 - 0.32(x-20)^2))} $$
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="card-header">
+                            <h3>Segment 4: The Launch Ramp</h3>
+                            <span class="domain">Domain: $25 \le x \le 35$</span>
+                        </div>
+                        <p><strong>Position $f_4(x)$:</strong></p>
+                        <div class="equation">$$ 0.32(x-30)^2 + 4.0 $$</div>
+                        <p><strong>Derivative (Slope) $f'_4(x)$:</strong></p>
+                        <div class="equation">$$ 0.64(x-30) $$</div>
+                        <p><strong>Velocity Equation $v_4(x)$:</strong></p>
+                        <div class="equation">
+                            $$ v_4(x) = \sqrt{2g(20.0127 - (0.32(x-30)^2 + 4))} $$
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="theory-section highlight-section">
-                <h2>2. Continuity Analysis ($C^0$ and $C^1$)</h2>
-                <p class="section-intro">For the ride to be safe, the track must not have gaps ($C^0$ continuous) or sharp corners ($C^1$ continuous). We prove this using limits at the critical junction $x=5$.</p>
+                <h2>3. Calculus of Continuity ($C^1$ Smoothness)</h2>
+                <p class="section-intro">For the roller coaster to be physically realizable, the track function $f(x)$ must be differentiable everywhere. We prove this at the critical junction $x=5$.</p>
 
                 <div class="continuity-explanation">
-                    <h3>Proof of $C^0$ Continuity (Position) at $x=5$</h3>
-                    <p>We evaluate the limit of $f(x)$ as $x$ approaches 5 from the left and right.</p>
-                    <div class="equation">$$ \lim_{x \to 5^-} f(x) = 20 - 0.32(5)^2 = 20 - 8 = 12 $$</div>
-                    <div class="equation">$$ \lim_{x \to 5^+} f(x) = 0.0064(5-10)^4 + 8 = 0.0064(-5)^4 + 8 = 12 $$</div>
-                    <p>Since $\lim_{x \to 5^-} f(x) = \lim_{x \to 5^+} f(x) = 12$, the track is connected.</p>
+                    <h3>Proof of $C^0$ Continuity (Connectedness)</h3>
+                    <p>We evaluate the limit of $f(x)$ approaching 5 from the left ($f_1$) and right ($f_2$).</p>
+                    <div class="equation">$$ \lim_{x \to 5^-} f_1(x) = 20 - 0.32(5)^2 = 12 $$</div>
+                    <div class="equation">$$ \lim_{x \to 5^+} f_2(x) = 0.0064(5-10)^4 + 8 = 12 $$</div>
+                    <p><strong>Conclusion:</strong> The track is continuous at $x=5$.</p>
 
-                    <h3 style="margin-top: 2rem;">Proof of $C^1$ Continuity (Differentiability) at $x=5$</h3>
-                    <p>We evaluate the limit of the derivative $f'(x)$ to ensure the slope is smooth.</p>
-                    <div class="equation">$$ \lim_{x \to 5^-} f'(x) = -0.64(5) = -3.2 $$</div>
-                    <div class="equation">$$ \lim_{x \to 5^+} f'(x) = 0.0256(5-10)^3 = 0.0256(-125) = -3.2 $$</div>
-                    <p>Since the left and right derivatives match, the tangent line is unique, and the ride is smooth.</p>
+                    <h3 style="margin-top: 2rem;">Proof of $C^1$ Continuity (Differentiability)</h3>
+                    <p>We evaluate the limit of the derivative $f'(x)$ (slope) approaching 5.</p>
+                    <div class="equation">$$ \lim_{x \to 5^-} f'_1(x) = -0.64(5) = -3.2 $$</div>
+                    <div class="equation">$$ \lim_{x \to 5^+} f'_2(x) = 0.0256(5-10)^3 = -3.2 $$</div>
+                    <p><strong>Conclusion:</strong> The slope is continuous. There are no sharp corners.</p>
                 </div>
             </div>
 
             <div class="theory-section">
-                <h2>3. Integral Calculus: Arc Length & Time</h2>
-                <p class="section-intro">We utilize Definite Integrals to calculate physical properties of the path that cannot be found via simple algebra.</p>
+                <h2>4. Integral Calculus: Time & Arc Length</h2>
+                <p class="section-intro">The total time of travel cannot be solved algebraically. It requires determining the arc length $ds$ and integrating the inverse velocity.</p>
 
                 <div class="master-equation">
-                    <h3>The Arc Length Integral ($s$)</h3>
-                    <p>To find the total physical length of the track, we treat the curve as an infinite sum of hypotenuses $ds$ formed by $dx$ and $dy$.</p>
-                    <div class="equation">$$ ds = \sqrt{dx^2 + dy^2} = \sqrt{1 + \left(\frac{dy}{dx}\right)^2} \, dx $$</div>
-                    <p>Integrating over the domain $x \in [a, b]$:</p>
-                    <div class="equation" style="border: 2px solid var(--accent-blue); padding: 15px;">
-                        $$ S = \int_{a}^{b} \sqrt{1 + [f'(x)]^2} \, dx $$
+                    <h3>1. The Arc Length Integral</h3>
+                    <p>Total distance traveled ($S$) along the curve from $x=0$ to $x=35$:</p>
+                    <div class="equation">
+                        $$ S = \int_{0}^{35} \sqrt{1 + [f'(x)]^2} \, dx $$
                     </div>
                 </div>
 
                 <div class="master-equation">
-                    <h3>The Time Integral ($T$)</h3>
-                    <p>Time is distance divided by speed. Since speed $v(x)$ varies continuously with height, we must integrate the infinitesimal time element $dt$.</p>
-                    <div class="equation">$$ v = \frac{ds}{dt} \implies dt = \frac{ds}{v(x)} $$</div>
-                    <p>Substituting $ds$ and the velocity equation derived from energy conservation ($v(x) = \sqrt{2g(H-y)}$):</p>
-                    <div class="equation" style="border: 2px solid var(--accent-teal); padding: 15px;">
-                        $$ T_{total} = \int_{0}^{35} \frac{\sqrt{1 + [f'(x)]^2}}{\sqrt{2g(H_{start} - f(x))}} \, dx $$
+                    <h3>2. The Time Integral</h3>
+                    <p>Since $v = ds/dt$, then $dt = ds/v$. We integrate $dt$ to find total time $T$:</p>
+                    <div class="equation">
+                        $$ T = \int dt = \int_{0}^{35} \frac{1}{v(x)} \sqrt{1 + [f'(x)]^2} \, dx $$
                     </div>
-                    <p><em>This integral typically has no closed-form solution for 4th-order polynomials and is solved numerically in the simulation using Riemann Sums.</em></p>
+                    <p>Substituting the Master Velocity Equation:</p>
+                    <div class="equation" style="border: 2px solid var(--accent-teal); padding: 10px;">
+                        $$ T = \int_{0}^{35} \frac{\sqrt{1 + [f'(x)]^2}}{\sqrt{2g(H - f(x))}} \, dx $$
+                    </div>
                 </div>
             </div>
 
             <div class="theory-section">
-                <h2>4. Vector Calculus & Curvature</h2>
-                <p class="section-intro">To determine the G-forces, we must analyze the change in the direction of the velocity vector. This requires the Radius of Curvature $\rho$.</p>
-
-                <div class="theory-grid">
-                    <div class="theory-card">
-                        <h3>Deriving Curvature ($\kappa$)</h3>
-                        <p>Curvature is the rate of change of the tangent vector angle $\phi$ with respect to arc length $s$.</p>
-                        <div class="equation">$$ \kappa = \frac{d\phi}{ds} = \frac{d\phi/dx}{ds/dx} $$</div>
-                        <p>Using $\tan \phi = f'(x)$, we derive:</p>
-                        <div class="equation">$$ \kappa(x) = \frac{f''(x)}{(1 + [f'(x)]^2)^{3/2}} $$</div>
-                    </div>
-
-                    <div class="theory-card">
-                        <h3>Normal Force (G-Force) Vector</h3>
-                        <p>The force exerted by the track on the cart ($N$) is the sum of the gravitational component perpendicular to the track and the centripetal force.</p>
-                        <div class="equation">$$ \vec{F}_{net} = m\vec{a} $$</div>
-                        <div class="equation">$$ N - mg \cos \theta = \frac{mv^2}{\rho} $$</div>
-                        <p>Solving for G-Force ($N/mg$):</p>
-                        <div class="equation">$$ Gs = \cos \theta + \frac{v^2}{g \rho} $$</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="theory-section highlight-section">
-                <h2>5. Projectile Motion (Differential Equations)</h2>
-                <p class="section-intro">Once the cart leaves the track ($x > 35$), the constraints are removed. The motion is defined by a system of second-order ordinary differential equations (ODEs).</p>
+                <h2>5. Projectile Motion Dynamics</h2>
+                <p class="section-intro">For $x > 35$, the cart leaves the track. The motion is defined by solving the second-order differential equations of gravity.</p>
 
                 <div class="continuity-conditions">
                     <div class="condition">
-                        <h4>System of ODEs</h4>
-                        <div class="equation">$$ m \frac{d^2x}{dt^2} = 0 $$</div>
-                        <div class="equation">$$ m \frac{d^2y}{dt^2} = -mg $$</div>
+                        <h4>Differential Equations</h4>
+                        <div class="equation">$$ \frac{d^2x}{dt^2} = 0, \quad \frac{d^2y}{dt^2} = -g $$</div>
                     </div>
-
                     <div class="condition">
-                        <h4>Solution (Parametric Equations)</h4>
-                        <p>Integrating twice with respect to time $t$ yields the equations of motion used in the simulation:</p>
+                        <h4>Parametric Solutions</h4>
+                        <p>Integrating twice w.r.t time:</p>
                         <div class="equation">$$ x(t) = v_{0x}t + x_0 $$</div>
-                        <div class="equation">$$ y(t) = -\frac{1}{2}gt^2 + v_{0y}t + y_0 $$</div>
-                    </div>
-
-                    <div class="condition" style="width: 100%; grid-column: 1 / -1;">
-                        <h4>Cartesian Trajectory Equation</h4>
-                        <p>Eliminating $t$ yields the parabolic path equation in terms of $x$:</p>
-                        <div class="equation">$$ y(x) = y_0 + \tan(\theta_0)(x - x_0) - \frac{g(x - x_0)^2}{2v_0^2 \cos^2(\theta_0)} $$</div>
+                        <div class="equation">$$ y(t) = y_0 + v_{0y}t - \frac{1}{2}gt^2 $$</div>
                     </div>
                 </div>
             </div>
@@ -187,7 +201,7 @@
                 </div>
                 <div class="footer-links">
                     <div class="footer-section">
-                        <h4>Reference</h4>
+                        <h4>Project Sections</h4>
                         <ul>
                             <li><a href="../index.html">Project Home</a></li>
                             <li><a href="simulation.html">Simulation</a></li>
