@@ -75,7 +75,19 @@
             </div>
 
             <div class="theory-section">
-                <h2>2. Velocity Field v(x): Energy Conservation</h2>
+                <h2>2. Track Length via Arc Length Integral</h2>
+
+                <div class="master-equation">
+                    <h3>The Arc Length Integral</h3>
+                    <div class="equation">
+                        $$ S = \int_{0}^{35} \sqrt{1 + [f'(x)]^2} \, dx $$
+                    </div>
+                    <p>This calculates the physical length of the steel track, not just the horizontal width.</p>
+                </div>
+            </div>
+
+            <div class="theory-section">
+                <h2>3. Velocity Field v(x): Energy Conservation</h2>
                 <p class="section-intro"><strong>Derivation:</strong> Using the Conservation of Energy principle ($E_{total} = KE + PE$), we derive the velocity scalar field. Assuming initial push $v_0 = 0.5$ m/s, total energy head $H \approx 20.0127$ m.</p>
                 
                 
@@ -110,7 +122,7 @@
             </div>
 
             <div class="theory-section highlight-section">
-                <h2>3. The Differential Equation of Motion x(t)</h2>
+                <h2>4. The Differential Equation of Motion x(t)</h2>
                 <p class="section-intro"><strong>The Problem:</strong> We know velocity as a function of position $v(x)$, but we need position as a function of time $x(t)$ for the simulation.</p>
 
                 <div class="master-equation">
@@ -152,8 +164,8 @@
             </div>
 
             <div class="theory-section">
-                <h2>4. Integral Calculus: Time & Distance</h2>
-                <p class="section-intro"><strong>Theoretical Check:</strong> Calculating the exact time and distance independent of the simulation loop.</p>
+                <h2>5. Time Integral: Theoretical Travel Time</h2>
+                <p class="section-intro"><strong>Theoretical Check:</strong> Calculating the exact time independent of the simulation loop.</p>
 
                 <div class="master-equation">
                     <h3>The Time Integral</h3>
@@ -165,18 +177,10 @@
                         $$ T_{total} = \int_{0}^{35} \frac{\sqrt{1 + [f'(x)]^2}}{\sqrt{2g(H - f(x))}} \, dx $$
                     </div>
                 </div>
-
-                <div class="master-equation">
-                    <h3>The Arc Length Integral</h3>
-                    <div class="equation">
-                        $$ S = \int_{0}^{35} \sqrt{1 + [f'(x)]^2} \, dx $$
-                    </div>
-                    <p>This calculates the physical length of the steel track, not just the horizontal width.</p>
-                </div>
             </div>
 
             <div class="theory-section">
-                <h2>5. Projectile Motion ($x > 35$)</h2>
+                <h2>6. Projectile Motion ($x > 35$)</h2>
                 <p class="section-intro">Once the cart leaves the ramp, it follows a parabolic trajectory determined by initial launch conditions.</p>
 
                 <div class="master-equation">
@@ -225,7 +229,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; Team Roller Riders | Calculus Class Project</p>
+                <p>&copy; 2025 Team Roller Riders | DSC 1 Semester Project</p>
             </div>
         </div>
     </footer>

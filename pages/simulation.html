@@ -107,6 +107,23 @@
                             <button id="initialSpeedApplyBtn" class="sim-button">Apply</button>
                             <button id="initialSpeedResetBtn" class="sim-button">Reset</button>
                         </div>
+                        <div class="start-x-control">
+                            <span>Start position x₀ (m):</span>
+                            <input type="number" id="startXInput" min="0" max="35" step="0.1" value="0.0">
+                            <button id="startXApplyBtn" class="sim-button">Apply</button>
+                            <button id="startXResetBtn" class="sim-button">Reset</button>
+                        </div>
+                        <div class="start-mode-control">
+                            <span>Start mode:</span>
+                            <label class="start-mode-option">
+                                <input type="radio" name="startMode" id="startModeFromTop" value="fromTop" checked>
+                                Roll from x = 0 (jump to x₀ mid-ride)
+                            </label>
+                            <label class="start-mode-option">
+                                <input type="radio" name="startMode" id="startModeFromX" value="fromX">
+                                Begin physics at x₀ (local energy)
+                            </label>
+                        </div>
                     </div>
                 </div>
                 
@@ -229,7 +246,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; Team Roller Riders | Calculus Class Project | Mathematical Analysis & Simulation</p>
+                <p>&copy; 2025 Team Roller Riders | DSC 1 Semester Project | Mathematical Analysis & Simulation</p>
             </div>
         </div>
     </footer>

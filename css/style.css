@@ -403,6 +403,15 @@ body.canvas-overlay-active .canvas-enlarge-icon {
   text-align: center;
   border-left: 4px solid var(--accent-blue);
   font-size: 1.1rem;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.design-section .equation-continuity {
+  font-size: 0.95rem;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
 .master-equation {
@@ -1006,7 +1015,9 @@ body.canvas-overlay-active .canvas-overlay-close {
 
 .controls-row,
 .gravity-control,
-.initial-speed-control {
+.initial-speed-control,
+.start-x-control,
+.start-mode-control {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1032,7 +1043,8 @@ body.canvas-overlay-active .canvas-overlay-close {
 }
 
 #gravityInput,
-#initialSpeedInput {
+#initialSpeedInput,
+#startXInput {
   width: 80px;
   padding: 0.25rem 0.5rem;
   border-radius: 999px;

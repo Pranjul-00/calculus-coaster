@@ -9,12 +9,17 @@
 // --- 1. Global Variables & Constants ---
 const defaultG = 9.81;
 const defaultInitialSpeed = 0.5;
+const defaultStartX = 0.0;
 let g = defaultG; 
+
 const trackStartHeight = 20.0; 
 const worldXMax = 50.0;
+
 const landedPauseDuration = 1.5; // Not used when auto-stop is on
 const teleportDuration = 1.5;
 let initialSpeed = defaultInitialSpeed;
+let startX = defaultStartX;
+let useTopAsEnergyReference = true; // true: energy from x=0, false: energy from x₀
 
 let energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
 
@@ -57,6 +62,9 @@ let lastLaunchX = null;
 let lastLaunchY = null;
 let lastLaunchVx = null;
 let lastLaunchVy = null;
+
+let spaceStars = [];
+let spacePlanets = [];
 
 function formatProjectileNumber(n) {
   if (Number.isFinite(n)) return n.toFixed(2);
@@ -102,7 +110,60 @@ function updateProjectileEquation(launchX, launchY, vx0, vy0) {
 }
 
 function updateEnergyStartHeight() {
-  energyStartHeight = trackStartHeight + (initialSpeed * initialSpeed) / (2 * g);
+  const referenceHeight = useTopAsEnergyReference ? trackStartHeight : f(startX);
+  energyStartHeight = referenceHeight + (initialSpeed * initialSpeed) / (2 * g);
+}
+
+function computePrerollFromZeroToStart() {
+  if (!useTopAsEnergyReference || startX <= 0) {
+    return { time: 0, dist: 0 };
+  }
+  const segments = Math.max(1, Math.floor(startX * 50));
+  const dx = startX / segments;
+  let tAccum = 0;
+  let sAccum = 0;
+  for (let i = 0; i < segments; i++) {
+    const xMid = (i + 0.5) * dx;
+    const yMid = f(xMid);
+    const slopeMid = fPrime(xMid);
+    const vSquared = 2 * g * (energyStartHeight - yMid);
+    if (vSquared <= 0) continue;
+    const vMid = Math.sqrt(vSquared);
+    const ds = Math.sqrt(1 + slopeMid * slopeMid) * dx;
+    const dt = ds / vMid;
+    sAccum += ds;
+    tAccum += dt;
+  }
+  return { time: tAccum, dist: sAccum };
+}
+
+function initSpaceObjects() {
+  if (spaceStars.length === 0) {
+    for (let i = 0; i < 80; i++) {
+      spaceStars.push({
+        x: random(0, width),
+        y: random(0, height * 0.6),
+        r: random(1, 2),
+        alpha: random(150, 255)
+      });
+    }
+  }
+  if (spacePlanets.length === 0) {
+    spacePlanets.push({
+      x: width * 0.18,
+      y: height * 0.16,
+      r: 26,
+      inner: color(255, 245, 200),
+      outer: color(255, 200, 80)
+    });
+    spacePlanets.push({
+      x: width * 0.75,
+      y: height * 0.22,
+      r: 18,
+      inner: color(190, 220, 255),
+      outer: color(70, 110, 210)
+    });
+  }
 }
 
 // --- 2. Track Functions ---
@@ -134,7 +195,8 @@ function fDoublePrime(x) {
 function setup() {
   let canvas = createCanvas(1200, 500);
   canvas.parent('canvas-container');
-  cartX = 0; cartY = f(cartX);
+  cartX = startX; cartY = f(cartX);
+  initSpaceObjects();
   
   const playPauseBtn = document.getElementById('playPauseBtn');
   const resetBtn = document.getElementById('resetBtn');
@@ -146,6 +208,12 @@ function setup() {
   const initialSpeedInput = document.getElementById('initialSpeedInput');
   const initialSpeedApplyBtn = document.getElementById('initialSpeedApplyBtn');
   const initialSpeedResetBtn = document.getElementById('initialSpeedResetBtn');
+  const startXInput = document.getElementById('startXInput');
+  const startXApplyBtn = document.getElementById('startXApplyBtn');
+  const startXResetBtn = document.getElementById('startXResetBtn');
+  const startModeFromTop = document.getElementById('startModeFromTop');
+  const startModeFromX = document.getElementById('startModeFromX');
+  
   const openOverlayBtn = document.getElementById('openCanvasOverlayBtn');
   const canvasOverlayBackdrop = document.getElementById('canvasOverlayBackdrop');
   const canvasOverlayCloseBtn = document.getElementById('canvasOverlayCloseBtn');
@@ -178,28 +246,33 @@ function setup() {
     playPauseBtn.addEventListener('click', () => {
       // If we have landed, 'Play' acts as a Reset+Start
       if (hasLanded) {
-         resetSimulation();
+         resetSimulation(true);
       } else {
          running = !running;
          playPauseBtn.textContent = running ? 'Pause' : 'Play';
       }
     });
 
-    resetBtn.addEventListener('click', resetSimulation);
+    resetBtn.addEventListener('click', () => resetSimulation(false));
 
-    function resetSimulation() {
-      cartX = 0; cartY = f(cartX); onTrack = true; hasLanded = false;
+    function resetSimulation(shouldRunAfter = false) {
+      cartX = startX; cartY = f(cartX); onTrack = true; hasLanded = false;
       projectileX = 0.0; projectileY = 0.0; projectileVx = 0.0; projectileVy = 0.0;
       landingX = 0.0; projectileRange = 0.0; projectileTrail = [];
       rideTime = 0.0; arcDistance = 0.0; 
+      if (useTopAsEnergyReference && startX > 0) {
+        const pre = computePrerollFromZeroToStart();
+        rideTime = pre.time;
+        arcDistance = pre.dist;
+      }
       cameraWorldXMax = worldXMax; cameraWorldYMax = 22.0;
       trackTime = null; totalTime = null; trackDistance = null; totalDistance = null;
-      running = true; 
-      playPauseBtn.textContent = 'Pause';
+      running = shouldRunAfter; 
+      playPauseBtn.textContent = shouldRunAfter ? 'Pause' : 'Play';
       
       // Reset Text
-      if (trackTimeElement) trackTimeElement.textContent = "0.00 s";
-      if (trackDistanceElement) trackDistanceElement.textContent = "0.00 m";
+      if (trackTimeElement) trackTimeElement.textContent = rideTime.toFixed(2) + " s";
+      if (trackDistanceElement) trackDistanceElement.textContent = arcDistance.toFixed(2) + " m";
       if (totalTimeElement) totalTimeElement.textContent = "--";
     }
 
@@ -210,6 +283,7 @@ function setup() {
 
     gravityInput.value = g.toFixed(2);
     initialSpeedInput.value = initialSpeed.toFixed(2);
+    if (startXInput) startXInput.value = startX.toFixed(2);
 
     const applyGravity = () => {
       const newG = parseFloat(gravityInput.value);
@@ -226,6 +300,44 @@ function setup() {
     };
     initialSpeedApplyBtn.addEventListener('click', applyInitialSpeed);
     initialSpeedResetBtn.addEventListener('click', () => { initialSpeed = defaultInitialSpeed; initialSpeedInput.value = initialSpeed.toFixed(2); updateEnergyStartHeight(); });
+
+    if (startXInput && startXApplyBtn && startXResetBtn) {
+      const applyStartX = () => {
+        const newX = parseFloat(startXInput.value);
+        if (!isNaN(newX)) {
+          let clampedX = Math.max(0, Math.min(35, newX));
+          startX = clampedX;
+          startXInput.value = startX.toFixed(2);
+          updateEnergyStartHeight();
+        } else {
+          startXInput.value = startX.toFixed(2);
+        }
+      };
+      startXApplyBtn.addEventListener('click', applyStartX);
+      startXResetBtn.addEventListener('click', () => {
+        startX = defaultStartX;
+        startXInput.value = startX.toFixed(2);
+        updateEnergyStartHeight();
+      });
+    }
+
+    if (startModeFromTop && startModeFromX) {
+      // Initialize radio buttons based on current mode
+      startModeFromTop.checked = useTopAsEnergyReference;
+      startModeFromX.checked = !useTopAsEnergyReference;
+
+      const applyStartMode = (fromTop) => {
+        useTopAsEnergyReference = fromTop;
+        updateEnergyStartHeight();
+      };
+
+      startModeFromTop.addEventListener('change', () => {
+        if (startModeFromTop.checked) applyStartMode(true);
+      });
+      startModeFromX.addEventListener('change', () => {
+        if (startModeFromX.checked) applyStartMode(false);
+      });
+    }
 
     if (openOverlayBtn) {
       openOverlayBtn.addEventListener('click', () => document.body.classList.add('canvas-overlay-active'));
@@ -326,6 +438,48 @@ function draw() {
   let displayWorldXMax = cameraWorldXMax; let displayWorldYMax = cameraWorldYMax;
 
   background(210, 230, 255);
+
+  if (displayWorldYMax > 80) {
+    let spaceWorldY = 80;
+    let boundaryScreenY = map(spaceWorldY, 0, displayWorldYMax, height - 50, 50);
+    let topY = 0;
+    let bottomY = max(boundaryScreenY, 0);
+    let cTop = color(5, 5, 25);
+    let cMid = color(40, 20, 80);
+    let cBottom = color(210, 230, 255);
+    noStroke();
+    for (let y = topY; y < bottomY; y += 2) {
+      let t = map(y, topY, bottomY, 0, 1);
+      let c;
+      if (t < 0.5) {
+        c = lerpColor(cTop, cMid, t * 2);
+      } else {
+        c = lerpColor(cMid, cBottom, (t - 0.5) * 2);
+      }
+      fill(c);
+      rect(0, y, width, 2);
+    }
+
+    noStroke();
+    for (let i = 0; i < spaceStars.length; i++) {
+      let s = spaceStars[i];
+      if (s.y < bottomY) {
+        fill(255, 255, 255, s.alpha);
+        circle(s.x, s.y, s.r * 2);
+      }
+    }
+    for (let i = 0; i < spacePlanets.length; i++) {
+      let p = spacePlanets[i];
+      if (p.y + p.r < bottomY) {
+        for (let rr = p.r; rr > 0; rr -= 1.5) {
+          let t2 = rr / p.r;
+          let c2 = lerpColor(p.inner, p.outer, t2);
+          fill(c2);
+          circle(p.x, p.y, rr * 2);
+        }
+      }
+    }
+  }
 
   // --- COORDINATE GRID ---
   push();
